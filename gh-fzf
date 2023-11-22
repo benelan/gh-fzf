@@ -23,7 +23,7 @@ error() {
     exit 1
 }
 
-help() {
+help_cmd() {
     printf "A work in progress FZF wrapper around the GitHub CLI." >&2
     exit 0
 }
@@ -71,13 +71,110 @@ log() {
 }
 
 # --------------------------------------------------------------------- }}}
-# Util functions                                                        {{{
+# Command > default                                                     {{{
 # --------------------------------------------------------------------- {|}
 
-arg_is_flag() { case $1 in -*) true ;; *) false ;; esac }
+default_cmd() {
+    echo "test"
+    FZF_DEFAULT_COMMAND="printf 'issue\npr\nrun\n'" \
+        fzf \
+        --no-multi \
+        --no-exit-0 \
+        --no-select-1 \
+        --bind="enter:execute(gh fzf {})"
+}
 
 # --------------------------------------------------------------------- }}}
-# Run command                                                           {{{
+# Command > issue                                                       {{{
+# --------------------------------------------------------------------- {|}
+
+issue_cmd() {
+    log "DEBUG " "issue > START"
+
+    # shellcheck disable=2016
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L69 $*" \
+        fzf \
+        --ansi \
+        --no-multi \
+        --no-exit-0 \
+        --no-select-1 \
+        --header-lines=4 \
+        --preview-window='right:50%,wrap' \
+        --preview 'GH_FORCE_TTY=true gh issue view {1}' \
+        --header='(enter:edit) (alt-d:develop) (alt-c:comment) (alt-x:close) (alt-r:reopen) (alt-a:assignee) (alt-A:author) (alt-m:mention)' \
+        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
+        --bind='enter:execute(gh issue edit {1})' \
+        --bind='alt-d:execute(gh issue develop {1})' \
+        --bind='alt-c:execute(gh issue comment {1})' \
+        --bind='alt-r:execute(gh issue reopen {1})' \
+        --bind='alt-x:execute(gh issue close {1})' \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
+        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND -m $(gh api user -q .login)")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")'
+
+    log "DEBUG " "issue > END"
+}
+
+# --------------------------------------------------------------------- }}}
+# Command > pr                                                          {{{
+# --------------------------------------------------------------------- {|}
+
+pr_cmd() {
+    log "DEBUG " "pull request > START"
+
+    # shellcheck disable=2016
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L69 $*" \
+        fzf \
+        --ansi \
+        --no-multi \
+        --no-exit-0 \
+        --no-select-1 \
+        --header-lines=4 \
+        --preview-window='right:50%,wrap' \
+        --preview 'GH_FORCE_TTY=true gh pr view {1}' \
+        --header='(enter:edit) (alt-o:checkout) (alt-m:merge) (alt-d:diff) (alt-c:comment) (alt-C:checks) (alt-x:close) (alt-r:reopen) (alt-R:ready) (alt-a:assignee) (alt-A:author)' \
+        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
+        --bind='enter:execute(gh pr edit {1})' \
+        --bind='alt-c:execute(gh pr comment {1})' \
+        --bind='alt-C:execute(gh pr checks {1})' \
+        --bind='alt-d:execute(gh pr diff {1})' \
+        --bind='alt-m:execute(gh pr merge {1})' \
+        --bind='alt-o:execute(gh pr checkout {1})' \
+        --bind='alt-R:execute(gh pr ready {1})' \
+        --bind='alt-r:execute(gh pr reopen {1})' \
+        --bind='alt-x:execute(gh pr close {1})' \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")'
+
+    log "DEBUG " "pull request > END"
+}
+
+# --------------------------------------------------------------------- }}}
+# Command > run                                                         {{{
 # --------------------------------------------------------------------- {|}
 
 run_cmd() {
@@ -87,108 +184,35 @@ run_cmd() {
 
     # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh $run_fmt -L69 $*" fzf \
-        --preview-window='right:30%,wrap' --preview 'gh run view {-1}' \
-        --ansi --no-sort --no-multi --no-exit-0 --no-select-1 \
+        --ansi \
+        --no-multi \
+        --no-exit-0 \
+        --no-select-1 \
+        --preview-window='right:30%,wrap' \
+        --preview 'GH_FORCE_TTY=true gh run view {-1}' \
         --header='(enter:watch) (alt-l:logs) (alt-r:rerun) (alt-x:cancel) (alt-f:failures) (alt-b:branch) (alt-u:user)' \
-        --bind='enter:execute(gh run watch {-1})' \
-        --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
-        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
-        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND -s failure")' \
-        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND -b $(git symbolic-ref --short HEAD)")' \
-        --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND -u $(gh api user -q .login)")' \
+        --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
+        --bind='enter:execute(gh run watch {-1})' \
         --bind='alt-l:execute(gh run view --log {-1})' \
         --bind='alt-r:execute(gh run rerun {-1})' \
-        --bind='alt-x:execute(gh run cancel {-1})'
+        --bind='alt-x:execute(gh run cancel {-1})' \
+        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND -b $(git symbolic-ref --short HEAD)")' \
+        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND -s failure")' \
+        --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND -u $(gh api user -q .login)")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")'
 
     log "DEBUG " "run (action) > END"
-}
-
-# --------------------------------------------------------------------- }}}
-# Issue command                                                         {{{
-# --------------------------------------------------------------------- {|}
-
-issue_cmd() {
-    log "DEBUG " "issue > START"
-
-    # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L69 $*" fzf \
-        --preview-window='right:40%,wrap' --preview 'gh issue view {1}' \
-        --ansi --no-sort --header-lines=4 --no-multi --no-exit-0 --no-select-1 \
-        --header='(enter:edit) (alt-d:develop) (alt-c:comment) (alt-x:close) (alt-r:reopen) (alt-a:assignee) (alt-A:author) (alt-m:mention)' \
-        --bind='enter:execute(gh issue edit {1})' \
-        --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
-        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
-        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
-        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND -m $(gh api user -q .login)")' \
-        --bind='alt-d:execute(gh issue develop {1})' \
-        --bind='alt-c:execute(gh issue comment {1})' \
-        --bind='alt-r:execute(gh issue reopen {1})' \
-        --bind='alt-x:execute(gh issue close {1})'
-
-    log "DEBUG " "issue > END"
-}
-
-# --------------------------------------------------------------------- }}}
-# Pull request command                                                  {{{
-# --------------------------------------------------------------------- {|}
-
-pr_cmd() {
-    log "DEBUG " "pull request > START"
-
-    # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L69 $*" fzf \
-        --preview-window='right:40%,wrap' --preview 'gh issue view {1}' \
-        --ansi --no-sort --header-lines=4 --no-multi --no-exit-0 --no-select-1 \
-        --header='(enter:edit) (alt-o:checkout) (alt-m:merge) (alt-d:diff) (alt-c:comment) (alt-C:checks) (alt-x:close) (alt-r:reopen) (alt-R:ready) (alt-a:assignee) (alt-A:author)' \
-        --bind='enter:execute(gh pr edit {1})' \
-        --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
-        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
-        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
-        --bind='alt-m:execute(gh pr merge {1})' \
-        --bind='alt-d:execute(gh pr diff {1})' \
-        --bind='alt-c:execute(gh pr comment {1})' \
-        --bind='alt-o:execute(gh pr checkout {1})' \
-        --bind='alt-C:execute(gh pr checks {1})' \
-        --bind='alt-r:execute(gh pr reopen {1})' \
-        --bind='alt-R:execute(gh pr ready {1})' \
-        --bind='alt-x:execute(gh pr close {1})'
-
-    log "DEBUG " "pull request > END"
 }
 
 # --------------------------------------------------------------------- }}}
@@ -197,17 +221,18 @@ pr_cmd() {
 
 main() {
     command="$1"
-    shift
 
     if [ -z "$command" ]; then
-        error "a command is required"
+        default_cmd
+    else
+        shift
     fi
 
     case $command in
-        h | help | -h | --help) help ;;
-        r | run) run_cmd "$@" ;;
-        p | pr) pr_cmd "$@" ;;
-        i | issue) issue_cmd "$@" ;;
+        h | -h | help | --help) help_cmd "$@" ;;
+        r | -r | run | --run) run_cmd "$@" ;;
+        p | -p | pr | --pr) pr_cmd "$@" ;;
+        i | -i | issue | --issue) issue_cmd "$@" ;;
         *) error "invalid command: \"$command\"" ;;
     esac
 }

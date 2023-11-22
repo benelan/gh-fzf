@@ -1,35 +1,219 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Hello gh-fzf!"
+# Configuration                                                         {{{
+# --------------------------------------------------------------------- {|}
 
-# Snippets to help get started:
+if [ "$GH_FZF_LOGS" = "1" ]; then
+    GH_FZF_LOGS="${XDG_STATE_HOME:-$HOME/.local/state}/gh-fzf/logs"
+    mkdir -p "$(dirname "$GH_FZF_LOGS")"
+fi
 
-# Determine if an executable is in the PATH
-# if ! type -p ruby >/dev/null; then
-#   echo "Ruby not found on the system" >&2
-#   exit 1
-# fi
+# --------------------------------------------------------------------- }}}
+# Usage info and logs                                                   {{{
+# --------------------------------------------------------------------- {|}
 
-# Pass arguments through to another command
-# gh issue list "$@" -R cli/cli
+error() {
+    if [ -n "$1" ]; then
+        log "ERROR" "$*"
+        printf "Error: %s\n" "$*"
+    fi
+    printf "\n%s\n" \
+        "Try -h for a concise description or --help for more detail." >&2
+    exit 1
+}
 
-# Using the gh api command to retrieve and format information
-# QUERY='
-#   query($endCursor: String) {
-#     viewer {
-#       repositories(first: 100, after: $endCursor) {
-#         nodes {
-#           nameWithOwner
-#           stargazerCount
-#         }
-#       }
-#     }
-#   }
-# '
-# TEMPLATE='
-#   {{- range $repo := .data.viewer.repositories.nodes -}}
-#     {{- printf "name: %s - stargazers: %v\n" $repo.nameWithOwner $repo.stargazerCount -}}
-#   {{- end -}}
-# '
-# exec gh api graphql -f query="${QUERY}" --paginate --template="${TEMPLATE}"
+help() {
+    printf "A work in progress FZF wrapper around the GitHub CLI." >&2
+    exit 0
+}
+
+has_log_level() {
+    case "$GH_FZF_LOG_LEVEL" in
+        DEBUG*) test "$1" -gt 0 && return 1 ;;
+        INFO*) test "$1" -gt 1 && return 1 ;;
+        WARN*) test "$1" -gt 2 && return 1 ;;
+        ERROR*) test "$1" -gt 3 && return 1 ;;
+        *) error "invalid GH_FZF_LOG_LEVEL value: $GH_FZF_LOG_LEVEL" ;;
+    esac
+    return 0
+}
+
+logged_newline=""
+log() {
+    if [ -n "$GH_FZF_LOGS" ] && [ "$GH_FZF_LOGS" != "0" ]; then
+        if [ -z "$1" ]; then
+            printf "\n" >>"$GH_FZF_LOGS"
+            return 0
+        fi
+
+        if [ -n "$GH_FZF_LOG_LEVEL" ]; then
+            case "$1" in
+                DEBUG) has_log_level 1 && return 0 ;;
+                INFO*) has_log_level 2 && return 0 ;;
+                WARN*) has_log_level 3 && return 0 ;;
+                ERROR) has_log_level 4 && return 0 ;;
+                *) error "invalid log level: $1" ;;
+            esac
+        fi
+
+        if [ -z "$logged_newline" ]; then
+            printf "\n" >>"$GH_FZF_LOGS"
+            logged_newline="1"
+        fi
+
+        printf "%s | %s | %s\n" \
+            "$1" \
+            "$(date +%Y-%m-%dT%H:%M:%S 2>/dev/null)" \
+            "$2" \
+            >>"$GH_FZF_LOGS"
+    fi
+}
+
+# --------------------------------------------------------------------- }}}
+# Util functions                                                        {{{
+# --------------------------------------------------------------------- {|}
+
+arg_is_flag() { case $1 in -*) true ;; *) false ;; esac }
+
+# --------------------------------------------------------------------- }}}
+# Run command                                                           {{{
+# --------------------------------------------------------------------- {|}
+
+run_cmd() {
+    log "DEBUG " "run (action) > START"
+
+    run_fmt="run list --json 'updatedAt,event,name,displayTitle,headBranch,databaseId,conclusion' --template '{{range .}}{{tablerow (truncate 60 (.displayTitle | autocolor \"white+b\")) (truncate 25 (.name | autocolor \"white\")) (truncate 25 (.headBranch | autocolor \"white+b\")) (.event | autocolor \"white\") (.conclusion | autocolor \"white+b\") ((timeago .updatedAt) | autocolor \"white\") .databaseId}}{{end}}'"
+
+    # shellcheck disable=2016
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh $run_fmt -L69 $*" fzf \
+        --preview-window='right:30%,wrap' --preview 'gh run view {-1}' \
+        --ansi --no-sort --no-multi --no-exit-0 --no-select-1 \
+        --header='(enter:watch) (alt-l:logs) (alt-r:rerun) (alt-x:cancel) (alt-f:failures) (alt-b:branch) (alt-u:user)' \
+        --bind='enter:execute(gh run watch {-1})' \
+        --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
+        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
+        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND -s failure")' \
+        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND -b $(git symbolic-ref --short HEAD)")' \
+        --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND -u $(gh api user -q .login)")' \
+        --bind='alt-l:execute(gh run view --log {-1})' \
+        --bind='alt-r:execute(gh run rerun {-1})' \
+        --bind='alt-x:execute(gh run cancel {-1})'
+
+    log "DEBUG " "run (action) > END"
+}
+
+# --------------------------------------------------------------------- }}}
+# Issue command                                                         {{{
+# --------------------------------------------------------------------- {|}
+
+issue_cmd() {
+    log "DEBUG " "issue > START"
+
+    # shellcheck disable=2016
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L69 $*" fzf \
+        --preview-window='right:40%,wrap' --preview 'gh issue view {1}' \
+        --ansi --no-sort --header-lines=4 --no-multi --no-exit-0 --no-select-1 \
+        --header='(enter:edit) (alt-d:develop) (alt-c:comment) (alt-x:close) (alt-r:reopen) (alt-a:assignee) (alt-A:author) (alt-m:mention)' \
+        --bind='enter:execute(gh issue edit {1})' \
+        --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
+        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
+        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND -m $(gh api user -q .login)")' \
+        --bind='alt-d:execute(gh issue develop {1})' \
+        --bind='alt-c:execute(gh issue comment {1})' \
+        --bind='alt-r:execute(gh issue reopen {1})' \
+        --bind='alt-x:execute(gh issue close {1})'
+
+    log "DEBUG " "issue > END"
+}
+
+# --------------------------------------------------------------------- }}}
+# Pull request command                                                  {{{
+# --------------------------------------------------------------------- {|}
+
+pr_cmd() {
+    log "DEBUG " "pull request > START"
+
+    # shellcheck disable=2016
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L69 $*" fzf \
+        --preview-window='right:40%,wrap' --preview 'gh issue view {1}' \
+        --ansi --no-sort --header-lines=4 --no-multi --no-exit-0 --no-select-1 \
+        --header='(enter:edit) (alt-o:checkout) (alt-m:merge) (alt-d:diff) (alt-c:comment) (alt-C:checks) (alt-x:close) (alt-r:reopen) (alt-R:ready) (alt-a:assignee) (alt-A:author)' \
+        --bind='enter:execute(gh pr edit {1})' \
+        --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
+        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")' \
+        --bind='alt-0:reload(eval "$FZF_DEFAULT_COMMAND -L1000")' \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND -a @me")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND -a $(gh api user -q .login)")' \
+        --bind='alt-m:execute(gh pr merge {1})' \
+        --bind='alt-d:execute(gh pr diff {1})' \
+        --bind='alt-c:execute(gh pr comment {1})' \
+        --bind='alt-o:execute(gh pr checkout {1})' \
+        --bind='alt-C:execute(gh pr checks {1})' \
+        --bind='alt-r:execute(gh pr reopen {1})' \
+        --bind='alt-R:execute(gh pr ready {1})' \
+        --bind='alt-x:execute(gh pr close {1})'
+
+    log "DEBUG " "pull request > END"
+}
+
+# --------------------------------------------------------------------- }}}
+# Parse arguments                                                       {{{
+# --------------------------------------------------------------------- {|}
+
+main() {
+    command="$1"
+    shift
+
+    if [ -z "$command" ]; then
+        error "a command is required"
+    fi
+
+    case $command in
+        h | help | -h | --help) help ;;
+        r | run) run_cmd "$@" ;;
+        p | pr) pr_cmd "$@" ;;
+        i | issue) issue_cmd "$@" ;;
+        *) error "invalid command: \"$command\"" ;;
+    esac
+}
+
+# --------------------------------------------------------------------- }}}
+
+log "INFO " "START > args: $*"
+
+main "$@"

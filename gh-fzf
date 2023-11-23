@@ -72,6 +72,8 @@ if [ "$GH_FZF_LOGS" = "1" ]; then
     mkdir -p "$(dirname "$GH_FZF_LOGS")"
 fi
 
+GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-69}"
+
 if [ -z "$GH_FZF_COPY_CMD" ]; then
     if has /mnt/c/Windows/System32/clip.exe; then
         GH_FZF_COPY_CMD="/mnt/c/Windows/System32/clip.exe" # Windows (WSL)
@@ -110,7 +112,7 @@ issue_cmd() {
     log "DEBUG " "issue > START"
 
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L69 $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --ansi \
         --no-multi \
@@ -154,7 +156,7 @@ pr_cmd() {
     log "DEBUG " "pull request > START"
 
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L69 $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --ansi \
         --no-multi \
@@ -203,7 +205,7 @@ run_cmd() {
     run_fmt="run list --json 'updatedAt,event,name,displayTitle,headBranch,databaseId,conclusion' --template '{{range .}}{{tablerow (truncate 60 (.displayTitle | autocolor \"white+b\")) (truncate 25 (.name | autocolor \"white\")) (truncate 25 (.headBranch | autocolor \"white+b\")) (.event | autocolor \"white\") (.conclusion | autocolor \"white+b\") ((timeago .updatedAt) | autocolor \"white\") .databaseId}}{{end}}'"
 
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh $run_fmt -L69 $*" fzf \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh $run_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
         --ansi \
         --no-multi \
         --no-exit-0 \

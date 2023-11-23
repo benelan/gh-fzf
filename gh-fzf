@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-# Configuration                                                         {{{
-# --------------------------------------------------------------------- {|}
-
-if [ "$GH_FZF_LOGS" = "1" ]; then
-    GH_FZF_LOGS="${XDG_STATE_HOME:-$HOME/.local/state}/gh-fzf/logs"
-    mkdir -p "$(dirname "$GH_FZF_LOGS")"
-fi
-
-# --------------------------------------------------------------------- }}}
 # Usage info and logs                                                   {{{
 # --------------------------------------------------------------------- {|}
+
+has() { command -v "$1" >/dev/null 2>&1; }
 
 error() {
     if [ -n "$1" ]; then
@@ -71,6 +64,31 @@ log() {
 }
 
 # --------------------------------------------------------------------- }}}
+# Configuration                                                         {{{
+# --------------------------------------------------------------------- {|}
+
+if [ "$GH_FZF_LOGS" = "1" ]; then
+    GH_FZF_LOGS="${XDG_STATE_HOME:-$HOME/.local/state}/gh-fzf/logs"
+    mkdir -p "$(dirname "$GH_FZF_LOGS")"
+fi
+
+if [ -z "$GH_FZF_COPY_CMD" ]; then
+    if has /mnt/c/Windows/System32/clip.exe; then
+        GH_FZF_COPY_CMD="/mnt/c/Windows/System32/clip.exe" # Windows (WSL)
+    elif has xsel; then
+        GH_FZF_COPY_CMD="xsel -bi" # Linux (X11)
+    elif has xclip; then
+        GH_FZF_COPY_CMD="xclip -selection clipboard" # Linux (X11)
+    elif has wl-copy; then
+        GH_FZF_COPY_CMD="wl-copy" # Linux (Wayland)
+    elif has pbcopy; then
+        GH_FZF_COPY_CMD="pbcopy" # OSX
+    fi
+
+    log "INFO " "GH_FZF_COPY_CMD environment variable is not set, defaulting to \"$GH_FZF_COPY_CMD\""
+fi
+
+# --------------------------------------------------------------------- }}}
 # Command > default                                                     {{{
 # --------------------------------------------------------------------- {|}
 
@@ -104,6 +122,7 @@ issue_cmd() {
         --header='(enter:edit) (alt-d:develop) (alt-c:comment) (alt-x:close) (alt-r:reopen) (alt-a:assignee) (alt-A:author) (alt-m:mention)' \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
+        --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh issue edit {1})' \
         --bind='alt-d:execute(gh issue develop {1})' \
         --bind='alt-c:execute(gh issue comment {1})' \
@@ -147,6 +166,7 @@ pr_cmd() {
         --header='(enter:edit) (alt-o:checkout) (alt-m:merge) (alt-d:diff) (alt-c:comment) (alt-C:checks) (alt-x:close) (alt-r:reopen) (alt-R:ready) (alt-a:assignee) (alt-A:author)' \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
+        --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh pr edit {1})' \
         --bind='alt-c:execute(gh pr comment {1})' \
         --bind='alt-C:execute(gh pr checks {1})' \
@@ -193,6 +213,7 @@ run_cmd() {
         --header='(enter:watch) (alt-l:logs) (alt-r:rerun) (alt-x:cancel) (alt-f:failures) (alt-b:branch) (alt-u:user)' \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
+        --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh run watch {-1})' \
         --bind='alt-l:execute(gh run view --log {-1})' \
         --bind='alt-r:execute(gh run rerun {-1})' \

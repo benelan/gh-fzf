@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+GH_FZF_VERSION="0.1.0"
+
 # Usage info and logs                                                   {{{
 # --------------------------------------------------------------------- {|}
 
@@ -12,12 +14,32 @@ error() {
         printf "Error: %s\n" "$*"
     fi
     printf "\n%s\n" \
-        "Try -h for a concise description or --help for more detail." >&2
+        "Try -h for usage information" >&2
     exit 1
 }
 
 help_cmd() {
-    printf "A work in progress FZF wrapper around the GitHub CLI." >&2
+    printf "
+An fzf wrapper around the GitHub CLI.
+
+Project home page: https://github.com/benelan/gh-fzf
+
+Usage:
+  gh fzf <command> [flags]
+
+Core Commands:
+  i, issue       Search for and interact with GitHub issues.
+  p, pr          Search for and interact with GitHub pull requests.
+  r, run         Search for and interact with GitHub Action runs.
+
+See \`gh <command> list --help\` for the flag options available for each core command.
+
+Other Commands:
+  h, help        Print this help message.
+  v, version     Print the version of gh-fzf.
+
+Check out the README for more information, such as keybindings and configuration.
+" >&2
     exit 0
 }
 
@@ -128,7 +150,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention)'
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
-        --bind='start:toggle-header' \
+        \ # --bind='start:toggle-header' \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
         --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
@@ -287,9 +309,10 @@ main() {
 
     case $command in
         h | -h | help | --help) help_cmd "$@" ;;
-        r | -r | run | --run) run_cmd "$@" ;;
-        p | -p | pr | --pr) pr_cmd "$@" ;;
-        i | -i | issue | --issue) issue_cmd "$@" ;;
+        r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
+        p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
+        i | -i | issue | issues | --issue | --issues) issue_cmd "$@" ;;
+        v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac
 }

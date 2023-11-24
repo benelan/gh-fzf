@@ -140,8 +140,7 @@ issue_cmd() {
     log "DEBUG " "issue > START"
 
     header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen)
-          (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
-
+        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention)'
 
     # shellcheck disable=2016
@@ -192,9 +191,8 @@ pr_cmd() {
     log "DEBUG " "pull request > START"
 
     header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review)
-          (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
-          (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
-
+        > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
+        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
 Filters > (alt-a:assignee) (alt-A:author)'
 
     # shellcheck disable=2016
@@ -261,8 +259,7 @@ run_cmd() {
         }}{{end}}'"
 
     header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel)
-          (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
-
+        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
  '
     # shellcheck disable=2016
@@ -312,8 +309,9 @@ main() {
 
     if [ -z "$command" ]; then
         default_cmd
+    else
+        shift
     fi
-    shift
 
     case $command in
         h | -h | help | --help) help_cmd "$@" ;;

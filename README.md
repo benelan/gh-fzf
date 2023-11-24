@@ -16,7 +16,7 @@ An fzf wrapper around the GitHub CLI.
 
 ## Installation
 
-1. Install the [GitHub CLI](https://github.com/cli/cli#installation) (`>= v2.0.0`) and [fzf](https://github.com/junegunn/fzf#installation) if you don't already have them. For example:
+1. Install [`gh`](https://github.com/cli/cli#installation) and [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already have them. For example:
    - **Homebrew:** `brew install gh fzf`
    - **DNF:** `sudo dnf install gh fzf`
    - ... see the links above for other package managers
@@ -97,8 +97,8 @@ Environment variables are used to configure different options in `gh-fzf`.
 
 | Variable               | Description                                                                                                                                                                            | Default                                                                                                      |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `GH_FZF_DEFAULT_LIMIT` | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt+1` to `alt+9` commands, see the [Usage](#usage) section for more info. | 69                                                                                                           |
-| `GH_FZF_HIDE_HINTS`    | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt+H` keybinding.                             | unset                                                                                                        |
+| `GH_FZF_DEFAULT_LIMIT` | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info. | 69                                                                                                           |
+| `GH_FZF_HIDE_HINTS`    | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                             | unset                                                                                                        |
 | `GH_FZF_COPY_CMD`      | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.   | [see code](https://github.com/benelan/gh-fzf/blob/432aac672061ac25b67c396d60fc20839aed5449/gh-fzf#L78-L88C1) |
 
 ## Related projects
@@ -106,7 +106,7 @@ Environment variables are used to configure different options in `gh-fzf`.
 - [`gh-f`](https://github.com/gennaro-tedesco/gh-f): another `fzf` wrapper around `gh`, which also provides some `git` functionality.
 
 **NOTE:** `gh-fzf` leaves `git` functionality to other tools, and instead focuses on providing more keybindings for the GitHub commands.
-The following `fzf` wrappers around `git` are both good options to fill that gap:
+The following `fzf` wrappers around `git` are both good options to bridge that gap:
 
 - [`forgit`](https://github.com/wfxr/forgit) (I use this one)
 - [`git-fuzzy`](https://github.com/bigH/git-fuzzy)

@@ -112,6 +112,12 @@ if [ -z "$GH_FZF_COPY_CMD" ]; then
     log "INFO " "GH_FZF_COPY_CMD environment variable is not set, defaulting to \"$GH_FZF_COPY_CMD\""
 fi
 
+if [ -n "$GH_FZF_HIDE_HINTS" ]; then
+    on_start="toggle-header"
+else
+    on_start=""
+fi
+
 # --------------------------------------------------------------------- }}}
 # Command > default                                                     {{{
 # --------------------------------------------------------------------- {|}
@@ -150,7 +156,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention)'
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
-        \ # --bind='start:toggle-header' \
+        --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
         --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
@@ -203,6 +209,7 @@ Filters > (alt-a:assignee) (alt-A:author)'
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
+        --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
         --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
@@ -268,6 +275,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
         --preview-window='right:35%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
+        --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
         --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \

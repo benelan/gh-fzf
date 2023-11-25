@@ -57,6 +57,7 @@ There are a few global keybindings that can be used with any `gh fzf` command:
   - `alt-a`: Filter the list, showing issues assigned to you
   - `alt-A`: Filter the list, showing issues authored by you
   - `alt-m`: Filter the list, showing issues where you are mentioned
+  - `alt-s`: Filter the list, showing issues with any state (open or closed)
 
 ### `pr`
 
@@ -74,8 +75,10 @@ There are a few global keybindings that can be used with any `gh fzf` command:
   - `alt-M`: Merge the pull request (see `gh pr merge --help`)
   - `alt-X`: Close the pull request (see `gh pr close --help`)
   - `alt-O`: Reopen the pull request (see `gh pr reopen --help`)
-  - `alt-a`: Filter the list, showing issues assigned to you
-  - `alt-A`: Filter the list, showing issues authored by you
+  - `alt-a`: Filter the list, showing pull requests assigned to you
+  - `alt-A`: Filter the list, showing pull requests authored by you
+  - `alt-b`: Filter the list, showing pull requests from the current branch
+  - `alt-s`: Filter the list, showing pull requests with any state (open, closed, or merged)
 
 ### `run`
 

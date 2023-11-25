@@ -38,7 +38,7 @@ Other Commands:
   h, help        Print this help message.
   v, version     Print the version of gh-fzf.
 
-Check out the README for more information, such as keybindings and configuration.
+Check out the project home page for more information, such as keybindings and configuration.
 " >&2
     exit 0
 }
@@ -140,8 +140,8 @@ issue_cmd() {
     log "DEBUG " "issue > START"
 
     header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen)
-        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
-Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention)'
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
 
     # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L $GH_FZF_DEFAULT_LIMIT $*" \
@@ -167,6 +167,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention)'
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author $(gh api user -q .login)")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention $(gh api user -q .login)")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind='alt-P:toggle-preview' \
         --bind='alt-H:toggle-header' \
         --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
@@ -192,8 +193,8 @@ pr_cmd() {
 
     header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review)
         > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
-        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
-Filters > (alt-a:assignee) (alt-A:author)'
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
 
     # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L $GH_FZF_DEFAULT_LIMIT $*" \
@@ -223,6 +224,9 @@ Filters > (alt-a:assignee) (alt-A:author)'
         --bind='alt-X:execute(gh pr close {1})' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author $(gh api user -q .login)")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
+        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --head \
+            $(git symbolic-ref --short HEAD)")' \
         --bind='alt-P:toggle-preview' \
         --bind='alt-H:toggle-header' \
         --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
@@ -259,7 +263,7 @@ run_cmd() {
         }}{{end}}'"
 
     header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel)
-        > (ctrl+o: open) (ctrl+y: copy) (ctrl+r: reload)
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
  '
     # shellcheck disable=2016

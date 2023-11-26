@@ -31,8 +31,9 @@ An fzf wrapper around the GitHub CLI.
 gh fzf <command> [flags]
 ```
 
-The extension adds a new command that wraps GitHub's "list" subcommands with fzf to make them fuzzy findable.
-A preview of the current selection is displayed, and keybindings are available to interact with the item.
+The extension adds a new command that wraps GitHub's "list" subcommands with fzf to make them fuzzy findable. All of the arguments after `<command>` are passed directly to `gh`. Because of the way shell works, you need to escape quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace). There are example usages for each command in the sections below.
+
+A preview of the current selection is displayed when navigating through the resulting list.Keybindings are available to call other `gh` subcommands on the item, or to further filter the list.
 
 There are a few global keybindings that can be used with any `gh fzf` command:
 
@@ -58,6 +59,9 @@ There are a few global keybindings that can be used with any `gh fzf` command:
   - `alt-A`: Filter the list, showing issues authored by you
   - `alt-m`: Filter the list, showing issues where you are mentioned
   - `alt-s`: Filter the list, showing issues with any state (open or closed)
+- **Examples:**
+  - `gh fzf issue --assignee @me --milestone "v1.33.7" --state all`: Filter the initial list to open and closed issues assigned to you in the "v1.33.7" milestone.
+  - `gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner'`: Filter the initial list to issues with the "good first issue" label, no assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests).
 
 ### `pr`
 
@@ -79,6 +83,9 @@ There are a few global keybindings that can be used with any `gh fzf` command:
   - `alt-A`: Filter the list, showing pull requests authored by you
   - `alt-b`: Filter the list, showing pull requests from the current branch
   - `alt-s`: Filter the list, showing pull requests with any state (open, closed, or merged)
+- **Examples:**
+  - `gh fzf pr --state merged --author @me --label \"breaking change\"`: Filter the initial list to your merged pull requests with the "breaking change" label
+  - `gh fzf p -S \'merged:">=2023-01-01" \"breaking change\" in:body author:@me\'`: Filter the initial list to your pull requests merged since the beginning of 2023 that have "breaking change" in the body. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests).
 
 ### `run`
 
@@ -93,6 +100,9 @@ There are a few global keybindings that can be used with any `gh fzf` command:
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
+- **Examples:**
+  - `gh fzf run --workflow test`: Filter the initial list to runs for the "test" workflow.
+  - `gh fzf r -b main -s failure`: Filter the initial list to failed runs on the main branch.
 
 ## Configuration
 

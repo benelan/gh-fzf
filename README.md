@@ -33,9 +33,7 @@ gh fzf <command> [flags]
 
 The extension adds a new command that wraps GitHub's "list" subcommands with fzf to make them fuzzy findable. All of the arguments after `<command>` are passed directly to `gh`. Because of the way shell works, you need to escape quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace). There are example usages for each command in the sections below.
 
-A preview of the current selection is displayed when navigating through the resulting list.Keybindings are available to call other `gh` subcommands on the item, or to further filter the list.
-
-There are a few global keybindings that can be used with any `gh fzf` command:
+A preview of the current selection is displayed when navigating through the resulting list. Each command has keybindings to further filter the list or to call other `gh` subcommands on the item. There are also a few global keybindings that can be used with any `gh fzf` command:
 
 - `ctrl-o`: Open the selected item in the browser
 - `ctrl-y`: Copy the selected item's URL to the clipboard

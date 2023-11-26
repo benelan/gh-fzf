@@ -1,0 +1,65 @@
+name: Bug Report
+description: Report a bug with the script
+labels: ["bug"]
+assignees:
+  - benelan
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for logging an issue, I appreciate the feedback! Please confirm the following before continuing:
+        - You are using the latest version, since the issue may already be fixed.
+        - There are no [existing issues](https://github.com/benelan/build-sizes/issues) with the same report/request. 
+            - If there is a duplicate issue, please add a 👍 reaction instead of creating a new one.
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: A clear description of the issue (optionally include before/after screenshots/GIFs).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected instead, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: Clear, numbered steps for reproducing the issue.
+      placeholder: |
+        1. Run the script with the following arguments: ...
+        2. Check the console for an error ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Reproduction Version
+      description: The latest version that reproduces the issue.
+      placeholder: v2.3.0
+    validations:
+      required: true
+  - type: input
+    id: regression
+    attributes:
+      label: Regression?
+      description: Please provide the last working version if the issue is a regression.
+      placeholder: v2.0.0
+    validations:
+      required: false
+  - type: textarea
+    id: relevant
+    attributes:
+      label: Relevant Info
+      description: Environment, stack traces, related issues, suggestions/resources on how to fix, etc.
+      placeholder: |
+        Windows 10
+        Uncaught TypeError: Cannot read property of undefined
+        ...
+    validations:
+      required: false

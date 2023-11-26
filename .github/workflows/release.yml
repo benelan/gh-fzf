@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3.7.9
+        id: release
+        with:
+          release-type: simple
+          package-name: gh-fzf
+          token: ${{ secrets.GITHUB_TOKEN }}
+          default-branch: main
+          extra-files: gh-fzf
+          plugins: sentence-case
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+      - name: tag stable versions
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git tag -d stable || true
+          git push origin :stable || true
+          git tag -a stable -m "Current Stable Release"
+          git push origin stable

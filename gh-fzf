@@ -126,9 +126,12 @@ default_cmd() {
     echo "test"
     FZF_DEFAULT_COMMAND="printf 'issue\npr\nrun\n'" \
         fzf \
+        --ansi \
         --no-multi \
         --no-exit-0 \
         --no-select-1 \
+        --preview="GH_FORCE_TTY=true gh {} --help" \
+        --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
 }
 
@@ -165,8 +168,8 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
         --bind='alt-O:execute(gh issue reopen {1})' \
         --bind='alt-X:execute(gh issue close {1})' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author $(gh api user -q .login)")' \
-        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention $(gh api user -q .login)")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
+        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind='alt-P:toggle-preview' \
         --bind='alt-H:toggle-header' \
@@ -223,7 +226,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
         --bind='alt-O:execute(gh pr reopen {1})' \
         --bind='alt-X:execute(gh pr close {1})' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author $(gh api user -q .login)")' \
+        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --head \
             $(git symbolic-ref --short HEAD)")' \

@@ -10,7 +10,7 @@ You can help most by:
 
 ## Before filing an issue
 
-If something isn't working the way you expect, take a look at the [existing issues](https://github.com/benelan/build-sizes/issues) before logging a new one. If there are no duplicates, please log a new issue! Make sure to provide all of the requested info from the appropriate [issue template](https://github.com/benelan/build-sizes/issues/new/choose). Some other things to consider:
+If something isn't working the way you expect, take a look at the [existing issues](https://github.com/benelan/gh-fzf/issues) before logging a new one. If there are no duplicates, please log a new issue! Make sure to provide all of the requested info from the appropriate [issue template](https://github.com/benelan/gh-fzf/issues/new/choose). Some other things to consider:
 
 - Use a clear and descriptive title
 - Detail what is happening now vs what should happen

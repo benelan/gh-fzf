@@ -21,9 +21,7 @@ jobs:
           extra-files: |
             gh-fzf
             .github/ISSUE_TEMPLATE/bug.yml
-          release-as: 0.1.0
           plugins: sentence-case
-          prerelease: true
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

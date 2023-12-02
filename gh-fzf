@@ -176,7 +176,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
         --no-exit-0 \
         --no-select-1 \
         --header-lines=4 \
-        --preview 'GH_FORCE_TTY=true gh issue view {1}' \
+        --preview 'GH_FORCE_TTY=true gh issue view {1} --coments' \
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
@@ -229,7 +229,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
         --no-exit-0 \
         --no-select-1 \
         --header-lines=4 \
-        --preview 'GH_FORCE_TTY=true gh pr view {1}' \
+        --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \

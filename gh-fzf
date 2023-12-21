@@ -163,22 +163,60 @@ default_cmd() {
 issue_cmd() {
     log "DEBUG " "issue > START"
 
+    # shellcheck disable=2016
+    issue_fmt='--json "number,title,author,assignees,state,milestone,labels,updatedAt,body" \
+            --template '\''
+                {{- $headerColor := "blue+b" -}}
+                {{- tablerow
+                    ("ISSUE" | autocolor $headerColor)
+                    ("TITLE" | autocolor $headerColor)
+                    ("AUTHOR" | autocolor $headerColor)
+                    ("MILESTONE" | autocolor $headerColor)
+                    ("LAST UPDATE" | autocolor $headerColor)
+                    ("LABELS" | autocolor $headerColor)
+                    ("BODY" | autocolor $headerColor)
+                -}}
+
+                {{- range . -}}
+                    {{- $milestoneTitle := "" -}}
+                    {{- if ne .milestone nil -}}
+                        {{- $milestoneTitle = .milestone.title -}}
+                    {{- end -}}
+
+                    {{- $stateColor := "green" -}}
+                    {{- if eq .state "CLOSED" -}}
+                        {{- $stateColor = "red" -}}
+                    {{- end -}}
+
+                    {{- tablerow
+                        (printf "#%v" .number | autocolor $stateColor)
+                        (.title | autocolor "white+h")
+                        (.author.login | autocolor "white+d")
+                        ($milestoneTitle | autocolor "white+h")
+                        ((timeago .updatedAt) | autocolor "white+d")
+                        (pluck "name" .labels | join ", " | autocolor "white+h")
+                        (.body | autocolor "white+d")
+                    -}}
+                {{- end -}}
+    '\'''
+
     header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
 
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list $issue_fmt -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --ansi \
+        --no-hscroll \
         --no-multi \
         --no-exit-0 \
         --no-select-1 \
-        --header-lines=4 \
         --preview 'GH_FORCE_TTY=true gh issue view {1} --comments' \
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
+        --header-lines=1 \
         --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
@@ -215,23 +253,62 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
 pr_cmd() {
     log "DEBUG " "pull request > START"
 
+    # shellcheck disable=2016
+    pr_fmt='--json "number,title,state,headRefName,milestone,updatedAt,labels,body" \
+            --template '\''
+                {{- $headerColor := "blue+b" -}}
+                {{- tablerow
+                    ("PR" | autocolor $headerColor)
+                    ("TITLE" | autocolor $headerColor)
+                    ("BRANCH" | autocolor $headerColor)
+                    ("LAST UPDATE" | autocolor $headerColor)
+                    ("LABELS" | autocolor $headerColor)
+                    ("MILESTONE" | autocolor $headerColor)
+                    ("BODY" | autocolor $headerColor)
+                -}}
+
+                {{- range . -}}
+                    {{- $milestoneTitle := "" -}}
+                    {{- if ne .milestone nil -}}
+                        {{- $milestoneTitle = .milestone.title -}}
+                    {{- end -}}
+
+                    {{- $stateColor := "green" -}}
+                    {{- if eq .state "CLOSED" -}}
+                        {{- $stateColor = "red" -}}
+                    {{- else if eq .state "MERGED" -}}
+                        {{- $stateColor = "magenta" -}}
+                    {{- end -}}
+
+                    {{- tablerow
+                        (printf "#%v" .number | autocolor $stateColor)
+                        (.title | autocolor "white+h")
+                        (.headRefName | autocolor "white+d")
+                        ((timeago .updatedAt) | autocolor "white+h")
+                        (pluck "name" .labels | join ", " | autocolor "white+d")
+                        ($milestoneTitle | autocolor "white+h")
+                        (.body)
+                    -}}
+                {{- end -}}
+    '\'''
+
     header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review)
         > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
 
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list -L $GH_FZF_DEFAULT_LIMIT $*" \
-        fzf \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list $pr_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
         --ansi \
+        --no-hscroll \
         --no-multi \
         --no-exit-0 \
         --no-select-1 \
-        --header-lines=4 \
         --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
         --preview-window='right:50%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
+        --header-lines=1 \
         --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
@@ -274,25 +351,56 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
 run_cmd() {
     log "DEBUG " "run (action) > START"
 
-    run_fmt="run list \
-        --json 'updatedAt,event,name,displayTitle,headBranch,databaseId,conclusion' \
-        --template '{{range .}}{{tablerow \
-            (truncate 60 (.displayTitle | autocolor \"white+b\")) \
-            (truncate 25 (.name | autocolor \"white\")) \
-            (truncate 25 (.headBranch | autocolor \"white+b\")) \
-            (.event | autocolor \"white\") \
-            (.conclusion | autocolor \"white+b\") \
-            ((timeago .updatedAt) | autocolor \"white\") \
-            .databaseId \
-        }}{{end}}'"
+    # shellcheck disable=2016
+    run_fmt='--json "updatedAt,event,displayTitle,headBranch,databaseId,conclusion,status,name" \
+            --template '\''
+                {{- $headerColor := "blue+b" -}}
+                {{- tablerow
+                    ("STATUS" | autocolor $headerColor)
+                    ("WORKFLOW" | autocolor $headerColor)
+                    ("BRANCH" | autocolor $headerColor)
+                    ("TITLE" | autocolor $headerColor)
+                    ("EVENT" | autocolor $headerColor)
+                    ("LAST UPDATE" | autocolor $headerColor)
+                    ("ID" | autocolor $headerColor)
+                -}}
+
+                {{- range . -}}
+                    {{- $statusColor := "yellow" -}}
+                    {{- $statusText := .status -}}
+                    {{- if ne .conclusion nil -}}
+                        {{- $statusText = .conclusion -}}
+                        {{- if eq .conclusion "failure" "startup_failure" -}}
+                            {{- $statusColor = "red" -}}
+                        {{- else if eq .conclusion "cancelled" "stale" "timed_out" -}}
+                            {{- $statusColor = "red+d" -}}
+                        {{- else if eq .conclusion "success" -}}
+                            {{- $statusColor = "green" -}}
+                        {{- else if eq .conclusion "skipped" -}}
+                            {{- $statusColor = "white+d" -}}
+                        {{- end -}}
+                    {{- end -}}
+
+                    {{- tablerow
+                        ($statusText | autocolor $statusColor)
+                        (.name | autocolor "white+h")
+                        (.headBranch | autocolor "white+d")
+                        (.displayTitle | autocolor "white+h")
+                        (.event | autocolor "white+d")
+                        ((timeago .updatedAt) | autocolor "white+h")
+                        (.databaseId | autocolor "white+d")
+                    -}}
+                {{- end -}}
+    '\'''
 
     header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
  '
     # shellcheck disable=2016
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh $run_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh run list $run_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
         --ansi \
+        --no-hscroll \
         --no-multi \
         --no-exit-0 \
         --no-select-1 \
@@ -300,6 +408,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
         --preview-window='right:35%,wrap' \
         --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
+        --header-lines=1 \
         --bind="start:$on_start" \
         --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \

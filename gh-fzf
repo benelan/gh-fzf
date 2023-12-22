@@ -219,7 +219,9 @@ issue_cmd() {
 
     header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
-Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
+Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
+
+'
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list $issue_fmt -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -289,7 +291,9 @@ pr_cmd() {
     header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review)
         > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
-Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
+Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
+
+'
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list $pr_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
         --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
@@ -367,7 +371,9 @@ run_cmd() {
     header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
- '
+
+'
+
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh run list $run_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
         --preview 'GH_FORCE_TTY=true gh run view {-1}' \
         --header="$header" \

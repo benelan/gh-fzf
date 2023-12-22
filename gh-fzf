@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=2016
 set -e
 
 # MIT License
@@ -141,17 +142,33 @@ else
     on_start=""
 fi
 
+# the options shared by all commands
+FZF_DEFAULT_OPTS+='
+--ansi --no-hscroll --no-multi --no-exit-0 --no-select-1 --header-lines=1
+--preview-window="right:50%,wrap"
+--preview-label="(alt+P: toggle preview) (alt+H: toggle hints)"
+--bind="alt-P:toggle-preview"
+--bind="alt-H:toggle-header"
+--bind="ctrl-r:reload(eval \"$FZF_DEFAULT_COMMAND\")"
+--bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"
+--bind="alt-2:reload(eval \"$FZF_DEFAULT_COMMAND -L200\")"
+--bind="alt-3:reload(eval \"$FZF_DEFAULT_COMMAND -L300\")"
+--bind="alt-4:reload(eval \"$FZF_DEFAULT_COMMAND -L400\")"
+--bind="alt-5:reload(eval \"$FZF_DEFAULT_COMMAND -L500\")"
+--bind="alt-6:reload(eval \"$FZF_DEFAULT_COMMAND -L600\")"
+--bind="alt-6:reload(eval \"$FZF_DEFAULT_COMMAND -L600\")"
+--bind="alt-7:reload(eval \"$FZF_DEFAULT_COMMAND -L700\")"
+--bind="alt-8:reload(eval \"$FZF_DEFAULT_COMMAND -L800\")"
+--bind="alt-9:reload(eval \"$FZF_DEFAULT_COMMAND -L900\")"
+'
+
 # --------------------------------------------------------------------- }}}
 # Command > default                                                     {{{
 # --------------------------------------------------------------------- {|}
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'issue\npr\nrun\n'" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\nissue\npr\nrun\n'" \
         fzf \
-        --ansi \
-        --no-multi \
-        --no-exit-0 \
-        --no-select-1 \
         --preview="GH_FORCE_TTY=true gh {} --help" \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
@@ -164,7 +181,6 @@ default_cmd() {
 issue_cmd() {
     log "DEBUG " "issue > START"
 
-    # shellcheck disable=2016
     issue_fmt='--json "number,title,author,assignees,state,milestone,labels,updatedAt,body" \
             --template '\''
                 {{- $headerColor := "blue+b" -}}
@@ -205,21 +221,11 @@ issue_cmd() {
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
 
-    # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list $issue_fmt -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --ansi \
-        --no-hscroll \
-        --no-multi \
-        --no-exit-0 \
-        --no-select-1 \
         --preview 'GH_FORCE_TTY=true gh issue view {1} --comments' \
-        --preview-window='right:50%,wrap' \
-        --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
-        --header-lines=1 \
         --bind="start:$on_start" \
-        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
         --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh issue edit {1})' \
@@ -230,19 +236,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
-        --bind='alt-P:toggle-preview' \
-        --bind='alt-H:toggle-header' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")'
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")'
 
     log "DEBUG " "issue > END"
 }
@@ -254,7 +248,6 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)'
 pr_cmd() {
     log "DEBUG " "pull request > START"
 
-    # shellcheck disable=2016
     pr_fmt='--json "number,title,state,headRefName,milestone,updatedAt,labels,body" \
             --template '\''
                 {{- $headerColor := "blue+b" -}}
@@ -298,20 +291,10 @@ pr_cmd() {
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
 
-    # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list $pr_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
-        --ansi \
-        --no-hscroll \
-        --no-multi \
-        --no-exit-0 \
-        --no-select-1 \
         --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
-        --preview-window='right:50%,wrap' \
-        --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
-        --header-lines=1 \
         --bind="start:$on_start" \
-        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
         --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh pr edit {1})' \
@@ -328,19 +311,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --head \
-            $(git symbolic-ref --short HEAD)")' \
-        --bind='alt-P:toggle-preview' \
-        --bind='alt-H:toggle-header' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")'
+            $(git symbolic-ref --short HEAD)")'
 
     log "DEBUG " "pull request > END"
 }
@@ -352,7 +323,6 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)'
 run_cmd() {
     log "DEBUG " "run (action) > START"
 
-    # shellcheck disable=2016
     run_fmt='--json "updatedAt,event,displayTitle,headBranch,databaseId,conclusion,status,name" \
             --template '\''
                 {{- $headerColor := "blue+b" -}}
@@ -398,20 +368,10 @@ run_cmd() {
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
  '
-    # shellcheck disable=2016
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh run list $run_fmt -L $GH_FZF_DEFAULT_LIMIT $*" fzf \
-        --ansi \
-        --no-hscroll \
-        --no-multi \
-        --no-exit-0 \
-        --no-select-1 \
         --preview 'GH_FORCE_TTY=true gh run view {-1}' \
-        --preview-window='right:35%,wrap' \
-        --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)" \
         --header="$header" \
-        --header-lines=1 \
         --bind="start:$on_start" \
-        --bind='ctrl-r:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
         --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh run watch {-1})' \
@@ -421,19 +381,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
         --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --branch \
             $(git symbolic-ref --short HEAD)")' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
-        --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)")' \
-        --bind='alt-P:toggle-preview' \
-        --bind='alt-H:toggle-header' \
-        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND -L100")' \
-        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND -L200")' \
-        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND -L300")' \
-        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND -L400")' \
-        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND -L500")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND -L600")' \
-        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND -L700")' \
-        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND -L800")' \
-        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND -L900")'
+        --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)")'
 
     log "DEBUG " "run (action) > END"
 }

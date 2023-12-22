@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# MIT Licence
+# MIT License
 #
 # Copyright (c) Ben Elan
 #
@@ -44,7 +44,7 @@ help_cmd() {
     printf "
 An fzf wrapper around the GitHub CLI.
 
-Project home page: https://github.com/benelan/gh-fzf
+Homepage: https://github.com/benelan/gh-fzf
 
 Usage:
   gh fzf <command> [flags]
@@ -54,13 +54,14 @@ Core Commands:
   p, pr          Search for and interact with GitHub pull requests.
   r, run         Search for and interact with GitHub Action runs.
 
-See \`gh <command> list --help\` for the flag options available for each core command.
+See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
   h, help        Print this help message.
   v, version     Print the version of gh-fzf.
 
-Check out the project home page for more information, such as keybindings and configuration.
+Check out the project homepage for more information, such as keybindings,
+configuration, and examples.
 " >&2
     exit 0
 }

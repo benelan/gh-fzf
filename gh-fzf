@@ -343,7 +343,7 @@ run_cmd() {
                 {{- range . -}}
                     {{- $statusColor := "yellow" -}}
                     {{- $statusText := .status -}}
-                    {{- if ne .conclusion nil -}}
+                    {{- if ne (len .conclusion) 0 -}}
                         {{- $statusText = .conclusion -}}
                         {{- if eq .conclusion "failure" "startup_failure" -}}
                             {{- $statusColor = "red" -}}

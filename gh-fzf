@@ -182,17 +182,16 @@ issue_cmd() {
     log "DEBUG " "issue > START"
 
     issue_template='\
-        --json "number,title,author,assignees,state,milestone,labels,updatedAt,body" \
+        --json "number,title,author,assignees,state,milestone,labels,updatedAt" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
                 ("ISSUE" | autocolor $headerColor)
+                ("LAST UPDATE" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
                 ("AUTHOR" | autocolor $headerColor)
                 ("MILESTONE" | autocolor $headerColor)
-                ("LAST UPDATE" | autocolor $headerColor)
                 ("LABELS" | autocolor $headerColor)
-                ("BODY" | autocolor $headerColor)
             -}}
 
             {{- range . -}}
@@ -208,12 +207,11 @@ issue_cmd() {
 
                 {{- tablerow
                     (printf "#%v" .number | autocolor $stateColor)
-                    (.title | autocolor "white+h")
+                    ((timeago .updatedAt) | autocolor "white+d")
+                    (truncate 100 (.title | autocolor "white+h"))
                     (.author.login | autocolor "white+d")
                     ($milestoneTitle | autocolor "white+h")
-                    ((timeago .updatedAt) | autocolor "white+d")
-                    (pluck "name" .labels | join ", " | autocolor "white+h")
-                    (.body | autocolor "white+d")
+                    (pluck "name" .labels | join ", " | autocolor "white+d")
                 -}}
             {{- end -}}
     '\'''
@@ -224,7 +222,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=true gh issue view {1} --comments' \
         --header="$issue_header" \
@@ -252,17 +250,16 @@ pr_cmd() {
     log "DEBUG " "pull request > START"
 
     pr_template='\
-        --json "number,title,state,headRefName,milestone,updatedAt,labels,body" \
+        --json "number,title,state,headRefName,milestone,updatedAt,labels" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
                 ("PR" | autocolor $headerColor)
+                ("LAST UPDATE" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
                 ("BRANCH" | autocolor $headerColor)
-                ("LAST UPDATE" | autocolor $headerColor)
                 ("LABELS" | autocolor $headerColor)
                 ("MILESTONE" | autocolor $headerColor)
-                ("BODY" | autocolor $headerColor)
             -}}
 
             {{- range . -}}
@@ -280,12 +277,11 @@ pr_cmd() {
 
                 {{- tablerow
                     (printf "#%v" .number | autocolor $stateColor)
-                    (.title | autocolor "white+h")
-                    (.headRefName | autocolor "white+d")
-                    ((timeago .updatedAt) | autocolor "white+h")
-                    (pluck "name" .labels | join ", " | autocolor "white+d")
-                    ($milestoneTitle | autocolor "white+h")
-                    (.body)
+                    ((timeago .updatedAt) | autocolor "white+d")
+                    (truncate 100 (.title | autocolor "white+h"))
+                    (truncate 60 (.headRefName | autocolor "white+d"))
+                    (pluck "name" .labels | join ", " | autocolor "white+h")
+                    ($milestoneTitle | autocolor "white+d")
                 -}}
             {{- end -}}
     '\'''
@@ -297,7 +293,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
         --header="$pr_header" \
@@ -336,11 +332,11 @@ run_cmd() {
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
                 ("STATUS" | autocolor $headerColor)
+                ("LAST UPDATE" | autocolor $headerColor)
                 ("WORKFLOW" | autocolor $headerColor)
                 ("BRANCH" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
                 ("EVENT" | autocolor $headerColor)
-                ("LAST UPDATE" | autocolor $headerColor)
                 ("ID" | autocolor $headerColor)
             -}}
 
@@ -362,12 +358,12 @@ run_cmd() {
 
                 {{- tablerow
                     ($statusText | autocolor $statusColor)
+                    ((timeago .updatedAt) | autocolor "white+d")
                     (.name | autocolor "white+h")
-                    (.headBranch | autocolor "white+d")
-                    (.displayTitle | autocolor "white+h")
+                    (truncate 60 (.headBranch | autocolor "white+d"))
+                    (truncate 100 (.displayTitle | autocolor "white+h"))
                     (.event | autocolor "white+d")
-                    ((timeago .updatedAt) | autocolor "white+h")
-                    (.databaseId | autocolor "white+d")
+                    (.databaseId | autocolor "white+h")
                 -}}
             {{- end -}}
     '\'''
@@ -378,7 +374,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=true gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=true gh run view {-1}' \
         --header="$run_header" \

@@ -125,6 +125,7 @@ keybindings that can be used with any `gh fzf` command:
   - `alt-l`: Show the selected run's logs (see `gh run view --help`)
   - `alt-r`: Rerun the selected run (see `gh run rerun --help`)
   - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
+  - `alt-p`: Open `gh fzf pr` filtered for the run's branch
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
@@ -157,5 +158,5 @@ Environment variables are used to configure different options in `gh-fzf`.
 focuses on providing more keybindings for the GitHub commands. The following
 `fzf` wrappers around `git` are both good options to bridge that gap:
 
-- [`forgit`](https://github.com/wfxr/forgit) (I use this one)
+- [`forgit`](https://github.com/wfxr/forgit)
 - [`git-fuzzy`](https://github.com/bigH/git-fuzzy)

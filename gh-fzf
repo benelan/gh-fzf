@@ -368,7 +368,7 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    run_header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel)
+    run_header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-p: pr)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 
@@ -385,6 +385,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
         --bind='alt-l:execute(gh run view --log {-1})' \
         --bind='alt-r:execute(gh run rerun {-1})' \
         --bind='alt-x:execute(gh run cancel {-1})' \
+        --bind='alt-p:execute<gh fzf pr --head $(gh run view {-1} --json headBranch --jq .headBranch)>' \
         --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --branch \
             $(git symbolic-ref --short HEAD)")' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \

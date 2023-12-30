@@ -90,13 +90,13 @@ keybindings that can be used with any `gh fzf` command:
   - `enter`: Edit the selected pull request in the CLI via prompts (see `gh pr edit --help`)
   - `alt-o`: Checkout the pull request's branch (see `gh pr checkout --help`)
   - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
-  - `alt-C`: Show the pull request's status checks (see `gh pr checks --help`)
   - `alt-d`: Show the pull request's diff (see `gh pr diff --help`)
   - `alt-r`: Start/continue/finish a review for the pull request (see `gh pr review --help`)
   - `alt-R`: Mark a draft pull request as "ready for review" (see `gh pr ready --help`)
   - `alt-M`: Merge the pull request (see `gh pr merge --help`)
   - `alt-X`: Close the pull request (see `gh pr close --help`)
   - `alt-O`: Reopen the pull request (see `gh pr reopen --help`)
+  - `alt-C`: Show the pull request's status checks in `gh fzf run`
   - `alt-a`: Filter the list, showing pull requests assigned to you
   - `alt-A`: Filter the list, showing pull requests authored by you
   - `alt-b`: Filter the list, showing pull requests from the current branch
@@ -147,7 +147,28 @@ Environment variables are used to configure different options in `gh-fzf`.
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `GH_FZF_DEFAULT_LIMIT` | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info. | 69                                                                                                           |
 | `GH_FZF_HIDE_HINTS`    | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                             | unset                                                                                                        |
-| `GH_FZF_COPY_CMD`      | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.   | [see code](https://github.com/benelan/gh-fzf/blob/432aac672061ac25b67c396d60fc20839aed5449/gh-fzf#L78-L88C1) |
+| `GH_FZF_COPY_CMD`      | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.   | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
+
+You can use [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
+to add/change `fzf` options for the commands. For example, you can create
+aliases in `gh`'s config file, where you add keybindings:
+
+```yml
+# ~/.config/gh/config.yml
+aliases:
+  i: |
+    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+      --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
+      --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
+    " gh fzf issue
+  p: |
+    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+      --bind='alt-m:execute(gh pr merge -d {1})'
+      " gh fzf pr
+```
+
+For the `issue` and `pr` commands, use `{1}` in place of the \<number\>.
+For the `run` command, use `{-1}` in place of the \<run-id\>.
 
 ## Related projects
 

@@ -156,15 +156,15 @@ aliases in `gh`'s config file, where you add keybindings:
 ```yml
 # ~/.config/gh/config.yml
 aliases:
-  i: |
-    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
-      --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
-      --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
-    " gh fzf issue
-  p: |
-    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
-      --bind='alt-m:execute(gh pr merge -d {1})'
-      " gh fzf pr
+    i: |
+        !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+        --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
+        --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
+        " gh fzf issue
+    p: |
+        !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+        --bind='alt-m:execute(gh pr merge -d {1})'
+        " gh fzf pr
 ```
 
 For the `issue` and `pr` commands, use `{1}` in place of the \<number\>.

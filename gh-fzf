@@ -347,8 +347,12 @@ run_cmd() {
                     {{- $statusText = .conclusion -}}
                     {{- if eq .conclusion "failure" "startup_failure" -}}
                         {{- $statusColor = "red" -}}
-                    {{- else if eq .conclusion "cancelled" "stale" "timed_out" -}}
+                    {{- else if eq .conclusion "cancelled" "timed_out" -}}
                         {{- $statusColor = "red+d" -}}
+                    {{- else if eq .conclusion "action_required" -}}
+                        {{- $statusColor = "magenta+h" -}}
+                    {{- else if eq .conclusion "stale" -}}
+                        {{- $statusColor = "yellow+d" -}}
                     {{- else if eq .conclusion "success" -}}
                         {{- $statusColor = "green" -}}
                     {{- else if eq .conclusion "skipped" -}}

@@ -167,8 +167,8 @@ aliases:
       " gh fzf pr
 ```
 
-For the `issue` and `pr` commands, use `{1}` in place of the \<number\>.
-For the `run` command, use `{-1}` in place of the \<run-id\>.
+For the `issue` and `pr` commands, use `{1}` in place of the `<number>`.
+For the `run` command, use `{-1}` in place of the `<run-id>`.
 
 ## Related projects
 

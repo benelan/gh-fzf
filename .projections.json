@@ -1,0 +1,14 @@
+{
+  "gh-fzf": {
+    "type": "main",
+    "alternate": "README.md"
+  },
+  "README.md": {
+    "type": "docs",
+    "alternate": "gh-fzf"
+  },
+  ".github/workflows/release.yml": {
+    "type": "ci",
+    "alternate": "gh-fzf"
+  }
+}

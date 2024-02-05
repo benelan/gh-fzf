@@ -18,8 +18,8 @@ An fzf wrapper around the GitHub CLI.
 ## Installation
 
 1. Install [`gh`](https://github.com/cli/cli#installation) and
-   [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already have
-   them. For example:
+   [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already
+   have them. For example:
    - **Homebrew:** `brew install gh fzf`
    - **DNF:** `sudo dnf install gh fzf`
    - ... see the links above for other package managers
@@ -37,19 +37,19 @@ gh fzf <command> [flags]
 This extension adds a new command that wraps GitHub's "list" subcommands with
 fzf to make them fuzzy findable. All of the arguments after `<command>` are
 passed directly to `gh`. Because of the way shell works, you need to escape
-quotes required by GitHub, e.g.
-[strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
+quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
 There are example usages for each command in the sections below.
 
 A preview of the current selection is displayed when navigating through the
 resulting list. Each command has keybindings to further filter the list or to
-call other `gh` subcommands on the item. There are also a few global
-keybindings that can be used with any `gh fzf` command:
+call other `gh` subcommands on the item. There are also a few global keybindings
+that can be used with any `gh fzf` command:
 
 - `ctrl-o`: Open the selected item in the browser
 - `ctrl-y`: Copy the selected item's URL to the clipboard
 - `ctrl-r`: Reload the list to its initial state
-- `alt-1` to `alt-9`: Change the number of items fetched from GitHub to 100, 200, ..., 900
+- `alt-1` to `alt-9`: Change the number of items fetched from GitHub to 100,
+  200, ..., 900
 - `alt-P`: Toggle the preview window
 - `alt-H`: Toggle the header display, where the keybinding hints are located
 
@@ -59,11 +59,16 @@ keybindings that can be used with any `gh fzf` command:
 - **Aliases**: `i`, `issues`, `-i`, `--issue`, `--issues`
 - **Flags**: See `gh issue list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected issue in the CLI via prompts (see `gh issue edit --help`)
-  - `alt-o`: Checkout the branch linked to the selected issue, creating one if necessary (see `gh issue develop --help`)
-  - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
-  - `alt-X`: Close the issue (see `gh issue close --help`)
-  - `alt-O`: Reopen the issue (see `gh issue reopen --help`)
+  - `enter`: Edit the selected issue in the CLI via prompts
+    (see `gh issue edit --help`)
+  - `alt-o`: Checkout the issue's linked branch, creating one if necessary
+    (see `gh issue develop --help`)
+  - `alt-c`: Add a comment to the selected issue
+    (see `gh issue comment --help`)
+  - `alt-X`: Close the issue
+    (see `gh issue close --help`)
+  - `alt-O`: Reopen the issue
+    (see `gh issue reopen --help`)
   - `alt-a`: Filter the list, showing issues assigned to you
   - `alt-A`: Filter the list, showing issues authored by you
   - `alt-m`: Filter the list, showing issues where you are mentioned
@@ -74,9 +79,8 @@ keybindings that can be used with any `gh fzf` command:
     ```sh
     gh fzf issue --assignee @me --milestone "v1.33.7" --state all
     ```
-  - Filter the initial list to issues with the "good first issue" label,
-    no assignee, and in the "backburner" milestone. Uses
-    [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
+  - Filter the initial list to issues with the "good first issue" label, no
+    assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
     ```sh
     gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner\'
     ```
@@ -87,15 +91,24 @@ keybindings that can be used with any `gh fzf` command:
 - **Aliases**: `p`, `prs`, `-p`, `--pr`, `--prs`
 - **Flags**: See `gh pr list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected pull request in the CLI via prompts (see `gh pr edit --help`)
-  - `alt-o`: Checkout the pull request's branch (see `gh pr checkout --help`)
-  - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
-  - `alt-d`: Show the pull request's diff (see `gh pr diff --help`)
-  - `alt-r`: Start/continue/finish a review for the pull request (see `gh pr review --help`)
-  - `alt-R`: Mark a draft pull request as "ready for review" (see `gh pr ready --help`)
-  - `alt-M`: Merge the pull request (see `gh pr merge --help`)
-  - `alt-X`: Close the pull request (see `gh pr close --help`)
-  - `alt-O`: Reopen the pull request (see `gh pr reopen --help`)
+  - `enter`: Edit the selected pull request in the CLI via prompts
+    (see `gh pr edit --help`)
+  - `alt-o`: Checkout the pull request's branch
+    (see `gh pr checkout --help`)
+  - `alt-c`: Add a comment to the selected issue
+    (see `gh issue comment --help`)
+  - `alt-d`: Show the pull request's diff
+    (see `gh pr diff --help`)
+  - `alt-r`: Start/continue/finish a review for the pull request
+    (see `gh pr review --help`)
+  - `alt-R`: Mark a draft pull request as "ready for review"
+    (see `gh pr ready --help`)
+  - `alt-M`: Merge the pull request
+    (see `gh pr merge --help`)
+  - `alt-X`: Close the pull request
+    (see `gh pr close --help`)
+  - `alt-O`: Reopen the pull request
+    (see `gh pr reopen --help`)
   - `alt-C`: Show the pull request's status checks in `gh fzf run`
   - `alt-a`: Filter the list, showing pull requests assigned to you
   - `alt-A`: Filter the list, showing pull requests authored by you
@@ -121,10 +134,14 @@ keybindings that can be used with any `gh fzf` command:
 - **Aliases**: `r`, `runs`, `-r`, `--run`, `--runs`
 - **Flags**: See `gh run list --help` for available options
 - **Keybindings**:
-  - `enter`: Watch the selected run's status updates (see `gh run watch --help`)
-  - `alt-l`: Show the selected run's logs (see `gh run view --help`)
-  - `alt-r`: Rerun the selected run (see `gh run rerun --help`)
-  - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
+  - `enter`: Watch the selected run's status updates
+    (see `gh run watch --help`)
+  - `alt-l`: Show the selected run's logs
+    (see `gh run view --help`)
+  - `alt-r`: Rerun the selected run
+    (see `gh run rerun --help`)
+  - `alt-x`: Cancel the selected run
+    (see `gh run cancel --help`)
   - `alt-p`: Open `gh fzf pr` filtered for the run's branch
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
@@ -172,8 +189,8 @@ For the `run` command, use `{-1}` in place of the `<run-id>`.
 
 ## Related projects
 
-- [`gh-f`](https://github.com/gennaro-tedesco/gh-f):
-  another `fzf` wrapper around `gh`, which also provides some `git` functionality.
+- [`gh-f`](https://github.com/gennaro-tedesco/gh-f): another `fzf` wrapper
+  around `gh`, which also provides some `git` functionality.
 
 **NOTE:** `gh-fzf` leaves `git` functionality to other tools, and instead
 focuses on providing more keybindings for the GitHub commands. The following

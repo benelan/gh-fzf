@@ -20,12 +20,35 @@ An fzf wrapper around the GitHub CLI.
 1. Install [`gh`](https://github.com/cli/cli#installation) and
    [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already
    have them. For example:
-   - **Homebrew:** `brew install gh fzf`
-   - **DNF:** `sudo dnf install gh fzf`
+
+   - **Homebrew**
+
+     ```sh
+     brew install gh fzf
+     ```
+
+   - **DNF**
+
+     ```sh
+     sudo dnf install gh fzf
+     ```
+
    - ... see the links above for other package managers
-2. Authenticate with the GitHub CLI: `gh auth login`
-3. Install the extension: `gh extension install benelan/gh-fzf`
-4. [???](#usage)
+
+2. Authenticate with the GitHub CLI:
+
+   ```sh
+   gh auth login
+   ```
+
+3. Install this extension:
+
+   ```sh
+   gh extension install benelan/gh-fzf
+   ```
+
+4. **[???](#usage)**
+
 5. **PROFIT**
 
 ## Usage
@@ -34,7 +57,7 @@ An fzf wrapper around the GitHub CLI.
 gh fzf <command> [flags]
 ```
 
-This extension adds a new command that wraps GitHub's "list" subcommands with
+This extension adds a new command that wraps GitHub's `list` subcommands with
 fzf to make them fuzzy findable. All of the arguments after `<command>` are
 passed directly to `gh`. Because of the way shell works, you need to escape
 quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
@@ -47,7 +70,8 @@ that can be used with any `gh fzf` command:
 
 - `ctrl-o`: Open the selected item in the browser
 - `ctrl-y`: Copy the selected item's URL to the clipboard
-- `ctrl-r`: Reload the list to its initial state
+- `ctrl-r`: Reload the list to its initial filter state and fetch changes from
+  GitHub
 - `alt-1` to `alt-9`: Change the number of items fetched from GitHub to 100,
   200, ..., 900
 - `alt-P`: Toggle the preview window
@@ -134,24 +158,24 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `r`, `runs`, `-r`, `--run`, `--runs`
 - **Flags**: See `gh run list --help` for available options
 - **Keybindings**:
-  - `enter`: Watch the selected run's status updates
+  - `enter`: Watch the status updates for the selected run
     (see `gh run watch --help`)
-  - `alt-l`: Show the selected run's logs
+  - `alt-l`: Display the logs for the selected run
     (see `gh run view --help`)
   - `alt-r`: Rerun the selected run
     (see `gh run rerun --help`)
   - `alt-x`: Cancel the selected run
     (see `gh run cancel --help`)
-  - `alt-p`: Open `gh fzf pr` filtered for the run's branch
+  - `alt-p`: Open `gh fzf pr` filtered for the run's branch as head
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
 - **Examples:**
-  - Filter the initial list to runs for the "test" workflow.
+  - Filter the initial list to runs for the "tests" workflow:
     ```sh
-    gh fzf run --workflow test
+    gh fzf run --workflow tests
     ```
-  - Filter the initial list to failed runs on the main branch.
+  - Filter the initial list to failed runs on the main branch:
     ```sh
     gh fzf r -b main -s failure
     ```
@@ -203,18 +227,19 @@ When adding or modifying fzf keybindings:
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).
 
-**NOTE:** If any of the shared keybindings set by `gh-fzf` don't work, you may be
+**NOTE:** If any of the keybindings set by `gh-fzf` don't work, you may be
 overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting
 the `$FZF_DEFAULT_OPTS` environment variable.
 
 ## Related projects
 
 - [`gh-f`](https://github.com/gennaro-tedesco/gh-f): another `fzf` wrapper
-  around `gh`, which also provides some `git` functionality.
+  around `gh` that also provides some `git` functionality.
 
 **NOTE:** `gh-fzf` leaves `git` functionality to other tools, and instead
-focuses on providing more keybindings for the GitHub commands. The following
-`fzf` wrappers around `git` are both good options to bridge that gap:
+focuses on providing keybindings to run `gh` subcommands on the selected item.
+The following `fzf` wrappers around `git` are both good options to bridge that
+gap:
 
 - [`forgit`](https://github.com/wfxr/forgit)
 - [`git-fuzzy`](https://github.com/bigH/git-fuzzy)

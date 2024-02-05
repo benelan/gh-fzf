@@ -169,7 +169,7 @@ FZF_DEFAULT_OPTS+='
 default_cmd() {
     FZF_DEFAULT_COMMAND="printf 'COMMAND\nissue\npr\nrun\n'" \
         fzf \
-        --preview="GH_FORCE_TTY=true gh {} --help" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh {} --help' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
 }
@@ -224,7 +224,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview 'GH_FORCE_TTY=true gh issue view {1} --comments' \
+        --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments' \
         --header="$issue_header" \
         --bind="start:$on_start" \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
@@ -295,7 +295,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview 'GH_FORCE_TTY=true gh pr view {1} --comments' \
+        --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments' \
         --header="$pr_header" \
         --bind="start:$on_start" \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
@@ -380,7 +380,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview 'GH_FORCE_TTY=true gh run view {-1}' \
+        --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1}' \
         --header="$run_header" \
         --bind="start:$on_start" \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \

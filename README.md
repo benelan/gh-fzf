@@ -195,7 +195,7 @@ You can set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master
 environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
 For example, create aliases in the `gh` config file that add new keybindings to
-the issue command for assigning and un-assigning yourself:
+the issue and pr commands:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -205,17 +205,9 @@ aliases:
       --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
       --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
     " gh fzf issue
-```
-
-Or change the default keybinding for merging pull requests to delete the branch
-afterward:
-
-```yml
-# ~/.config/gh/config.yml
-aliases:
   p: |
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
-      --bind='alt-M:execute(gh pr merge --delete-branch {1})'
+      --bind='alt-m:execute(gh pr merge --delete-branch --squash {1})'
       " gh fzf pr
 ```
 

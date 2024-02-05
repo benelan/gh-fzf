@@ -166,9 +166,11 @@ Environment variables are used to configure different options in `gh-fzf`.
 | `GH_FZF_HIDE_HINTS`    | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                             | unset                                                                                                        |
 | `GH_FZF_COPY_CMD`      | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.   | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
 
-You can use [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
-to add/change `fzf` options for the commands. For example, you can create
-aliases in `gh`'s config file, where you add keybindings:
+You can set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
+environment variable to add/change `fzf` options used by `gh-fzf` commands.
+
+For example, create aliases in the `gh` config file that add new keybindings to
+the issue command for assigning and un-assigning yourself:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -178,14 +180,31 @@ aliases:
       --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
       --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
     " gh fzf issue
+```
+
+Or change the default keybinding for merging pull requests to delete the branch
+afterward:
+
+```yml
+# ~/.config/gh/config.yml
+aliases:
   p: |
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
-      --bind='alt-m:execute(gh pr merge -d {1})'
+      --bind='alt-M:execute(gh pr merge --delete-branch {1})'
       " gh fzf pr
 ```
 
-For the `issue` and `pr` commands, use `{1}` in place of the `<number>`.
-For the `run` command, use `{-1}` in place of the `<run-id>`.
+When adding or modifying fzf keybindings:
+
+- use `{1}` in place of the `<number>` for the `issue` and `pr` commands.
+- use `{-1}` in place of the `<run-id>` for the `run` command.
+
+For a list of the fzf options shared by all `gh-fzf` commands, see the
+[source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).
+
+**NOTE:** If any of the shared keybindings set by `gh-fzf` don't work, you may be
+overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting
+the `$FZF_DEFAULT_OPTS` environment variable.
 
 ## Related projects
 

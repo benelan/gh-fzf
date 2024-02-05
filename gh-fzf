@@ -137,9 +137,15 @@ if [ -z "$GH_FZF_COPY_CMD" ]; then
 fi
 
 if [ -n "$GH_FZF_HIDE_HINTS" ]; then
-    on_start="toggle-header"
+    _start="toggle-header"
 else
-    on_start=""
+    _start=""
+fi
+
+if [ -n "$GH_FZF_TRUNCATE_FIELDS" ]; then
+    _columns='100%'
+else
+    _columns='9999999'
 fi
 
 # The following fzf options are shared by all commands. They are prepended to
@@ -224,11 +230,11 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$_columns gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments' \
         --header="$issue_header" \
-        --bind="start:$on_start" \
+        --bind="start:$_start" \
         --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
         --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh issue edit {1})' \
@@ -295,11 +301,11 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$_columns gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments' \
         --header="$pr_header" \
-        --bind="start:$on_start" \
+        --bind="start:$_start" \
         --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
         --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh pr edit {1})' \
@@ -380,11 +386,11 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 
 '
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=42069 gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$_columns gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview 'GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1}' \
         --header="$run_header" \
-        --bind="start:$on_start" \
+        --bind="start:$_start" \
         --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
         --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind='enter:execute(gh run watch {-1})' \

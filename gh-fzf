@@ -125,7 +125,7 @@ FZF_DEFAULT_OPTS='
 # --------------------------------------------------------------------- {|}
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n' 'issue' 'pr' 'run'" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n' 'issue' 'pr' 'run' 'repo'" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help {}' \
         --preview-window='right:75%,wrap' \
@@ -345,6 +345,64 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 }
 
 # --------------------------------------------------------------------- }}}
+# Command > repo                                                        {{{
+# --------------------------------------------------------------------- {|}
+
+repo_cmd() {
+    repo_template='\
+        --json "nameWithOwner,description,primaryLanguage,stargazerCount,forkCount,updatedAt,viewerPermission,visibility" \
+        --template '\''
+            {{- $headerColor := "blue+b" -}}
+            {{- tablerow
+                ("REPO" | autocolor $headerColor)
+                ("VISIBILITY" | autocolor $headerColor)
+                ("PERMISSIONS" | autocolor $headerColor)
+                ("LAST UPDATE" | autocolor $headerColor)
+                ("DESCRIPTION" | autocolor $headerColor)
+                ("STARS" | autocolor $headerColor)
+                ("FORKS" | autocolor $headerColor)
+            -}}
+
+            {{- range . -}}
+                {{- tablerow
+                    (.nameWithOwner | autocolor "white+h")
+                    (.visibility | autocolor "white+d")
+                    (.viewerPermission | autocolor "white+d")
+                    ((timeago .updatedAt) | autocolor "white+d")
+                    (truncate 100 (.description | autocolor "white+h"))
+                    (.stargazerCount | autocolor "white+d")
+                    (.forkCount | autocolor "white+h")
+                -}}
+            {{- end -}}
+    '\'''
+
+    repo_header='Actions > (enter: edit) (alt-c: clone) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-f: fork) (alt-s: sync)
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+Filters > (alt-P: private) (alt-O: public) (alt-S: source) (alt-F: forks)
+'
+
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
+        fzf \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
+        --header="$repo_header" \
+        --header-lines=4 \
+        --bind="start:$on_start" \
+        --bind='ctrl-o:execute-silent(gh repo view --web {1})' \
+        --bind="ctrl-y:execute-silent(gh repo view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
+        --bind='enter:execute(gh repo edit {1})' \
+        --bind='alt-c:execute(gh repo clone {1})' \
+        --bind="alt-p:execute(gh fzf pr --repo {1})" \
+        --bind="alt-i:execute(gh fzf issue --repo {1})" \
+        --bind="alt-r:execute(gh fzf run --repo {1})" \
+        --bind="alt-f:execute(gh repo fork {1})" \
+        --bind="alt-s:execute(gh repo sync {1})" \
+        --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
+        --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
+        --bind='alt-S:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
+        --bind='alt-F:reload(eval "$FZF_DEFAULT_COMMAND --fork")'
+}
+
+# --------------------------------------------------------------------- }}}
 # Parse arguments                                                       {{{
 # --------------------------------------------------------------------- {|}
 
@@ -360,6 +418,7 @@ main() {
     case $command in
         h | -h | help | --help) help_cmd "$@" ;;
         r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
+        R | -R | repo | repos | --repo | --repos) repo_cmd "$@" ;;
         p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
         i | -i | issue | issues | --issue | --issues) issue_cmd "$@" ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;

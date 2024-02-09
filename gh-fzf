@@ -180,16 +180,16 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments' \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
         --header="$issue_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh issue view --web {1})' \
-        --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
-        --bind='enter:execute(gh issue edit {1})' \
-        --bind='alt-o:execute(gh issue develop --checkout {1})+abort' \
-        --bind='alt-c:execute(gh issue comment {1})' \
-        --bind='alt-O:execute(gh issue reopen {1})' \
-        --bind='alt-X:execute(gh issue close {1})' \
+        --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag)" \
+        --bind="ctrl-y:execute-silent(gh issue view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD)" \
+        --bind="enter:execute(gh issue edit {1} $repo_flag)" \
+        --bind="alt-o:execute(gh issue develop --checkout {1} $repo_flag)+abort" \
+        --bind="alt-c:execute(gh issue comment {1} $repo_flag)" \
+        --bind="alt-O:execute(gh issue reopen {1} $repo_flag)" \
+        --bind="alt-X:execute(gh issue close {1} $repo_flag)" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
@@ -247,21 +247,23 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments' \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$repo_flag" \
         --header="$pr_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh pr view --web {1})' \
-        --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
-        --bind='enter:execute(gh pr edit {1})' \
-        --bind='alt-c:execute(gh pr comment {1})' \
-        --bind='alt-d:execute(gh pr diff {1})' \
-        --bind='alt-o:execute(gh pr checkout {1})' \
-        --bind='alt-r:execute(gh pr review {1})' \
-        --bind='alt-C:execute<gh fzf run -b $(gh pr view {1} --json headRefName --jq .headRefName)>' \
-        --bind='alt-R:execute(gh pr ready {1})' \
-        --bind='alt-M:execute(gh pr merge {1})' \
-        --bind='alt-O:execute(gh pr reopen {1})' \
-        --bind='alt-X:execute(gh pr close {1})' \
+        --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag)" \
+        --bind="ctrl-y:execute-silent(gh pr view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD)" \
+        --bind="enter:execute(gh pr edit {1} $repo_flag)" \
+        --bind="alt-c:execute(gh pr comment {1} $repo_flag)" \
+        --bind="alt-d:execute(gh pr diff {1} $repo_flag)" \
+        --bind="alt-o:execute(gh pr checkout {1} $repo_flag)" \
+        --bind="alt-r:execute(gh pr review {1} $repo_flag)" \
+        --bind='alt-C:execute<gh fzf run -b $(
+            gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'
+        ) '"$repo_flag"'>' \
+        --bind="alt-R:execute(gh pr ready {1} $repo_flag)" \
+        --bind="alt-M:execute(gh pr merge {1} $repo_flag)" \
+        --bind="alt-O:execute(gh pr reopen {1} $repo_flag)" \
+        --bind="alt-X:execute(gh pr close {1} $repo_flag)" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
@@ -328,18 +330,22 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1}' \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$repo_flag" \
         --header="$run_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh run view --web {-1})' \
-        --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
-        --bind='enter:execute(gh run watch {-1})' \
-        --bind='alt-l:execute(gh run view --log {-1})' \
-        --bind='alt-r:execute(gh run rerun {-1})' \
-        --bind='alt-d:execute(gh run download {-1})' \
-        --bind='alt-x:execute(gh run cancel {-1})' \
-        --bind='alt-p:execute<gh fzf pr --head $(gh run view {-1} --json headBranch --jq .headBranch)>' \
-        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)")' \
+        --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag)" \
+        --bind="ctrl-y:execute-silent(gh run view {-1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD)" \
+        --bind="enter:execute(gh run watch {-1} $repo_flag)" \
+        --bind="alt-l:execute(gh run view --log {-1} $repo_flag)" \
+        --bind="alt-r:execute(gh run rerun {-1} $repo_flag)" \
+        --bind="alt-d:execute(gh run download {-1} $repo_flag)" \
+        --bind="alt-x:execute(gh run cancel {-1} $repo_flag)" \
+        --bind='alt-p:execute<gh fzf pr --head $(
+            gh run view {-1} --json headBranch --jq .headBranch '"$repo_flag"'
+        ) '"$repo_flag"'>' \
+        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --branch $(
+            git symbolic-ref --short HEAD
+            )")' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
         --bind='alt-u:reload(eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)")'
 }
@@ -347,6 +353,22 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 # --------------------------------------------------------------------- }}}
 # Parse arguments                                                       {{{
 # --------------------------------------------------------------------- {|}
+
+find_repo_flag() {
+    for i in "$@"; do
+        case $i in
+            -R | --repo)
+                repo_flag="--repo $2"
+                shift # past argument
+                shift # past value
+                ;;
+            -R=* | --repo=*)
+                repo_flag="--repo=${i#*=}"
+                shift # past argument=value
+                ;;
+        esac
+    done
+}
 
 main() {
     command="$1"
@@ -356,6 +378,8 @@ main() {
     else
         shift
     fi
+
+    find_repo_flag "$@"
 
     case $command in
         h | -h | help | --help) help_cmd "$@" ;;

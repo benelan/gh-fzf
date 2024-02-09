@@ -48,7 +48,6 @@ An fzf wrapper around the GitHub CLI.
    ```
 
 4. **[???](#usage)**
-
 5. **PROFIT**
 
 ## Usage
@@ -162,6 +161,8 @@ that can be used with any `gh fzf` command:
     (see `gh run watch --help`)
   - `alt-l`: Display the logs for the selected run
     (see `gh run view --help`)
+  - `alt-d`: Download artifacts from the selected run
+    (see `gh run download --help`)
   - `alt-r`: Rerun the selected run
     (see `gh run rerun --help`)
   - `alt-x`: Cancel the selected run
@@ -204,11 +205,13 @@ aliases:
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
       --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
       --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
-    " gh fzf issue
+    " gh fzf issue $*
   p: |
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+      --bind='alt-+:execute(gh pr review --approve --body \":+1:\" {1})'
+      --bind='alt--:execute(gh pr review --request-changes {1})'
       --bind='alt-m:execute(gh pr merge --delete-branch --squash {1})'
-      " gh fzf pr
+      " gh fzf pr $*
 ```
 
 When adding or modifying fzf keybindings:

@@ -181,6 +181,40 @@ that can be used with any `gh fzf` command:
     gh fzf r -b main -s failure
     ```
 
+### `repo`
+
+- **Usage**: `gh fzf repo [flags]`
+- **Aliases**: `repos`, `--repo`, `--repos`
+- **Flags**: See `gh repo list --help` for available options
+- **Keybindings**:
+  - `alt-i`: Run `gh fzf issue` on the selected repo
+    (see [`issue`](#issue))
+  - `alt-p`: Run `gh fzf pr` on the selected repo
+    (see [`pr`](#pr))
+  - `alt-r`: Run `gh fzf run` on the selected repo
+    (see [`run`](#run))
+  - `enter`: Edit the selected repo's settings
+    (see `gh repo edit --help`)
+  - `alt-C`: Clone the selected repo
+    (see `gh repo clone --help`)
+  - `alt-F`: Fork the selected repo
+    (see `gh repo fork --help`)
+  - `alt-c`: Filter the list, showing private repos
+  - `alt-o`: Filter the list, showing public repos
+  - `alt-f`: Filter the list, showing forked repos
+  - `alt-s`: Filter the list, showing source (non-forked) repos
+- **Examples**:
+  - Filter the initial list to non-archived, private repos created by you with
+    the "cli" topic:
+    ```sh
+    gh fzf repo --no-archived --visibility private --topic cli
+    ```
+  - Filter the initial list to archived repos created by the "google"
+    organization where the primary language was "typescript":
+    ```sh
+    gh fzf repo google --archived --language typescript
+    ```
+
 ## Configuration
 
 Environment variables are used to configure different options in `gh-fzf`.

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.0](https://github.com/benelan/gh-fzf/compare/v0.5.0...v0.6.0) (2024-02-12)
+
+
+### Features
+
+* Add repo command ([#9](https://github.com/benelan/gh-fzf/issues/9)) ([4ce7fbd](https://github.com/benelan/gh-fzf/commit/4ce7fbdf8cba5d524b3acb91e0e92329b71ac402))
+* **run:** Add keymap to download artifacts ([#6](https://github.com/benelan/gh-fzf/issues/6)) ([8bc2f1a](https://github.com/benelan/gh-fzf/commit/8bc2f1a90c1e2860d6fa0dc35b32c0fdb2b4ffd2))
+
+
+### Bug Fixes
+
+* Pass repo flag to preview and keybinding commands ([#8](https://github.com/benelan/gh-fzf/issues/8)) ([d97c8cb](https://github.com/benelan/gh-fzf/commit/d97c8cbcdac5d2559e80c6a313238b5103e87937))
+
 ## [0.5.0](https://github.com/benelan/gh-fzf/compare/v0.4.0...v0.5.0) (2024-02-05)
 
 

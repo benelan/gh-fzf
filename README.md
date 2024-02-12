@@ -10,6 +10,7 @@ An fzf wrapper around the GitHub CLI.
     - [`issue`](#issue)
     - [`pr`](#pr)
     - [`run`](#run)
+    - [`repo`](#repo)
   - [Configuration](#configuration)
   - [Related projects](#related-projects)
 

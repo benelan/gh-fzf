@@ -274,9 +274,9 @@ aliases:
 
 When adding or modifying fzf keybindings:
 
-- Use `{1}` in place of the `<number>` for the `issue` and `pr` commands.
-- Use `{-1}` in place of the `<run-id>` or `<tag-name>` for the `run` or
-  `release` commands, respectively.
+- Use `{1}` in place of the `<number>` for the `issue`/`pr` commands and in
+  place of the `<tag-name>` for the `release` command.
+- Use `{-1}` in place of the `<run-id>` for the `run` command.
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).

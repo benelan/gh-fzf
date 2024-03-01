@@ -419,10 +419,10 @@ release_cmd() {
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
+                ("TAG" | autocolor $headerColor)
+                ("PUBLISHED" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
                 ("TYPE" | autocolor $headerColor)
-                ("PUBLISHED" | autocolor $headerColor)
-                ("TAG" | autocolor $headerColor)
             -}}
 
             {{- range . -}}
@@ -438,10 +438,13 @@ release_cmd() {
                     {{- $type = "Draft" -}}
                 {{- end -}}
                 {{- tablerow
+                    (.tagName | autocolor "white+h")
+                    (printf "%s (%s)" 
+                        (timefmt "2006-01-02" .publishedAt) 
+                        (timeago .publishedAt) 
+                    | autocolor "white+d")
                     (.name | autocolor "white+h")
                     ($type | autocolor $typeColor)
-                    (printf "%s (%s)" (timefmt "2006-01-02" .publishedAt) (timeago .publishedAt) | autocolor "white+h")
-                    (.tagName | autocolor "white+d")
                 -}}
             {{- end -}}
     '\'''
@@ -454,13 +457,13 @@ Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh release $release_template list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {-1}' \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1}' \
         --header="$release_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh release view --web {-1})' \
-        --bind="ctrl-y:execute-silent(gh release view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
-        --bind="alt-enter:execute(gh release download {-1})" \
-        --bind="alt-X:execute(gh release delete {-1})" \
+        --bind='ctrl-o:execute-silent(gh release view --web {1})' \
+        --bind="ctrl-y:execute-silent(gh release view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
+        --bind="alt-enter:execute(gh release download {1})" \
+        --bind="alt-X:execute(gh release delete {1})" \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'

@@ -11,6 +11,7 @@ An fzf wrapper around the GitHub CLI.
     - [`pr`](#pr)
     - [`run`](#run)
     - [`repo`](#repo)
+    - [`release`](#release)
   - [Configuration](#configuration)
   - [Related projects](#related-projects)
 
@@ -216,6 +217,28 @@ that can be used with any `gh fzf` command:
     gh fzf repo google --archived --language typescript
     ```
 
+### `release`
+
+- **Usage**: `gh fzf release [flags]`
+- **Aliases**: `releases`, `--release`, `--releases`
+- **Flags**: See `gh release list --help` for available options
+- **Keybindings**:
+  - `enter`: Download the assets for the selected release
+    (see `gh release download --help`)
+  - `alt-X`: Delete the selected release
+    (see `gh release delete --help`)
+  - `alt-s`: Filter the list, showing stable releases
+    (i.e. excluding pre-releases)
+  - `alt-p`: Filter the list, showing published releases
+    (i.e. excluding drafts)
+  - `alt-a`: Filter the list, showing releases in ascending order by release date
+    (defaults to descending order)
+- **Examples**:
+  - Filter the initial list to exclude drafts and pre-releases:
+    ```sh
+    gh fzf release --exclude-drafts --exclude-pre-releases
+    ```
+
 ## Configuration
 
 Environment variables are used to configure different options in `gh-fzf`.
@@ -251,8 +274,9 @@ aliases:
 
 When adding or modifying fzf keybindings:
 
-- use `{1}` in place of the `<number>` for the `issue` and `pr` commands.
-- use `{-1}` in place of the `<run-id>` for the `run` command.
+- Use `{1}` in place of the `<number>` for the `issue` and `pr` commands.
+- Use `{-1}` in place of the `<run-id>` or `<tag-name>` for the `run` or
+  `release` commands, respectively.
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).

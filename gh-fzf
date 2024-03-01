@@ -448,7 +448,7 @@ release_cmd() {
 
     release_header='Actions > (enter: download) (alt-X: delete)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
-Filters > (alt-r: releases) (alt-p: published) (alt-a: ascending)
+Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
 
 '
 
@@ -461,7 +461,7 @@ Filters > (alt-r: releases) (alt-p: published) (alt-a: ascending)
         --bind="ctrl-y:execute-silent(gh release view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
         --bind="alt-enter:execute(gh release download {-1})" \
         --bind="alt-X:execute(gh release delete {-1})" \
-        --bind='alt-r:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
 }

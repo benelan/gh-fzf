@@ -54,6 +54,7 @@ Core Commands:
   pr          Search for and interact with GitHub pull requests.
   run         Search for and interact with GitHub Action runs.
   repo        Search for and interact with GitHub repos.
+  release     Search for and interact with GitHub releases.
 
 See \`gh <command> list --help\` for the flag options.
 
@@ -126,7 +127,7 @@ FZF_DEFAULT_OPTS='
 # --------------------------------------------------------------------- {|}
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n' 'issue' 'pr' 'run' 'repo'" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n' 'issue' 'pr' 'run' 'repo' 'release'" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help {}' \
         --preview-window='right:75%,wrap' \
@@ -409,6 +410,63 @@ Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
 }
 
 # --------------------------------------------------------------------- }}}
+# Command > release                                                     {{{
+# --------------------------------------------------------------------- {|}
+
+release_cmd() {
+    release_template='\
+        --json "publishedAt,isDraft,isLatest,isPrerelease,name,tagName" \
+        --template '\''
+            {{- $headerColor := "blue+b" -}}
+            {{- tablerow
+                ("TITLE" | autocolor $headerColor)
+                ("TYPE" | autocolor $headerColor)
+                ("PUBLISHED" | autocolor $headerColor)
+                ("TAG" | autocolor $headerColor)
+            -}}
+
+            {{- range . -}}
+                {{- $type := "" -}}
+                {{- $typeColor := "white+d" -}}
+                {{- if eq .isLatest true -}}
+                    {{- $type = "Latest" -}}
+                    {{- $typeColor = "green" -}}
+                {{- else if eq .isPrerelease true -}}
+                    {{- $type = "Pre-release" -}}
+                    {{- $typeColor = "yellow" -}}
+                {{- else if eq .isDraft true -}}
+                    {{- $type = "Draft" -}}
+                {{- end -}}
+                {{- tablerow
+                    (.name | autocolor "white+h")
+                    ($type | autocolor $typeColor)
+                    (printf "%s (%s)" (timefmt "2006-01-02" .publishedAt) (timeago .publishedAt) | autocolor "white+h")
+                    (.tagName | autocolor "white+d")
+                -}}
+            {{- end -}}
+    '\'''
+
+    release_header='Actions > (enter: download) (alt-X: delete)
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+Filters > (alt-r: releases) (alt-p: published) (alt-a: ascending)
+
+'
+
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh release $release_template list -L $GH_FZF_DEFAULT_LIMIT $*" \
+        fzf \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {-1}' \
+        --header="$release_header" \
+        --bind="start:$on_start" \
+        --bind='ctrl-o:execute-silent(gh release view --web {-1})' \
+        --bind="ctrl-y:execute-silent(gh release view {-1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD)" \
+        --bind="alt-enter:execute(gh release download {-1})" \
+        --bind="alt-X:execute(gh release delete {-1})" \
+        --bind='alt-r:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
+        --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
+}
+
+# --------------------------------------------------------------------- }}}
 # Parse arguments                                                       {{{
 # --------------------------------------------------------------------- {|}
 
@@ -445,6 +503,7 @@ main() {
         p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
         r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
         repo | repos | --repo | --repos) repo_cmd "$@" ;;
+        release | releases | --release | --releases) release_cmd "$@" ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac

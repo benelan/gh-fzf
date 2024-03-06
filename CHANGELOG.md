@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0](https://github.com/benelan/gh-fzf/compare/v0.6.0...v0.7.0) (2024-03-06)
+
+
+### Features
+
+* Add gist command ([#12](https://github.com/benelan/gh-fzf/issues/12)) ([13ac32c](https://github.com/benelan/gh-fzf/commit/13ac32c90865a7c4484824d080583948af35ab97))
+* Add release command ([#10](https://github.com/benelan/gh-fzf/issues/10)) ([8b9fa6f](https://github.com/benelan/gh-fzf/commit/8b9fa6fa125412a2673e6ba482d3180888e70250))
+
 ## [0.6.0](https://github.com/benelan/gh-fzf/compare/v0.5.0...v0.6.0) (2024-02-12)
 
 

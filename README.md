@@ -296,10 +296,9 @@ aliases:
 When adding or modifying fzf keybindings:
 
 - Use `{1}` in place of:
-  - the `<issue-number>` for the `issue` command
-  - the `<pr-number>` for the `pr` command
-  - the `<tag-name>` for the `release` command
-  - the `<gist-id>` for the `gist` command
+  - the `<number>` for the `issue` and `pr` commands
+  - the `<tag>` for the `release` command
+  - the `<id>` for the `gist` command
 - Use `{-1}` in place of:
   - the `<run-id>` for the `run` command
 

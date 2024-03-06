@@ -12,6 +12,7 @@ An fzf wrapper around the GitHub CLI.
     - [`run`](#run)
     - [`repo`](#repo)
     - [`release`](#release)
+    - [`gist`](#gist)
   - [Configuration](#configuration)
   - [Related projects](#related-projects)
 
@@ -239,6 +240,26 @@ that can be used with any `gh fzf` command:
     gh fzf release --exclude-drafts --exclude-pre-releases
     ```
 
+### `gist`
+
+- **Usage**: `gh fzf gist [flags]`
+- **Aliases**: `gists`, `--gist`, `--gists`
+- **Flags**: See `gh gist list --help` for available options
+- **Keybindings**:
+  - `enter`: Edit the selected gist
+    (see `gh gist edit --help`)
+  - `alt-c`: Clone the selected gist to the current directory
+    (see `gh gist clone --help`)
+  - `alt-X`: Delete the selected gist
+    (see `gh gist delete --help`)
+  - `alt-s`: Filter the list, showing only secret gists
+  - `alt-p`: Filter the list, showing only public gists
+- **Examples**:
+  - Filter the initial list to only show public gists (excluding secret ones):
+    ```sh
+    gh fzf gist --public
+    ```
+
 ## Configuration
 
 Environment variables are used to configure different options in `gh-fzf`.
@@ -274,9 +295,13 @@ aliases:
 
 When adding or modifying fzf keybindings:
 
-- Use `{1}` in place of the `<number>` for the `issue`/`pr` commands and in
-  place of the `<tag-name>` for the `release` command.
-- Use `{-1}` in place of the `<run-id>` for the `run` command.
+- Use `{1}` in place of:
+  - the `<issue-number>` for the `issue` command
+  - the `<pr-number>` for the `pr` command
+  - the `<tag-name>` for the `release` command
+  - the `<gist-id>` for the `gist` command
+- Use `{-1}` in place of:
+  - the `<run-id>` for the `run` command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).

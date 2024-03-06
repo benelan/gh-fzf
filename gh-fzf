@@ -439,9 +439,9 @@ release_cmd() {
                 {{- end -}}
                 {{- tablerow
                     (.tagName | autocolor "white+h")
-                    (printf "%s (%s)" 
-                        (timefmt "2006-01-02" .publishedAt) 
-                        (timeago .publishedAt) 
+                    (printf "%s (%s)"
+                        (timefmt "2006-01-02" .publishedAt)
+                        (timeago .publishedAt)
                     | autocolor "white+d")
                     (.name | autocolor "white+h")
                     ($type | autocolor $typeColor)

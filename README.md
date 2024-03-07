@@ -10,8 +10,9 @@ An fzf wrapper around the GitHub CLI.
     - [`issue`](#issue)
     - [`pr`](#pr)
     - [`run`](#run)
-    - [`repo`](#repo)
+    - [`workflow`](#workflow)
     - [`release`](#release)
+    - [`repo`](#repo)
     - [`gist`](#gist)
   - [Configuration](#configuration)
   - [Related projects](#related-projects)
@@ -170,7 +171,8 @@ that can be used with any `gh fzf` command:
     (see `gh run rerun --help`)
   - `alt-x`: Cancel the selected run
     (see `gh run cancel --help`)
-  - `alt-p`: Open `gh fzf pr` filtered for the run's branch as head
+  - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as head
+    (see [`pr`](#pr))
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
@@ -182,6 +184,49 @@ that can be used with any `gh fzf` command:
   - Filter the initial list to failed runs on the main branch:
     ```sh
     gh fzf r -b main -s failure
+    ```
+
+### `workflow`
+
+- **Usage**: `gh fzf workflow [flags]`
+- **Aliases**: `workflows`, `--workflow`, `--workflows`
+- **Flags**: See `gh workflow list --help` for available options
+- **Keybindings**:
+  - `enter`: Open `gh fzf run` filtered for the selected workflow
+    (see [`run`](#run))
+  - `alt-d`: Create a `workflow_dispatch` event for the selected workflow
+    (see `gh workflow run --help`)
+  - `alt-X`: Disable the selected workflow
+    (see `gh workflow disable --help`)
+  - `alt-E`: Enable the selected workflow
+    (see `gh workflow enable --help`)
+  - `alt-a`: Filter the list, showing all workflows (including disabled ones)
+- **Examples**:
+  - Filter the initial list to show all workflows:
+    ```sh
+    gh fzf workflow --all
+    ```
+
+### `release`
+
+- **Usage**: `gh fzf release [flags]`
+- **Aliases**: `releases`, `--release`, `--releases`
+- **Flags**: See `gh release list --help` for available options
+- **Keybindings**:
+  - `enter`: Download the assets for the selected release
+    (see `gh release download --help`)
+  - `alt-X`: Delete the selected release
+    (see `gh release delete --help`)
+  - `alt-s`: Filter the list, showing stable releases
+    (i.e. excluding pre-releases)
+  - `alt-p`: Filter the list, showing published releases
+    (i.e. excluding drafts)
+  - `alt-a`: Filter the list, showing releases in ascending order by release date
+    (defaults to descending order)
+- **Examples**:
+  - Filter the initial list to exclude drafts and pre-releases:
+    ```sh
+    gh fzf release --exclude-drafts --exclude-pre-releases
     ```
 
 ### `repo`
@@ -216,28 +261,6 @@ that can be used with any `gh fzf` command:
     organization where the primary language was "typescript":
     ```sh
     gh fzf repo google --archived --language typescript
-    ```
-
-### `release`
-
-- **Usage**: `gh fzf release [flags]`
-- **Aliases**: `releases`, `--release`, `--releases`
-- **Flags**: See `gh release list --help` for available options
-- **Keybindings**:
-  - `enter`: Download the assets for the selected release
-    (see `gh release download --help`)
-  - `alt-X`: Delete the selected release
-    (see `gh release delete --help`)
-  - `alt-s`: Filter the list, showing stable releases
-    (i.e. excluding pre-releases)
-  - `alt-p`: Filter the list, showing published releases
-    (i.e. excluding drafts)
-  - `alt-a`: Filter the list, showing releases in ascending order by release date
-    (defaults to descending order)
-- **Examples**:
-  - Filter the initial list to exclude drafts and pre-releases:
-    ```sh
-    gh fzf release --exclude-drafts --exclude-pre-releases
     ```
 
 ### `gist`
@@ -301,6 +324,7 @@ When adding or modifying fzf keybindings:
   - the `<id>` for the `gist` command
 - Use `{-1}` in place of:
   - the `<run-id>` for the `run` command
+  - the `<workflow-id>` for the `workflow` command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).

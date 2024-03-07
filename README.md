@@ -12,6 +12,7 @@ An fzf wrapper around the GitHub CLI.
     - [`run`](#run)
     - [`workflow`](#workflow)
     - [`release`](#release)
+    - [`label`](#label)
     - [`repo`](#repo)
     - [`gist`](#gist)
   - [Configuration](#configuration)
@@ -222,11 +223,36 @@ that can be used with any `gh fzf` command:
   - `alt-p`: Filter the list, showing published releases
     (i.e. excluding drafts)
   - `alt-a`: Filter the list, showing releases in ascending order by release date
-    (defaults to descending order)
+    (defaults to descending)
 - **Examples**:
   - Filter the initial list to exclude drafts and pre-releases:
     ```sh
     gh fzf release --exclude-drafts --exclude-pre-releases
+    ```
+
+### `label`
+
+- **Usage**: `gh fzf label [flags]`
+- **Aliases**: `labels`, `--label`, `--labels`
+- **Flags**: See `gh label list --help` for available options
+- **Keybindings**:
+  - `enter`: Print the name of the selected label
+  - `alt-n`: Edit the name of the selected label
+    (see `gh label edit --help`)
+  - `alt-d`: Edit the description of the selected label
+    (see `gh label edit --help`)
+  - `alt-c`: Edit the color of the selected label
+    (see `gh label edit --help`)
+  - `alt-X`: Delete the selected label
+    (see `gh label delete --help`)
+  - `alt-N`: Filter the list, sorting labels by name
+    (defaults to creation date)
+  - `alt-D`: Filter the list, showing labels in descending order
+    (defaults to ascending)
+- **Examples**:
+  - Filter the initial list to sort by label name in descending order
+    ```sh
+    gh fzf label --sort name --order desc
     ```
 
 ### `repo`
@@ -322,6 +348,7 @@ When adding or modifying fzf keybindings:
   - the `<number>` for the `issue` and `pr` commands
   - the `<tag>` for the `release` command
   - the `<id>` for the `gist` command
+  - the `<name>` for the `label` command
 - Use `{-1}` in place of:
   - the `<run-id>` for the `run` command
   - the `<workflow-id>` for the `workflow` command

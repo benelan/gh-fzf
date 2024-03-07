@@ -89,17 +89,17 @@ that can be used with any `gh fzf` command:
 - **Keybindings**:
   - `enter`: Edit the selected issue in the CLI via prompts
     (see `gh issue edit --help`)
-  - `alt-o`: Checkout the issue's linked branch, creating one if necessary
-    (see `gh issue develop --help`)
+  - `alt-o`: Checkout the linked branch of the selected issue, creating one if
+    necessary (see `gh issue develop --help`)
   - `alt-c`: Add a comment to the selected issue
     (see `gh issue comment --help`)
-  - `alt-X`: Close the issue
   - `alt-l`: Open `gh fzf label` and add the label to the selected issue
     (see `gh issue edit --help`)
   - `alt-L`: Open `gh fzf label` and remove the label from the selected issue
     (see `gh issue edit --help`)
+  - `alt-X`: Close the selected issue
     (see `gh issue close --help`)
-  - `alt-O`: Reopen the issue
+  - `alt-O`: Reopen the selected issue
     (see `gh issue reopen --help`)
   - `alt-a`: Filter the list, showing issues assigned to you
   - `alt-A`: Filter the list, showing issues authored by you
@@ -125,27 +125,28 @@ that can be used with any `gh fzf` command:
 - **Keybindings**:
   - `enter`: Edit the selected pull request in the CLI via prompts
     (see `gh pr edit --help`)
-  - `alt-o`: Checkout the pull request's branch
+  - `alt-o`: Checkout the branch of the selected pull request
     (see `gh pr checkout --help`)
-  - `alt-c`: Add a comment to the selected issue
+  - `alt-c`: Add a comment to the selected pull request
     (see `gh issue comment --help`)
-  - `alt-d`: Show the pull request's diff
+  - `alt-d`: Show the diff for the selected pull request
     (see `gh pr diff --help`)
-  - `alt-r`: Start/continue/finish a review for the pull request
+  - `alt-r`: Start/continue/finish a review for the selected pull request
     (see `gh pr review --help`)
-  - `alt-R`: Mark a draft pull request as "ready for review"
   - `alt-l`: Open `gh fzf label` and add the label to the selected pull request
     (see `gh issue edit --help`)
   - `alt-L`: Open `gh fzf label` and remove the label from the selected pull
     request (see `gh issue edit --help`)
+  - `alt-R`: Mark the selected draft pull request as "ready for review"
     (see `gh pr ready --help`)
-  - `alt-M`: Merge the pull request
+  - `alt-M`: Merge the selected pull request
     (see `gh pr merge --help`)
-  - `alt-X`: Close the pull request
+  - `alt-X`: Close the selected pull request
     (see `gh pr close --help`)
-  - `alt-O`: Reopen the pull request
+  - `alt-O`: Reopen the selected pull request
     (see `gh pr reopen --help`)
-  - `alt-C`: Show the pull request's status checks in `gh fzf run`
+  - `alt-C`: Open `gh fzf run` filtered for the selected pull request
+    (see [run](#run))
   - `alt-a`: Filter the list, showing pull requests assigned to you
   - `alt-A`: Filter the list, showing pull requests authored by you
   - `alt-b`: Filter the list, showing pull requests from the current branch

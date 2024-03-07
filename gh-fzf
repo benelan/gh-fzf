@@ -501,7 +501,7 @@ Filters > (alt-p: public) (alt-s: secret)
 # --------------------------------------------------------------------- {|}
 
 workflow_cmd() {
-    workflow_header='Actions > (enter: runs) (alt-d: dispatch) (alt-X: delete) (alt-E: enable)
+    workflow_header='Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
         > (ctrl-o: open url) (ctrl-r: reload)
 Filters > (alt-a: all)
 

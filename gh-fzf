@@ -55,6 +55,7 @@ Core Commands:
   run         Search for and interact with GitHub Action runs.
   workflow    Search for and interact with GitHub Action workflows.
   release     Search for and interact with GitHub releases.
+  label       Search for and interact with GitHub labels.
   repo        Search for and interact with GitHub repos.
   gist        Search for and interact with GitHub gists.
 
@@ -129,7 +130,7 @@ FZF_DEFAULT_OPTS='
 # --------------------------------------------------------------------- {|}
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' issue pr run workflow release repo gist" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' issue pr run workflow release label repo gist" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help {}' \
         --preview-window='right:75%,wrap' \
@@ -521,6 +522,45 @@ Filters > (alt-a: all)
 }
 
 # --------------------------------------------------------------------- }}}
+# Command > label                                                       {{{
+# --------------------------------------------------------------------- {|}
+
+label_cmd() {
+    label_header='Actions > (enter: print) (alt-n: edit name) (alt-d: edit description) (alt-c: edit color) (alt-X: delete)
+        > (ctrl-o: open url) (ctrl-r: reload)
+Filters > (alt-N: sort by name) (alt-D: descending order)
+'
+
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh label list -L $GH_FZF_DEFAULT_LIMIT $*" \
+        fzf \
+        --no-preview \
+        --delimiter='  ' \
+        --header-lines=4 \
+        --header="$label_header" \
+        --bind="start:$on_start" \
+        --bind="enter:execute(printf {1})+abort" \
+        --bind='ctrl-o:execute-silent(gh label list --web)' \
+        --bind='alt-n:execute(
+            printf "Enter new label name: "; 
+            read -r name; 
+            [ -n "$name" ] && gh label edit {1} --name "$name"
+        )' \
+        --bind='alt-d:execute(
+            printf "Enter new label description: ";
+            read -r description;
+            [ -n "$description" ] && gh label edit {1} --description "$description"
+        )' \
+        --bind='alt-c:execute(
+            printf "Enter new label color: ";
+            read -r color;
+            [ -n "$color" ] && gh label edit {1} --color "$color"
+        )' \
+        --bind="alt-X:execute(gh label delete {1})" \
+        --bind='alt-N:reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
+        --bind='alt-D:reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
+}
+
+# --------------------------------------------------------------------- }}}
 # Parse arguments                                                       {{{
 # --------------------------------------------------------------------- {|}
 
@@ -560,6 +600,7 @@ main() {
         release | releases | --release | --releases) release_cmd "$@" ;;
         gist | gists | --gist | --gists) gist_cmd "$@" ;;
         workflow | workflows | --workflow | --workflows) workflow_cmd "$@" ;;
+        label | labels | --label | --labels) label_cmd "$@" ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac

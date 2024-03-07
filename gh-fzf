@@ -178,7 +178,7 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
-    issue_header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen)
+    issue_header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen) (alt-l: add label) (alt-L: remove label)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
@@ -196,6 +196,12 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
         --bind="enter:execute(gh issue edit {1} $repo_flag)" \
         --bind="alt-o:execute(gh issue develop --checkout {1} $repo_flag)+abort" \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)" \
+        --bind='alt-l:execute(
+            gh issue edit --add-label "$(gh fzf label)" {1} '"$repo_flag"'
+        )' \
+        --bind='alt-L:execute(
+            gh issue edit --remove-label "$(gh fzf label)" {1} '"$repo_flag"'
+        )' \
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
@@ -246,7 +252,7 @@ pr_cmd() {
             {{- end -}}
     '\'''
 
-    pr_header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review)
+    pr_header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add label) (alt-L: remove label)
         > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
@@ -267,6 +273,12 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
         --bind="alt-d:execute(gh pr diff {1} $repo_flag)" \
         --bind="alt-o:execute(gh pr checkout {1} $repo_flag)" \
         --bind="alt-r:execute(gh pr review {1} $repo_flag)" \
+        --bind='alt-l:execute(
+            gh issue edit --add-label "$(gh fzf label)" {1} '"$repo_flag"'
+        )' \
+        --bind='alt-L:execute(
+            gh issue edit --remove-label "$(gh fzf label)" {1} '"$repo_flag"'
+        )' \
         --bind='alt-C:execute<gh fzf run -b $(
             gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'
         ) '"$repo_flag"'>' \

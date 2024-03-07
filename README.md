@@ -94,6 +94,10 @@ that can be used with any `gh fzf` command:
   - `alt-c`: Add a comment to the selected issue
     (see `gh issue comment --help`)
   - `alt-X`: Close the issue
+  - `alt-l`: Open `gh fzf label` and add the label to the selected issue
+    (see `gh issue edit --help`)
+  - `alt-L`: Open `gh fzf label` and remove the label from the selected issue
+    (see `gh issue edit --help`)
     (see `gh issue close --help`)
   - `alt-O`: Reopen the issue
     (see `gh issue reopen --help`)
@@ -130,6 +134,10 @@ that can be used with any `gh fzf` command:
   - `alt-r`: Start/continue/finish a review for the pull request
     (see `gh pr review --help`)
   - `alt-R`: Mark a draft pull request as "ready for review"
+  - `alt-l`: Open `gh fzf label` and add the label to the selected pull request
+    (see `gh issue edit --help`)
+  - `alt-L`: Open `gh fzf label` and remove the label from the selected pull
+    request (see `gh issue edit --help`)
     (see `gh pr ready --help`)
   - `alt-M`: Merge the pull request
     (see `gh pr merge --help`)

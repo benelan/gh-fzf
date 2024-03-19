@@ -6,6 +6,7 @@ An fzf wrapper around the GitHub CLI.
 
 - [gh fzf](#gh-fzf)
   - [Installation](#installation)
+    - [Upgrading](#upgrading)
   - [Usage](#usage)
     - [`issue`](#issue)
     - [`pr`](#pr)
@@ -55,6 +56,37 @@ An fzf wrapper around the GitHub CLI.
 4. **[???](#usage)**
 5. **PROFIT**
 
+### Upgrading
+
+To upgrade `gh-fzf` to the latest commit on `main`:
+
+```sh
+gh extension upgrade gh-fzf
+```
+
+You can also pin a version tag when installing an extension. If you already have
+`gh-fzf` installed, you need to remove it first before pinning a version:
+
+<!-- x-release-please-start-version -->
+
+```sh
+gh extension remove gh-fzf &&
+  gh extension install benelan/gh-fzf --pin "v0.7.0"
+```
+
+<!-- x-release-please-end -->
+
+There is also a `stable` tag, which always points to the latest release.
+
+See the [changelog](./CHANGELOG.md) for a list of features and fixes
+released in each version.
+
+To check which version you currently have installed:
+
+```sh
+gh fzf -v
+```
+
 ## Usage
 
 ```sh
@@ -65,7 +97,7 @@ This extension adds a new command that wraps GitHub's `list` subcommands with
 fzf to make them fuzzy findable. All of the arguments after `<command>` are
 passed directly to `gh`. Because of the way shell works, you need to escape
 quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
-There are example usages for each command in the sections below.
+There are usage examples for each command in the sections below.
 
 A preview of the current selection is displayed when navigating through the
 resulting list. Each command has keybindings to further filter the list or to

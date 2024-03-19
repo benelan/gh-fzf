@@ -41,7 +41,7 @@ body:
     attributes:
       label: Reproduction Version
       description: The latest version that reproduces the issue (check `gh fzf version`)
-      placeholder: 0.7.0 # x-release-please-version
+      placeholder: v0.7.0 # x-release-please-version
     validations:
       required: true
   - type: input

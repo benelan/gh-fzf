@@ -189,7 +189,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
         --header="$issue_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag)" \
+        --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag &)" \
         --bind="ctrl-y:execute-silent(
             gh issue view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
         )" \
@@ -264,7 +264,7 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$repo_flag" \
         --header="$pr_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag)" \
+        --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag &)" \
         --bind="ctrl-y:execute-silent(
             gh pr view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
         )" \
@@ -355,7 +355,7 @@ Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$repo_flag" \
         --header="$run_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag)" \
+        --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag &)" \
         --bind="ctrl-y:execute-silent(
             gh run view {-1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
         )" \
@@ -419,7 +419,7 @@ Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
         --header="$repo_header" \
         --header-lines=4 \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh repo view --web {1})' \
+        --bind='ctrl-o:execute-silent(gh repo view --web {1} &)' \
         --bind="ctrl-y:execute-silent(
             gh repo view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD
         )" \
@@ -486,7 +486,7 @@ Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1}' \
         --header="$release_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh release view --web {1})' \
+        --bind='ctrl-o:execute-silent(gh release view --web {1} &)' \
         --bind="ctrl-y:execute-silent(
             gh release view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD
         )" \
@@ -513,7 +513,7 @@ Filters > (alt-p: public) (alt-s: secret)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
         --header="$gist_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh gist view --web {1})' \
+        --bind='ctrl-o:execute-silent(gh gist view --web {1} &)' \
         --bind="ctrl-y:execute-silent(
             echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
         )" \
@@ -540,7 +540,7 @@ Filters > (alt-a: all)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1}' \
         --header="$workflow_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh workflow view --web {-1})' \
+        --bind='ctrl-o:execute-silent(gh workflow view --web {-1} &)' \
         --bind='enter:execute(gh fzf run --workflow {-1})' \
         --bind='alt-d:execute(gh workflow run {-1})' \
         --bind='alt-E:execute(gh workflow enable {-1})' \
@@ -566,10 +566,10 @@ Filters > (alt-N: sort by name) (alt-D: descending order)
         --header="$label_header" \
         --bind="start:$on_start" \
         --bind="enter:execute(printf {1})+abort" \
-        --bind='ctrl-o:execute-silent(gh label list --web)' \
+        --bind='ctrl-o:execute-silent(gh label list --web &)' \
         --bind='alt-n:execute(
-            printf "Enter new label name: "; 
-            read -r name; 
+            printf "Enter new label name: ";
+            read -r name;
             [ -n "$name" ] && gh label edit {1} --name "$name"
         )' \
         --bind='alt-d:execute(

@@ -184,6 +184,9 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 
 '
 
+    # increase the limit when showing labels
+    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
+
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
@@ -197,10 +200,10 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
         --bind="alt-o:execute(gh issue develop --checkout {1} $repo_flag)+abort" \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)" \
         --bind='alt-l:execute(
-            gh issue edit --add-label "$(gh fzf label)" {1} '"$repo_flag"'
+            gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
         )' \
         --bind='alt-L:execute(
-            gh issue edit --remove-label "$(gh fzf label)" {1} '"$repo_flag"'
+            gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
         )' \
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)" \
@@ -258,6 +261,8 @@ pr_cmd() {
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 
 '
+    # increase the limit when showing labels
+    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -274,10 +279,10 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
         --bind="alt-o:execute(gh pr checkout {1} $repo_flag)" \
         --bind="alt-r:execute(gh pr review {1} $repo_flag)" \
         --bind='alt-l:execute(
-            gh issue edit --add-label "$(gh fzf label)" {1} '"$repo_flag"'
+            gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
         )' \
         --bind='alt-L:execute(
-            gh issue edit --remove-label "$(gh fzf label)" {1} '"$repo_flag"'
+            gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
         )' \
         --bind='alt-C:execute<gh fzf run -b $(
             gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'

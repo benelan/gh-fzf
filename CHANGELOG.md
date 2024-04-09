@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.8.0](https://github.com/benelan/gh-fzf/compare/v0.7.0...v0.8.0) (2024-04-09)
+
+
+### Features
+
+* Add label command ([#15](https://github.com/benelan/gh-fzf/issues/15)) ([abec1bd](https://github.com/benelan/gh-fzf/commit/abec1bde9f12310d6a7c8cd7af38aba16caa70b4))
+* Add workflow command ([#13](https://github.com/benelan/gh-fzf/issues/13)) ([09e402b](https://github.com/benelan/gh-fzf/commit/09e402bf40525b86be51b2d08bab02722f37c440))
+* **issue, pr:** Increase labels limit in keybinds ([1b81c6f](https://github.com/benelan/gh-fzf/commit/1b81c6f3e9b1018d8b67203a46740366b45ccc39))
+* **issue, pr:** Keybindings to add/remove label ([fea7b42](https://github.com/benelan/gh-fzf/commit/fea7b4238dddf9c4e374782f5071beaa62a87cc3))
+
+
+### Bug Fixes
+
+* Blocked process when opening item in browser ([0284389](https://github.com/benelan/gh-fzf/commit/0284389b07d039ead201803be47acbbfd0ddb8ad))
+* Ensure all commands respect --repo flag ([526452b](https://github.com/benelan/gh-fzf/commit/526452b58488ddd63331377906b831b6eb5a3bf1))
+
 ## [0.7.0](https://github.com/benelan/gh-fzf/compare/v0.6.0...v0.7.0) (2024-03-06)
 
 

@@ -71,6 +71,8 @@ configuration, and examples.
     exit 0
 }
 
+global_binds="Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
+
 # --------------------------------------------------------------------- }}}
 # Configuration                                                         {{{
 # --------------------------------------------------------------------- {|}
@@ -178,11 +180,11 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
-    issue_header='Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen) (alt-l: add label) (alt-L: remove label)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+    issue_header="Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen) (alt-l: add label) (alt-L: remove label)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
+$global_binds
 
-'
+"
 
     # increase the limit when showing labels
     [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
@@ -255,12 +257,12 @@ pr_cmd() {
             {{- end -}}
     '\'''
 
-    pr_header='Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add label) (alt-L: remove label)
-        > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+    pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add label)
+        > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)  (alt-L: remove label)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
+$global_binds
 
-'
+"
     # increase the limit when showing labels
     [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
 
@@ -349,11 +351,11 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    run_header='Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-p: pr) (alt-d: download)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
+$global_binds
 
-'
+"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -413,10 +415,10 @@ repo_cmd() {
     #         {{- end -}}
     # '\'''
 
-    repo_header='Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+    repo_header="Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
 Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
-'
+$global_binds
+"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -480,11 +482,11 @@ release_cmd() {
             {{- end -}}
     '\'''
 
-    release_header='Actions > (enter: download) (alt-X: delete)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+    release_header="Actions > (enter: download) (alt-X: delete)
 Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
+$global_binds
 
-'
+"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh release $release_template list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -534,11 +536,11 @@ Filters > (alt-p: public) (alt-s: secret)
 # --------------------------------------------------------------------- {|}
 
 workflow_cmd() {
-    workflow_header='Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
-        > (ctrl-o: open url) (ctrl-r: reload)
+    workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
 Filters > (alt-a: all)
+$global_binds
 
-'
+"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -558,10 +560,10 @@ Filters > (alt-a: all)
 # --------------------------------------------------------------------- {|}
 
 label_cmd() {
-    label_header='Actions > (enter: print) (alt-n: edit name) (alt-d: edit description) (alt-c: edit color) (alt-X: delete)
-        > (ctrl-o: open url) (ctrl-r: reload)
+    label_header="Actions > (enter: print) (alt-n: edit name) (alt-d: edit description) (alt-c: edit color) (alt-X: delete)
 Filters > (alt-N: sort by name) (alt-D: descending order)
-'
+$global_binds
+"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh label list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \

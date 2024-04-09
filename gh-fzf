@@ -24,7 +24,7 @@ set -e
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-GH_FZF_VERSION="v0.7.0" # x-release-please-version
+GH_FZF_VERSION="v0.8.0" # x-release-please-version
 
 # Usage info and logs                                                   {{{
 # --------------------------------------------------------------------- {|}

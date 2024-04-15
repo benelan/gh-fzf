@@ -58,30 +58,27 @@ An fzf wrapper around the GitHub CLI.
 
 ### Upgrading
 
-To upgrade `gh-fzf` to the latest commit on `main`:
+To upgrade `gh-fzf` to the latest commit on `main` **(recommended)**:
 
 ```sh
 gh extension upgrade gh-fzf
 ```
 
-You can also pin a version tag when installing an extension. If you already have
-`gh-fzf` installed, you need to remove it first before pinning a version:
+Alternatively, you can pin a tag when installing `gh` extensions. If you already
+have `gh-fzf` installed, you need to remove it first before pinning a version:
 
 <!-- x-release-please-start-version -->
 
 ```sh
-gh extension remove gh-fzf &&
-  gh extension install benelan/gh-fzf --pin "v0.7.0"
+gh extension remove fzf && gh extension install benelan/gh-fzf --pin "v0.8.0"
 ```
 
 <!-- x-release-please-end -->
 
 There is also a `stable` tag, which always points to the latest release.
 
-See the [changelog](./CHANGELOG.md) for a list of features and fixes
-released in each version.
-
-To check which version you currently have installed:
+The [changelog](./CHANGELOG.md) contains a list of features and fixes released
+in each version. To see the version of `gh-fzf` you currently have installed:
 
 ```sh
 gh fzf -v
@@ -110,7 +107,7 @@ that can be used with any `gh fzf` command:
   GitHub
 - `alt-1` to `alt-9`: Change the number of items fetched from GitHub to 100,
   200, ..., 900
-- `alt-P`: Toggle the preview window
+- `alt-P`: Toggle the preview window display
 - `alt-H`: Toggle the header display, where the keybinding hints are located
 
 ### `issue`
@@ -119,20 +116,15 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `i`, `issues`, `-i`, `--issue`, `--issues`
 - **Flags**: See `gh issue list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected issue in the CLI via prompts
+  - `enter`: Edit the selected issue via CLI prompts
     (see `gh issue edit --help`)
-  - `alt-o`: Checkout the linked branch of the selected issue, creating one if
-    necessary (see `gh issue develop --help`)
-  - `alt-c`: Add a comment to the selected issue
-    (see `gh issue comment --help`)
-  - `alt-l`: Open `gh fzf label` and add the label to the selected issue
-    (see `gh issue edit --help`)
-  - `alt-L`: Open `gh fzf label` and remove the label from the selected issue
-    (see `gh issue edit --help`)
-  - `alt-X`: Close the selected issue
-    (see `gh issue close --help`)
-  - `alt-O`: Reopen the selected issue
-    (see `gh issue reopen --help`)
+  - `alt-o`: Create/checkout the branch linked to the selected issue
+    (see `gh issue develop --help`)
+  - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
+  - `alt-l`: Open `gh fzf label` and add the selected label to the issue
+  - `alt-L`: Open `gh fzf label` and remove the selected label from the issue
+  - `alt-X`: Close the selected issue (see `gh issue close --help`)
+  - `alt-O`: Reopen the selected issue (see `gh issue reopen --help`)
   - `alt-a`: Filter the list, showing issues assigned to you
   - `alt-A`: Filter the list, showing issues authored by you
   - `alt-m`: Filter the list, showing issues where you are mentioned
@@ -155,35 +147,25 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `p`, `prs`, `-p`, `--pr`, `--prs`
 - **Flags**: See `gh pr list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected pull request in the CLI via prompts
-    (see `gh pr edit --help`)
-  - `alt-o`: Checkout the branch of the selected pull request
+  - `enter`: Edit the selected PR via CLI prompts (see `gh pr edit --help`)
+  - `alt-o`: Checkout the HEAD branch of the selected PR
     (see `gh pr checkout --help`)
-  - `alt-c`: Add a comment to the selected pull request
-    (see `gh issue comment --help`)
-  - `alt-d`: Show the diff for the selected pull request
-    (see `gh pr diff --help`)
-  - `alt-r`: Start/continue/finish a review for the selected pull request
+  - `alt-c`: Add a comment to the selected PR (see `gh pr comment --help`)
+  - `alt-d`: Show the diff for the selected PR (see `gh pr diff --help`)
+  - `alt-r`: Start/continue/finish a review for the selected PR
     (see `gh pr review --help`)
-  - `alt-l`: Open `gh fzf label` and add the label to the selected pull request
-    (see `gh issue edit --help`)
-  - `alt-L`: Open `gh fzf label` and remove the label from the selected pull
-    request (see `gh issue edit --help`)
-  - `alt-R`: Mark the selected draft pull request as "ready for review"
+  - `alt-l`: Open `gh fzf label` and add the selected label to the PR
+  - `alt-L`: Open `gh fzf label` and remove the selected label from the PR
+  - `alt-R`: Mark the selected draft PR as "ready for review"
     (see `gh pr ready --help`)
-  - `alt-M`: Merge the selected pull request
-    (see `gh pr merge --help`)
-  - `alt-X`: Close the selected pull request
-    (see `gh pr close --help`)
-  - `alt-O`: Reopen the selected pull request
-    (see `gh pr reopen --help`)
-  - `alt-C`: Open `gh fzf run` filtered for the selected pull request
-    (see [run](#run))
-  - `alt-a`: Filter the list, showing pull requests assigned to you
-  - `alt-A`: Filter the list, showing pull requests authored by you
-  - `alt-b`: Filter the list, showing pull requests from the current branch
-  - `alt-s`: Filter the list, showing pull requests with any state
-    (open, closed, or merged)
+  - `alt-M`: Merge the selected PR (see `gh pr merge --help`)
+  - `alt-X`: Close the selected PR (see `gh pr close --help`)
+  - `alt-O`: Reopen the selected PR (see `gh pr reopen --help`)
+  - `alt-C`: Open `gh fzf run` filtered for the selected PR (see [run](#run))
+  - `alt-a`: Filter the list, showing PRs assigned to you
+  - `alt-A`: Filter the list, showing PRs authored by you
+  - `alt-b`: Filter the list, showing PRs from the current branch
+  - `alt-s`: Filter the list, showing PRs in any state (open, closed, or merged)
 - **Examples:**
   - Filter the initial list to your merged pull requests with the
     "breaking change" label:
@@ -203,17 +185,14 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `r`, `runs`, `-r`, `--run`, `--runs`
 - **Flags**: See `gh run list --help` for available options
 - **Keybindings**:
-  - `enter`: Watch the status updates for the selected run
+  - `enter`: Watch for status updates on the selected run
     (see `gh run watch --help`)
-  - `alt-l`: Display the logs for the selected run
-    (see `gh run view --help`)
+  - `alt-l`: Display logs for the selected run (see `gh run view --help`)
   - `alt-d`: Download artifacts from the selected run
     (see `gh run download --help`)
-  - `alt-r`: Rerun the selected run
-    (see `gh run rerun --help`)
-  - `alt-x`: Cancel the selected run
-    (see `gh run cancel --help`)
-  - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as head
+  - `alt-r`: Rerun the selected run (see `gh run rerun --help`)
+  - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
+  - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as HEAD
     (see [`pr`](#pr))
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
@@ -236,12 +215,9 @@ that can be used with any `gh fzf` command:
 - **Keybindings**:
   - `enter`: Open `gh fzf run` filtered for the selected workflow
     (see [`run`](#run))
-  - `alt-d`: Create a `workflow_dispatch` event for the selected workflow
-    (see `gh workflow run --help`)
-  - `alt-X`: Disable the selected workflow
-    (see `gh workflow disable --help`)
-  - `alt-E`: Enable the selected workflow
-    (see `gh workflow enable --help`)
+  - `alt-d`: Dispatch the selected workflow (see `gh workflow run --help`)
+  - `alt-X`: Disable the selected workflow (see `gh workflow disable --help`)
+  - `alt-E`: Enable the selected workflow (see `gh workflow enable --help`)
   - `alt-a`: Filter the list, showing all workflows (including disabled ones)
 - **Examples**:
   - Filter the initial list to show all workflows:
@@ -255,15 +231,12 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `releases`, `--release`, `--releases`
 - **Flags**: See `gh release list --help` for available options
 - **Keybindings**:
-  - `enter`: Download the assets for the selected release
+  - `enter`: Download the assets from the selected release
     (see `gh release download --help`)
-  - `alt-X`: Delete the selected release
-    (see `gh release delete --help`)
-  - `alt-s`: Filter the list, showing stable releases
-    (i.e. excluding pre-releases)
-  - `alt-p`: Filter the list, showing published releases
-    (i.e. excluding drafts)
-  - `alt-a`: Filter the list, showing releases in ascending order by release date
+  - `alt-X`: Delete the selected release (see `gh release delete --help`)
+  - `alt-s`: Filter the list, showing stable releases (exclude pre-releases)
+  - `alt-p`: Filter the list, showing published releases (exclude drafts)
+  - `alt-a`: Filter the list, showing releases in ascending order by date
     (defaults to descending)
 - **Examples**:
   - Filter the initial list to exclude drafts and pre-releases:
@@ -278,16 +251,12 @@ that can be used with any `gh fzf` command:
 - **Flags**: See `gh label list --help` for available options
 - **Keybindings**:
   - `enter`: Print the name of the selected label
-  - `alt-n`: Edit the name of the selected label
-    (see `gh label edit --help`)
+  - `alt-n`: Edit the name of the selected label (see `gh label edit --help`)
   - `alt-d`: Edit the description of the selected label
     (see `gh label edit --help`)
-  - `alt-c`: Edit the color of the selected label
-    (see `gh label edit --help`)
-  - `alt-X`: Delete the selected label
-    (see `gh label delete --help`)
-  - `alt-N`: Filter the list, sorting labels by name
-    (defaults to creation date)
+  - `alt-c`: Edit the color of the selected label (see `gh label edit --help`)
+  - `alt-X`: Delete the selected label (see `gh label delete --help`)
+  - `alt-N`: Filter the list, sorting labels by name (defaults to creation date)
   - `alt-D`: Filter the list, showing labels in descending order
     (defaults to ascending)
 - **Examples**:
@@ -302,25 +271,19 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `repos`, `--repo`, `--repos`
 - **Flags**: See `gh repo list --help` for available options
 - **Keybindings**:
-  - `alt-i`: Run `gh fzf issue` on the selected repo
-    (see [`issue`](#issue))
-  - `alt-p`: Run `gh fzf pr` on the selected repo
-    (see [`pr`](#pr))
-  - `alt-r`: Run `gh fzf run` on the selected repo
-    (see [`run`](#run))
-  - `enter`: Edit the selected repo's settings
-    (see `gh repo edit --help`)
-  - `alt-C`: Clone the selected repo
-    (see `gh repo clone --help`)
-  - `alt-F`: Fork the selected repo
-    (see `gh repo fork --help`)
-  - `alt-c`: Filter the list, showing private repos
-  - `alt-o`: Filter the list, showing public repos
+  - `alt-i`: Run `gh fzf issue` on the selected repo (see [`issue`](#issue))
+  - `alt-p`: Run `gh fzf pr` on the selected repo (see [`pr`](#pr))
+  - `alt-r`: Run `gh fzf run` on the selected repo (see [`run`](#run))
+  - `enter`: Edit the selected repo's settings (see `gh repo edit --help`)
+  - `alt-C`: Clone the selected repo (see `gh repo clone --help`)
+  - `alt-F`: Fork the selected repo (see `gh repo fork --help`)
+  - `alt-c`: Filter the list, showing private repos (i.e. closed source)
+  - `alt-o`: Filter the list, showing public repos (i.e. open source)
   - `alt-f`: Filter the list, showing forked repos
   - `alt-s`: Filter the list, showing source (non-forked) repos
 - **Examples**:
-  - Filter the initial list to non-archived, private repos created by you with
-    the "cli" topic:
+  - Filter the initial list to your non-archived, private repos with the "cli"
+    topic:
     ```sh
     gh fzf repo --no-archived --visibility private --topic cli
     ```
@@ -336,12 +299,10 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `gists`, `--gist`, `--gists`
 - **Flags**: See `gh gist list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected gist
-    (see `gh gist edit --help`)
+  - `enter`: Edit the selected gist (see `gh gist edit --help`)
   - `alt-c`: Clone the selected gist to the current directory
     (see `gh gist clone --help`)
-  - `alt-X`: Delete the selected gist
-    (see `gh gist delete --help`)
+  - `alt-X`: Delete the selected gist (see `gh gist delete --help`)
   - `alt-s`: Filter the list, showing only secret gists
   - `alt-p`: Filter the list, showing only public gists
 - **Examples**:
@@ -352,7 +313,7 @@ that can be used with any `gh fzf` command:
 
 ## Configuration
 
-Environment variables are used to configure different options in `gh-fzf`.
+Environment variables are used to configure `gh-fzf`.
 
 | Variable                 | Description                                                                                                                                                                                                                   | Default                                                                                                      |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -361,11 +322,11 @@ Environment variables are used to configure different options in `gh-fzf`.
 | `GH_FZF_HIDE_HINTS`      | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                    | unset                                                                                                        |
 | `GH_FZF_COPY_CMD`        | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                          | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
 
-You can set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
+You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
 environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
 For example, create aliases in the `gh` config file that add new keybindings to
-the issue and pr commands:
+the [`issue`](#issue) and [`pr`](#pr) commands:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -386,13 +347,13 @@ aliases:
 When adding or modifying fzf keybindings:
 
 - Use `{1}` in place of:
-  - the `<number>` for the `issue` and `pr` commands
-  - the `<tag>` for the `release` command
-  - the `<id>` for the `gist` command
-  - the `<name>` for the `label` command
+  - the `<number>` for the [`issue`](#issue) and [`pr`](#pr) commands
+  - the `<tag>` for the [`release`](#release) command
+  - the `<id>` for the [`gist`](#gist) command
+  - the `<name>` for the [`label`](#label) command
 - Use `{-1}` in place of:
-  - the `<run-id>` for the `run` command
-  - the `<workflow-id>` for the `workflow` command
+  - the `<run-id>` for the [`run`](#run) command
+  - the `<workflow-id>` for the [`workflow`](#workflow) command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).

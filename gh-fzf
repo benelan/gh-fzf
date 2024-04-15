@@ -384,62 +384,27 @@ $global_binds
 }
 
 # --------------------------------------------------------------------- }}}
-# Command > repo                                                        {{{
+# Command > workflow                                                    {{{
 # --------------------------------------------------------------------- {|}
 
-repo_cmd() {
-    # repo_template='\
-    #     --json "nameWithOwner,description,stargazerCount,forkCount,updatedAt,viewerPermission,visibility" \
-    #     --template '\''
-    #         {{- $headerColor := "blue+b" -}}
-    #         {{- tablerow
-    #             ("REPO" | autocolor $headerColor)
-    #             ("VISIBILITY" | autocolor $headerColor)
-    #             ("PERMISSIONS" | autocolor $headerColor)
-    #             ("LAST UPDATE" | autocolor $headerColor)
-    #             ("DESCRIPTION" | autocolor $headerColor)
-    #             ("STARS" | autocolor $headerColor)
-    #             ("FORKS" | autocolor $headerColor)
-    #         -}}
-
-    #         {{- range . -}}
-    #             {{- tablerow
-    #                 (.nameWithOwner | autocolor "white+h")
-    #                 (.visibility | autocolor "white+d")
-    #                 (.viewerPermission | autocolor "white+h")
-    #                 ((timeago .updatedAt) | autocolor "white+d")
-    #                 (truncate 100 (.description | autocolor "white+h"))
-    #                 (.stargazerCount | autocolor "white+d")
-    #                 (.forkCount | autocolor "white+h")
-    #             -}}
-    #         {{- end -}}
-    # '\'''
-
-    repo_header="Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
-Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
+workflow_cmd() {
+    workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
+Filters > (alt-a: all)
 $global_binds
+
 "
 
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1} '"$repo_flag" \
-        --header="$repo_header" \
-        --header-lines=4 \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$repo_flag" \
+        --header="$workflow_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh repo view --web {1} $repo_flag &)" \
-        --bind="ctrl-y:execute-silent(
-            gh repo view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )" \
-        --bind="alt-p:execute(gh fzf pr --repo {1} $repo_flag)" \
-        --bind="alt-i:execute(gh fzf issue --repo {1} $repo_flag)" \
-        --bind="alt-r:execute(gh fzf run --repo {1} $repo_flag)" \
-        --bind='enter:execute(gh repo edit {1} $repo_flag)' \
-        --bind='alt-C:execute(gh repo clone {1} $repo_flag)' \
-        --bind="alt-F:execute(gh repo fork {1} $repo_flag)" \
-        --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
-        --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
-        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --fork")'
+        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $repo_flag &)" \
+        --bind="enter:execute(gh fzf run --workflow {-1} $repo_flag)" \
+        --bind="alt-d:execute(gh workflow run {-1} $repo_flag)" \
+        --bind="alt-E:execute(gh workflow enable {-1} $repo_flag)" \
+        --bind="alt-X:execute(gh workflow disable {-1} $repo_flag)" \
+        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
 }
 
 # --------------------------------------------------------------------- }}}
@@ -505,57 +470,6 @@ $global_binds
 }
 
 # --------------------------------------------------------------------- }}}
-# Command > gist                                                        {{{
-# --------------------------------------------------------------------- {|}
-
-gist_cmd() {
-    gist_header='Actions > (enter: edit) (alt-c: clone) (alt-X: delete)
-        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
-Filters > (alt-p: public) (alt-s: secret)
-
-'
-
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
-        fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
-        --header="$gist_header" \
-        --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh gist view --web {1} &)' \
-        --bind="ctrl-y:execute-silent(
-            echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
-        )" \
-        --bind='enter:execute(gh gist edit {1})' \
-        --bind='alt-c:execute(gh gist clone {1})' \
-        --bind="alt-X:execute(gh gist delete {1})" \
-        --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --public")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --secret")'
-}
-
-# --------------------------------------------------------------------- }}}
-# Command > workflow                                                    {{{
-# --------------------------------------------------------------------- {|}
-
-workflow_cmd() {
-    workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
-Filters > (alt-a: all)
-$global_binds
-
-"
-
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
-        fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$repo_flag" \
-        --header="$workflow_header" \
-        --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $repo_flag &)" \
-        --bind="enter:execute(gh fzf run --workflow {-1} $repo_flag)" \
-        --bind="alt-d:execute(gh workflow run {-1} $repo_flag)" \
-        --bind="alt-E:execute(gh workflow enable {-1} $repo_flag)" \
-        --bind="alt-X:execute(gh workflow disable {-1} $repo_flag)" \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
-}
-
-# --------------------------------------------------------------------- }}}
 # Command > label                                                       {{{
 # --------------------------------------------------------------------- {|}
 
@@ -592,6 +506,92 @@ $global_binds
         --bind="alt-X:execute(gh label delete {1} $repo_flag)" \
         --bind='alt-N:reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
         --bind='alt-D:reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
+}
+
+# --------------------------------------------------------------------- }}}
+# Command > repo                                                        {{{
+# --------------------------------------------------------------------- {|}
+
+repo_cmd() {
+    # repo_template='\
+    #     --json "nameWithOwner,description,stargazerCount,forkCount,updatedAt,viewerPermission,visibility" \
+    #     --template '\''
+    #         {{- $headerColor := "blue+b" -}}
+    #         {{- tablerow
+    #             ("REPO" | autocolor $headerColor)
+    #             ("VISIBILITY" | autocolor $headerColor)
+    #             ("PERMISSIONS" | autocolor $headerColor)
+    #             ("LAST UPDATE" | autocolor $headerColor)
+    #             ("DESCRIPTION" | autocolor $headerColor)
+    #             ("STARS" | autocolor $headerColor)
+    #             ("FORKS" | autocolor $headerColor)
+    #         -}}
+
+    #         {{- range . -}}
+    #             {{- tablerow
+    #                 (.nameWithOwner | autocolor "white+h")
+    #                 (.visibility | autocolor "white+d")
+    #                 (.viewerPermission | autocolor "white+h")
+    #                 ((timeago .updatedAt) | autocolor "white+d")
+    #                 (truncate 100 (.description | autocolor "white+h"))
+    #                 (.stargazerCount | autocolor "white+d")
+    #                 (.forkCount | autocolor "white+h")
+    #             -}}
+    #         {{- end -}}
+    # '\'''
+
+    repo_header="Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
+Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
+$global_binds
+"
+
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
+        fzf \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1} '"$repo_flag" \
+        --header="$repo_header" \
+        --header-lines=4 \
+        --bind="start:$on_start" \
+        --bind="ctrl-o:execute-silent(gh repo view --web {1} $repo_flag &)" \
+        --bind="ctrl-y:execute-silent(
+            gh repo view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
+        )" \
+        --bind="alt-p:execute(gh fzf pr --repo {1} $repo_flag)" \
+        --bind="alt-i:execute(gh fzf issue --repo {1} $repo_flag)" \
+        --bind="alt-r:execute(gh fzf run --repo {1} $repo_flag)" \
+        --bind='enter:execute(gh repo edit {1} $repo_flag)' \
+        --bind='alt-C:execute(gh repo clone {1} $repo_flag)' \
+        --bind="alt-F:execute(gh repo fork {1} $repo_flag)" \
+        --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
+        --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
+        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --fork")'
+}
+
+# --------------------------------------------------------------------- }}}
+# Command > gist                                                        {{{
+# --------------------------------------------------------------------- {|}
+
+gist_cmd() {
+    gist_header='Actions > (enter: edit) (alt-c: clone) (alt-X: delete)
+        > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+Filters > (alt-p: public) (alt-s: secret)
+
+'
+
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
+        fzf \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
+        --header="$gist_header" \
+        --bind="start:$on_start" \
+        --bind='ctrl-o:execute-silent(gh gist view --web {1} &)' \
+        --bind="ctrl-y:execute-silent(
+            echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
+        )" \
+        --bind='enter:execute(gh gist edit {1})' \
+        --bind='alt-c:execute(gh gist clone {1})' \
+        --bind="alt-X:execute(gh gist delete {1})" \
+        --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --public")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --secret")'
 }
 
 # --------------------------------------------------------------------- }}}

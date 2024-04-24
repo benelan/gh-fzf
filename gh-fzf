@@ -2,6 +2,8 @@
 # shellcheck disable=2016
 set -e
 
+# An fzf wrapper around the GitHub CLI - https://github.com/benelan/gh-fzf
+#
 # MIT License
 #
 # Copyright (c) Ben Elan

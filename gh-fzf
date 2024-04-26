@@ -111,7 +111,7 @@ fi
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
 FZF_DEFAULT_OPTS='
 --no-hscroll --no-exit-0 --header-lines=1
---preview-window="right:50%,wrap"
+--preview-window="right,50%,wrap,~2,<60(down,40%,wrap)"
 --delimiter="  "
 --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)"
 --bind="alt-P:toggle-preview"
@@ -183,7 +183,7 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
-    issue_header="Actions > (enter: edit) (alt-o: checkout) (alt-c: comment) (alt-X: close) (alt-O: reopen) (alt-l: add label) (alt-L: remove label)
+    issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add label) (alt-L: remove label) (alt-X: close) (alt-O: reopen)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 $global_binds
 
@@ -261,7 +261,7 @@ pr_cmd() {
     '\'''
 
     pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add label)
-        > (alt-C: checks) (alt-M: merge) (alt-X: close) (alt-O: reopen) (alt-R: ready)  (alt-L: remove label)
+        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-X: close) (alt-O: reopen) (alt-L: remove label)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 

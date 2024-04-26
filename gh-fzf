@@ -549,20 +549,20 @@ $global_binds
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1} '"$repo_flag" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
         --header="$repo_header" \
         --header-lines=4 \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh repo view --web {1} $repo_flag &)" \
+        --bind="ctrl-o:execute-silent(gh repo view --web {1} &)" \
         --bind="ctrl-y:execute-silent(
-            gh repo view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
+            gh repo view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD
         )" \
-        --bind="alt-p:execute(gh fzf pr --repo {1} $repo_flag)" \
-        --bind="alt-i:execute(gh fzf issue --repo {1} $repo_flag)" \
-        --bind="alt-r:execute(gh fzf run --repo {1} $repo_flag)" \
-        --bind='enter:execute(gh repo edit {1} $repo_flag)' \
-        --bind='alt-C:execute(gh repo clone {1} $repo_flag)' \
-        --bind="alt-F:execute(gh repo fork {1} $repo_flag)" \
+        --bind="alt-p:execute(gh fzf pr --repo {1})" \
+        --bind="alt-i:execute(gh fzf issue --repo {1})" \
+        --bind="alt-r:execute(gh fzf run --repo {1})" \
+        --bind='enter:execute(gh repo edit {1})' \
+        --bind='alt-C:execute(gh repo clone {1})' \
+        --bind="alt-F:execute(gh repo fork {1})" \
         --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
         --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \

@@ -196,21 +196,21 @@ $global_binds
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
         --header="$issue_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag &)" \
+        --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(
             gh issue view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )" \
-        --bind="enter:execute(gh issue edit {1} $repo_flag)" \
+        )+refresh-preview" \
+        --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
         --bind="alt-o:execute(gh issue develop --checkout {1} $repo_flag)+abort" \
-        --bind="alt-c:execute(gh issue comment {1} $repo_flag)" \
+        --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
             gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
-        )' \
+        )+refresh-preview' \
         --bind='alt-L:execute(
             gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
-        )' \
-        --bind="alt-O:execute(gh issue reopen {1} $repo_flag)" \
-        --bind="alt-X:execute(gh issue close {1} $repo_flag)" \
+        )+refresh-preview' \
+        --bind="alt-O:execute(gh issue reopen {1} $repo_flag)+refresh-preview" \
+        --bind="alt-X:execute(gh issue close {1} $repo_flag)+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
@@ -273,28 +273,28 @@ $global_binds
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$repo_flag" \
         --header="$pr_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag &)" \
+        --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(
             gh pr view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )" \
-        --bind="enter:execute(gh pr edit {1} $repo_flag)" \
-        --bind="alt-c:execute(gh pr comment {1} $repo_flag)" \
-        --bind="alt-d:execute(gh pr diff {1} $repo_flag)" \
-        --bind="alt-o:execute(gh pr checkout {1} $repo_flag)" \
-        --bind="alt-r:execute(gh pr review {1} $repo_flag)" \
+        )+refresh-preview" \
+        --bind="enter:execute(gh pr edit {1} $repo_flag)+refresh-preview" \
+        --bind="alt-c:execute(gh pr comment {1} $repo_flag)+refresh-preview" \
+        --bind="alt-d:execute(gh pr diff {1} $repo_flag)+refresh-preview" \
+        --bind="alt-o:execute(gh pr checkout {1} $repo_flag)+refresh-preview" \
+        --bind="alt-r:execute(gh pr review {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
             gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
-        )' \
+        )+refresh-preview' \
         --bind='alt-L:execute(
             gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
-        )' \
+        )+refresh-preview' \
         --bind='alt-C:execute<gh fzf run -b $(
             gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'
-        ) '"$repo_flag"'>' \
-        --bind="alt-R:execute(gh pr ready {1} $repo_flag)" \
-        --bind="alt-M:execute(gh pr merge {1} $repo_flag)" \
-        --bind="alt-O:execute(gh pr reopen {1} $repo_flag)" \
-        --bind="alt-X:execute(gh pr close {1} $repo_flag)" \
+        ) '"$repo_flag"'>+refresh-preview' \
+        --bind="alt-R:execute(gh pr ready {1} $repo_flag)+refresh-preview" \
+        --bind="alt-M:execute(gh pr merge {1} $repo_flag)+refresh-preview" \
+        --bind="alt-O:execute(gh pr reopen {1} $repo_flag)+refresh-preview" \
+        --bind="alt-X:execute(gh pr close {1} $repo_flag)+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
@@ -364,18 +364,18 @@ $global_binds
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$repo_flag" \
         --header="$run_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag &)" \
+        --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(
             gh run view {-1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )" \
-        --bind="enter:execute(gh run watch {-1} $repo_flag)" \
-        --bind="alt-l:execute(gh run view --log {-1} $repo_flag)" \
-        --bind="alt-r:execute(gh run rerun {-1} $repo_flag)" \
-        --bind="alt-d:execute(gh run download {-1} $repo_flag)" \
-        --bind="alt-x:execute(gh run cancel {-1} $repo_flag)" \
+        )+refresh-preview" \
+        --bind="enter:execute(gh run watch {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-l:execute(gh run view --log {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-r:execute(gh run rerun {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-d:execute(gh run download {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-x:execute(gh run cancel {-1} $repo_flag)+refresh-preview" \
         --bind='alt-p:execute<gh fzf pr --head $(
             gh run view {-1} --json headBranch --jq .headBranch '"$repo_flag"'
-        ) '"$repo_flag"'>' \
+        ) '"$repo_flag"'>+refresh-preview' \
         --bind='alt-b:reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
@@ -401,11 +401,11 @@ $global_binds
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$repo_flag" \
         --header="$workflow_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $repo_flag &)" \
-        --bind="enter:execute(gh fzf run --workflow {-1} $repo_flag)" \
-        --bind="alt-d:execute(gh workflow run {-1} $repo_flag)" \
-        --bind="alt-E:execute(gh workflow enable {-1} $repo_flag)" \
-        --bind="alt-X:execute(gh workflow disable {-1} $repo_flag)" \
+        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $repo_flag &)+refresh-preview" \
+        --bind="enter:execute(gh fzf run --workflow {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-d:execute(gh workflow run {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-E:execute(gh workflow enable {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-X:execute(gh workflow disable {-1} $repo_flag)+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
 }
 
@@ -460,12 +460,12 @@ $global_binds
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1} '"$repo_flag" \
         --header="$release_header" \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh release view --web {1} $repo_flag &)" \
+        --bind="ctrl-o:execute-silent(gh release view --web {1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(
             gh release view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )" \
-        --bind="alt-enter:execute(gh release download {1} $repo_flag)" \
-        --bind="alt-X:execute(gh release delete {1} $repo_flag)" \
+        )+refresh-preview" \
+        --bind="alt-enter:execute(gh release download {1} $repo_flag)+refresh-preview" \
+        --bind="alt-X:execute(gh release delete {1} $repo_flag)+refresh-preview" \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
@@ -553,16 +553,16 @@ $global_binds
         --header="$repo_header" \
         --header-lines=4 \
         --bind="start:$on_start" \
-        --bind="ctrl-o:execute-silent(gh repo view --web {1} &)" \
+        --bind="ctrl-o:execute-silent(gh repo view --web {1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(
             gh repo view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD
-        )" \
-        --bind="alt-p:execute(gh fzf pr --repo {1})" \
-        --bind="alt-i:execute(gh fzf issue --repo {1})" \
-        --bind="alt-r:execute(gh fzf run --repo {1})" \
-        --bind='enter:execute(gh repo edit {1})' \
-        --bind='alt-C:execute(gh repo clone {1})' \
-        --bind="alt-F:execute(gh repo fork {1})" \
+        )+refresh-preview" \
+        --bind="alt-p:execute(gh fzf pr --repo {1})+refresh-preview" \
+        --bind="alt-i:execute(gh fzf issue --repo {1})+refresh-preview" \
+        --bind="alt-r:execute(gh fzf run --repo {1})+refresh-preview" \
+        --bind="enter:execute(gh repo edit {1})+refresh-preview" \
+        --bind="alt-C:execute(gh repo clone {1})+refresh-preview" \
+        --bind="alt-F:execute(gh repo fork {1})+refresh-preview" \
         --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
         --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
@@ -585,13 +585,13 @@ Filters > (alt-p: public) (alt-s: secret)
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
         --header="$gist_header" \
         --bind="start:$on_start" \
-        --bind='ctrl-o:execute-silent(gh gist view --web {1} &)' \
+        --bind='ctrl-o:execute-silent(gh gist view --web {1} &)+refresh-preview' \
         --bind="ctrl-y:execute-silent(
             echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
-        )" \
-        --bind='enter:execute(gh gist edit {1})' \
-        --bind='alt-c:execute(gh gist clone {1})' \
-        --bind="alt-X:execute(gh gist delete {1})" \
+        )+refresh-preview" \
+        --bind='enter:execute(gh gist edit {1})+refresh-preview' \
+        --bind='alt-c:execute(gh gist clone {1})+refresh-preview' \
+        --bind="alt-X:execute(gh gist delete {1})+refresh-preview" \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --public")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --secret")'
 }

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.0](https://github.com/benelan/gh-fzf/compare/v0.8.0...v0.9.0) (2024-05-02)
+
+
+### Features
+
+* **preview, header:** Readable on small width terminals ([ca8bbf5](https://github.com/benelan/gh-fzf/commit/ca8bbf596fd66dd5687e17c38b977f832175db79))
+* Refresh preview after keybind actions execute ([f3b5fad](https://github.com/benelan/gh-fzf/commit/f3b5fad561ff5d99199c40f582bd5c4dd6025dee))
+
+
+### Bug Fixes
+
+* **label:** Handle spaces in label names ([b7697a0](https://github.com/benelan/gh-fzf/commit/b7697a0212231419ab5630ca32dc288db207e351))
+
 ## [0.8.0](https://github.com/benelan/gh-fzf/compare/v0.7.0...v0.8.0) (2024-04-09)
 
 

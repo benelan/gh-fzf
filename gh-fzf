@@ -202,7 +202,12 @@ $global_binds
             gh issue view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
         )+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
-        --bind="alt-o:execute(gh issue develop --checkout {1} $repo_flag)+abort" \
+        --bind='alt-o:execute(
+            printf "Branch name for {1} (leave blank to use the default): ";
+            read -r branch;
+            [ -n "$branch" ] && branch_flag="--name $branch";
+            gh issue develop {1} --checkout "$branch_flag" '"$repo_flag"'
+        )+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
             gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'

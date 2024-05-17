@@ -203,9 +203,13 @@ $global_binds
         )+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
         --bind='alt-o:execute(
-            printf "Branch name for {1} (leave blank to use the default): ";
-            read -r branch;
-            gh issue develop {1} --checkout ${branch:+--name $branch} '"$repo_flag"'
+            prefix="$GH_FZF_BRANCH_PREFIX"
+            num="${GH_FZF_BRANCH_ADD_ISSUE_NUMBER:+{1}$GH_FZF_BRANCH_ADD_ISSUE_NUMBER}"
+            num=$(tr -d "#'\''" <<< ${num// /})
+            printf "Enter branch name for {1}: ${prefix}${num}";
+            read -r name;
+            branch="${prefix}${num}${name// /-}"
+            gh issue develop {1} --checkout ${branch:+--name "$branch"} '"$repo_flag"'
         )+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(

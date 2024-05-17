@@ -4,7 +4,7 @@
     "alternate": "README.md"
   },
   "README.md": {
-    "type": "docs",
+    "type": "doc",
     "alternate": "gh-fzf"
   },
   ".github/workflows/release.yml": {

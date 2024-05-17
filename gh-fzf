@@ -97,8 +97,6 @@ fi
 
 if [ -n "$GH_FZF_HIDE_HINTS" ]; then
     on_start="toggle-header"
-else
-    on_start=""
 fi
 
 if [ -n "$GH_FZF_TRUNCATE_FIELDS" ]; then

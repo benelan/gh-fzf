@@ -205,8 +205,7 @@ $global_binds
         --bind='alt-o:execute(
             printf "Branch name for {1} (leave blank to use the default): ";
             read -r branch;
-            [ -n "$branch" ] && branch_flag="--name $branch";
-            gh issue develop {1} --checkout "$branch_flag" '"$repo_flag"'
+            gh issue develop {1} --checkout ${branch:+--name $branch} '"$repo_flag"'
         )+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(

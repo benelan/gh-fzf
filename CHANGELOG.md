@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.10.0](https://github.com/benelan/gh-fzf/compare/v0.9.0...v0.10.0) (2024-05-18)
+
+
+### Features
+
+* Improve default user interface ([d891a07](https://github.com/benelan/gh-fzf/commit/d891a07056838e97b9e8155e3eb4adf65445a924))
+* **issue:** Add options for naming linked branch ([f6f78e2](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119))
+* **issue:** Checkout existing linked branch if exists ([ecfd426](https://github.com/benelan/gh-fzf/commit/ecfd4269419131a9861da21f7cfffb64c48f7d79))
+* **issue:** Prompt for branch name in develop keybind ([1aca50f](https://github.com/benelan/gh-fzf/commit/1aca50fbf8a159dc36504891bf13877642d0ec99))
+
+
+### Bug Fixes
+
+* Config issues when user hasn't set FZF_DEFAULT_OPTS ([5ae01a4](https://github.com/benelan/gh-fzf/commit/5ae01a44dd546473fb29f15f5438ff3255040446))
+* **issue:** Syntax error setting linked branch name ([9c484d8](https://github.com/benelan/gh-fzf/commit/9c484d894c25578e4aeb97628d7eb40351f5fa58))
+
 ## [0.9.0](https://github.com/benelan/gh-fzf/compare/v0.8.0...v0.9.0) (2024-05-02)
 
 

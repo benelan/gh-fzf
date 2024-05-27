@@ -67,18 +67,20 @@ gh extension upgrade gh-fzf
 Alternatively, you can pin a tag when installing `gh` extensions. If you already
 have `gh-fzf` installed, you need to remove it first before pinning a version:
 
-<!-- x-release-please-start-version -->
-
 ```sh
 gh extension remove fzf && gh extension install benelan/gh-fzf --pin "v0.8.0"
 ```
 
-<!-- x-release-please-end -->
-
 There is also a `stable` tag, which always points to the latest release.
 
 The [changelog](./CHANGELOG.md) contains a list of features and fixes released
-in each version. To see the version of `gh-fzf` you currently have installed:
+in each version. You can also view the release notes on the command line with:
+
+```sh
+gh fzf changelog
+```
+
+To see the version of `gh-fzf` you currently have installed:
 
 ```sh
 gh fzf -v
@@ -118,8 +120,8 @@ that can be used with any `gh fzf` command:
 - **Keybindings**:
   - `enter`: Edit the selected issue via CLI prompts
     (see `gh issue edit --help`)
-  - `alt-o`: Create/checkout the branch linked to the selected issue
-    (see `gh issue develop --help`)
+  - `alt-o`: Create/checkout a branch linked to the selected issue, prompting
+    for the name (see `gh issue develop --help`)
   - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
   - `alt-l`: Open `gh fzf label` and add the selected label to the issue
   - `alt-L`: Open `gh fzf label` and remove the selected label from the issue
@@ -315,18 +317,20 @@ that can be used with any `gh fzf` command:
 
 Environment variables are used to configure `gh-fzf`.
 
-| Variable                 | Description                                                                                                                                                                                                                   | Default                                                                                                      |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `GH_FZF_DEFAULT_LIMIT`   | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info.                                        | 69                                                                                                           |
-| `GH_FZF_TRUNCATE_FIELDS` | Set the variable to any value to make `gh` truncate text to ensure all fields fit on the screen. When set, truncated text is **not** fuzzy findable. When unset, fields may be cut off, but all text is still fuzzy findable. | unset                                                                                                        |
-| `GH_FZF_HIDE_HINTS`      | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                    | unset                                                                                                        |
-| `GH_FZF_COPY_CMD`        | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                          | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
+| Variable                         | Description                                                                                                                                                                                                                                                                                                    | Default                                                                                                      |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `GH_FZF_DEFAULT_LIMIT`           | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info.                                                                                                                         | 69                                                                                                           |
+| `GH_FZF_TRUNCATE_FIELDS`         | Set the variable to any value to make `gh` truncate text to ensure all fields fit on the screen. When set, truncated text is **not** fuzzy findable. When unset, fields may be cut off, but all text is still fuzzy findable.                                                                                  | unset                                                                                                        |
+| `GH_FZF_HIDE_HINTS`              | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                                                                                                     | unset                                                                                                        |
+| `GH_FZF_BRANCH_PREFIX`           | A string to prepend to the branch name entered for the `pr` command's `alt-o` keybinding. Spaces are replaced with hyphens. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples.                                                          | unset                                                                                                        |
+| `GH_FZF_BRANCH_ADD_ISSUE_NUMBER` | When set, the issue number is added after the prefix (if specified) for the `pr` command's `alt-o` keybinding. The variable's value is added after the number, unless it is a space. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples. | unset                                                                                                        |
+| `GH_FZF_COPY_CMD`                | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                                                                                                           | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
 
 You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
 environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
 For example, create aliases in the `gh` config file that add new keybindings to
-the [`issue`](#issue) and [`pr`](#pr) commands:
+the [`issue`](#issue), [`pr`](#pr), and [`run`](#run) commands:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -336,12 +340,19 @@ aliases:
       --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
       --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
     " gh fzf issue $*
+
   p: |
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
       --bind='alt-+:execute(gh pr review --approve --body \":+1:\" {1})'
       --bind='alt--:execute(gh pr review --request-changes {1})'
       --bind='alt-m:execute(gh pr merge --delete-branch --squash {1})'
       " gh fzf pr $*
+
+  r: |
+    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+      --bind='alt-e:execute(gh run view --log-failed {-1})'
+      --bind='alt-i:reload(eval \"\$FZF_DEFAULT_COMMAND --status in_progress\")'
+    " gh fzf run $*
 ```
 
 When adding or modifying fzf keybindings:
@@ -356,11 +367,12 @@ When adding or modifying fzf keybindings:
   - the `<workflow-id>` for the [`workflow`](#workflow) command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
-[source code](https://github.com/benelan/gh-fzf/blob/c455e3034f49da1ae81c26779de2419fda87e4a8/gh-fzf#L145-L165).
+[source code](https://github.com/benelan/gh-fzf/blob/f8d5b23e283e234557cbed615993e618fd45ccf3/gh-fzf#L109-L129).
 
-**NOTE:** If any of the keybindings set by `gh-fzf` don't work, you may be
-overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting
-the `$FZF_DEFAULT_OPTS` environment variable.
+> [!WARNING]
+> If any of the shared keybindings set by `gh-fzf` don't work, you may be
+> overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting
+> the `$FZF_DEFAULT_OPTS` environment variable.
 
 ## Related projects
 

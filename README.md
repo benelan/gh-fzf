@@ -376,13 +376,15 @@ For a list of the fzf options shared by all `gh-fzf` commands, see the
 
 ## Related projects
 
-- [`gh-f`](https://github.com/gennaro-tedesco/gh-f): another `fzf` wrapper
-  around `gh` that also provides some `git` functionality.
+There is another `fzf` wrapper around `gh` that also provides some `git`
+functionality. However, it doesn't provide as many `gh` commands, keybindings,
+or configuration options.
 
-**NOTE:** `gh-fzf` leaves `git` functionality to other tools, and instead
-focuses on providing keybindings to run `gh` subcommands on the selected item.
-The following `fzf` wrappers around `git` are both good options to bridge that
-gap:
+- [`gh-f`](https://github.com/gennaro-tedesco/gh-f)
+
+The main focus of `gh-fzf` is providing keybindings to run `gh` subcommands on
+the selected item, so `git` functionality is left to other tools. The
+following `fzf` wrappers around `git` are good options to bridge that gap.
 
 - [`forgit`](https://github.com/wfxr/forgit)
 - [`git-fuzzy`](https://github.com/bigH/git-fuzzy)

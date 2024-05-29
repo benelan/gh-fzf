@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=2016
+# shellcheck disable=2086,2015,2016
 set -e
 
 # An fzf wrapper around the GitHub CLI - https://github.com/benelan/gh-fzf
@@ -35,10 +35,10 @@ has() { command -v "$1" >/dev/null 2>&1; }
 
 error() {
     if [ -n "$1" ]; then
-        printf "Error: %s\n" "$*"
+        printf "Error: " >&2
+        printf "%s\n" "$@" >&2
     fi
-    printf "\n%s\n" \
-        "Try -h for usage information" >&2
+    printf "\n%s\n" "See -h for usage info" >&2
     exit 1
 }
 
@@ -196,23 +196,9 @@ $global_binds
         --header="$issue_header" \
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag &)+refresh-preview" \
-        --bind="ctrl-y:execute-silent(
-            gh issue view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
-        --bind='alt-o:execute(
-            branch="$(gh issue develop --list {1} | tail | cut -f1)"
-            if git show-ref --quiet "refs/heads/$branch"; then
-                git checkout "$branch"
-            else
-                num="${GH_FZF_BRANCH_ADD_ISSUE_NUMBER:+{1}$GH_FZF_BRANCH_ADD_ISSUE_NUMBER}"
-                num=$(tr -d "#'\''" <<< ${num// /})
-                printf "Enter branch name for {1}: ${GH_FZF_BRANCH_PREFIX}${num}";
-                read -r name;
-                branch="${GH_FZF_BRANCH_PREFIX}${num}${name// /-}"
-                gh issue develop {1} --checkout ${branch:+--name "$branch"} '"$repo_flag"'
-            fi
-        )+abort' \
+        --bind='alt-o:execute(gh fzf util develop-issue {1})+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
             gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
@@ -285,9 +271,7 @@ $global_binds
         --header="$pr_header" \
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag &)+refresh-preview" \
-        --bind="ctrl-y:execute-silent(
-            gh pr view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
         --bind="enter:execute(gh pr edit {1} $repo_flag)+refresh-preview" \
         --bind="alt-c:execute(gh pr comment {1} $repo_flag)+refresh-preview" \
         --bind="alt-d:execute(gh pr diff {1} $repo_flag)+refresh-preview" \
@@ -376,9 +360,7 @@ $global_binds
         --header="$run_header" \
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag &)+refresh-preview" \
-        --bind="ctrl-y:execute-silent(
-            gh run view {-1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
         --bind="enter:execute(gh run watch {-1} $repo_flag)+refresh-preview" \
         --bind="alt-l:execute(gh run view --log {-1} $repo_flag)+refresh-preview" \
         --bind="alt-r:execute(gh run rerun {-1} $repo_flag)+refresh-preview" \
@@ -472,9 +454,7 @@ $global_binds
         --header="$release_header" \
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh release view --web {1} $repo_flag &)+refresh-preview" \
-        --bind="ctrl-y:execute-silent(
-            gh release view {1} --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
-        )+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
         --bind="alt-enter:execute(gh release download {1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh release delete {1} $repo_flag)+refresh-preview" \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
@@ -565,9 +545,7 @@ $global_binds
         --header-lines=4 \
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh repo view --web {1} &)+refresh-preview" \
-        --bind="ctrl-y:execute-silent(
-            gh repo view {1} --json 'url' -q '.url' | $GH_FZF_COPY_CMD
-        )+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
         --bind="alt-p:execute(gh fzf pr --repo {1})+refresh-preview" \
         --bind="alt-i:execute(gh fzf issue --repo {1})+refresh-preview" \
         --bind="alt-r:execute(gh fzf run --repo {1})+refresh-preview" \
@@ -608,6 +586,58 @@ Filters > (alt-p: public) (alt-s: secret)
 }
 
 # --------------------------------------------------------------------- }}}
+# Command > util                                                       {{{
+# --------------------------------------------------------------------- {|}
+
+# arg1: issue number
+branch_prompt() {
+    [ -z "$1" ] && error "missing argument." \
+        "Usage: gh fzf util branch-prompt <issue-number>"
+
+    issue="${GH_FZF_BRANCH_ADD_ISSUE_NUMBER:+${1}$GH_FZF_BRANCH_ADD_ISSUE_NUMBER}"
+    sanitized_issue=$(tr -d "#'\''" <<<"${issue// /}")
+
+    read -rp "Enter branch name for ${1}: ${GH_FZF_BRANCH_PREFIX}${sanitized_issue}" name
+    echo "${GH_FZF_BRANCH_PREFIX}${sanitized_issue}${name// /-}"
+}
+
+# arg1: issue number
+develop_issue() {
+    [ -z "$1" ] && error "missing argument." \
+        "Usage: gh fzf util develop-issue <issue-number>"
+
+    branch="$(gh issue develop --list "$1" | tail | cut -f1)"
+
+    if git show-ref --quiet "refs/heads/$branch"; then
+        git checkout "$branch"
+    else
+        name="$(gh fzf util branch-prompt "$1")"
+        gh issue develop "$1" --checkout ${name:+--name "$name"} $repo_flag
+    fi
+}
+
+# arg1: github command ("issue", "run", etc.)
+# arg2: item identifier for the command (<issue-number>, <run-id>, etc.)
+copy_url() {
+    [ -z "$2" ] && error "missing argument(s)." \
+        "Usage: gh fzf util copy_url <command> <identifier>"
+
+    gh "$1" view "$2" --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
+}
+
+util_cmd() {
+    util="$1"
+    [ -n "$util" ] && shift || error "missing util name"
+
+    case $util in
+        copy-url) copy_url "$@" ;;
+        branch-prompt) branch_prompt "$@" ;;
+        develop-issue) develop_issue "$@" ;;
+        *) error "invalid util: \"$command\"" ;;
+    esac
+}
+
+# --------------------------------------------------------------------- }}}
 # Parse arguments                                                       {{{
 # --------------------------------------------------------------------- {|}
 
@@ -641,6 +671,7 @@ main() {
         gist | gists | --gist | --gists) gist_cmd "$@" ;;
         workflow | workflows | --workflow | --workflows) workflow_cmd "$@" ;;
         label | labels | --label | --labels) label_cmd "$@" ;;
+        util | utils | --util | --utils) util_cmd "$@" ;;
         changelog) gh fzf release --repo benelan/gh-fzf ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;

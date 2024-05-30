@@ -201,10 +201,12 @@ $global_binds
         --bind='alt-o:execute(gh fzf util develop-issue {1})+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
-            gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
+            label="$(gh fzf label '"$label_limit"')"
+            [ -n "$label" ] && gh issue edit --add-label "$label" {1} '"$repo_flag"'
         )+refresh-preview' \
         --bind='alt-L:execute(
-            gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
+            label="$(gh fzf label '"$label_limit"')"
+            [ -n "$label" ] && gh issue edit --remove-label "$label" {1} '"$repo_flag"'
         )+refresh-preview' \
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)+refresh-preview" \
@@ -278,10 +280,12 @@ $global_binds
         --bind="alt-o:execute(gh pr checkout {1} $repo_flag)+refresh-preview" \
         --bind="alt-r:execute(gh pr review {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(
-            gh issue edit --add-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
+            label="$(gh fzf label '"$label_limit"')"
+            [ -n "$label" ] && gh issue edit --add-label "$label" {1} '"$repo_flag"'
         )+refresh-preview' \
         --bind='alt-L:execute(
-            gh issue edit --remove-label "$(gh fzf label '"$label_limit"')" {1} '"$repo_flag"'
+            label="$(gh fzf label '"$label_limit"')"
+            [ -n "$label" ] && gh issue edit --remove-label "$label" {1} '"$repo_flag"'
         )+refresh-preview' \
         --bind='alt-C:execute<gh fzf run -b $(
             gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'
@@ -481,19 +485,16 @@ $global_binds
         --bind="enter:execute(printf {1})+abort" \
         --bind="ctrl-o:execute-silent(gh label list --web $repo_flag &)" \
         --bind='alt-n:execute(
-            printf "Enter new label name: ";
-            read -r name;
+            read -rp "Enter new label name: " name;
             [ -n "$name" ] && gh label edit {1} --name "$name" '"$repo_flag"'
         )' \
         --bind='alt-d:execute(
-            printf "Enter new label description: ";
-            read -r description;
+            read -rp "Enter new label description: " description;
             [ -n "$description" ] &&
                 gh label edit {1} --description "$description" '"$repo_flag"'
         )' \
         --bind='alt-c:execute(
-            printf "Enter new label color: ";
-            read -r color;
+            read -rp "Enter new label color: " color;
             [ -n "$color" ] && gh label edit {1} --color "$color" '"$repo_flag"'
         )' \
         --bind="alt-X:execute(gh label delete {1} $repo_flag)" \

@@ -626,38 +626,63 @@ copy_url() {
     gh "$1" view "$2" --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
 }
 
-# arg1: title
-# arg2: message
-# arg3: urgency (low, normal, critical)
-# arg4: icon path
-notify() {
+# arg1: run id
+notify_run_completed() {
+    run_id="$1"
+    [ -z "$run_id" ] && error "missing argument." \
+        "Usage: gh fzf util notify-run-completed <run-id>"
+
+    gh run watch --exit-status "$run_id" || urgency="critical"
+
+    OLDIFS=$IFS
+    IFS=$'\n'
+
+    run_info="$(
+        gh run view "$run_id" \
+            --json name,headBranch,conclusion,url \
+            --jq .name,.headBranch,.conclusion,.url
+    )"
+
+    set -- $run_info
+    workflow="$1"
+    branch="$2"
+    conclusion="$3"
+    url="$4"
+
+    IFS=$OLDIFS
+
+    title="${workflow:-GitHub Action run completed}"
+    body="${conclusion}${branch:+ on \"$branch\" branch}"
+
     if has dunstify; then
-        dunstify "$1" "$2" ${3:+-u $3} ${4:+-i $4} -a "gh-fzf"
+        [ -n "$urgency" ] &&
+            conditional_action="rerun,Rerun failed jobs" ||
+            conditional_action="download,Download artifacts"
+
+        action_response=$(
+            dunstify "$title" "$body" ${urgency:+-u "$urgency"} \
+                ${GH_FZF_NOTIFY_ICON:+-i "$GH_FZF_NOTIFY_ICON"} -a "gh-fzf" \
+                -A "web,Open in browser" -A "$conditional_action" -A "log,View logs"
+        )
+
+        case $action_response in
+            log) $TERMINAL -- sh -c "cd \"$PWD\" && gh run view --log \"$run_id\"" ;;
+            web) gh run view --web "$run_id" & ;;
+            download) gh run download "$run_id" ;;
+            rerun)
+                gh run rerun --failed "$run_id"
+                gh fzf util notify-run-completed "$run_id"
+                ;;
+            *) exit ;;
+        esac
     elif has notify-send; then
-        notify-send "$1" "$2" ${3:+-u $3} ${4:+-i $4} -a "gh-fzf"
+        notify-send "$title" "$body${url:+: \n$url}" ${urgency:+-u "$urgency"} \
+            ${GH_FZF_NOTIFY_ICON:+-i "$GH_FZF_NOTIFY_ICON"} -a "gh-fzf"
     elif has osascript; then
-        osascript -e "display notification '$2' with title '$1'"
+        osascript -e "display notification '$body${url:+: \n$url}' with title '$title'"
     else
         error "no notification support found." \
             "Supported: osascript, dunstify, notify-send"
-    fi
-
-}
-
-# arg1: run id
-notify_run_completed() {
-    [ -z "$1" ] && error "missing argument." \
-        "Usage: gh fzf util notify-run-completed <run-id>"
-
-    branch="$(gh run view ${1} --json headBranch --jq .headBranch)"
-    workflow="$(gh run view ${1} --json workflowName --jq .workflowName)"
-
-    if gh run watch --exit-status ${1}; then
-        notify "$workflow" "Passed${branch:+ on branch: $branch}" \
-            "normal" "$GH_FZF_NOTIFY_ICON"
-    else
-        notify "$workflow" "Failed${branch:+ on branch: $branch}" \
-            "critical" "$GH_FZF_NOTIFY_ICON"
     fi
 }
 

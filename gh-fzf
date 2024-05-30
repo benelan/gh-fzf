@@ -625,12 +625,48 @@ copy_url() {
     gh "$1" view "$2" --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
 }
 
+# arg1: title
+# arg2: message
+# arg3: urgency (low, normal, critical)
+# arg4: icon path
+notify() {
+    if has dunstify; then
+        dunstify "$1" "$2" ${3:+-u $3} ${4:+-i $4} -a "gh-fzf"
+    elif has notify-send; then
+        notify-send "$1" "$2" ${3:+-u $3} ${4:+-i $4} -a "gh-fzf"
+    elif has osascript; then
+        osascript -e "display notification '$2' with title '$1'"
+    else
+        error "no notification support found." \
+            "Supported: osascript, dunstify, notify-send"
+    fi
+
+}
+
+# arg1: run id
+notify_run_completed() {
+    [ -z "$1" ] && error "missing argument." \
+        "Usage: gh fzf util notify-run-completed <run-id>"
+
+    branch="$(gh run view ${1} --json headBranch --jq .headBranch)"
+    workflow="$(gh run view ${1} --json workflowName --jq .workflowName)"
+
+    if gh run watch --exit-status ${1}; then
+        notify "$workflow" "Passed${branch:+ on branch: $branch}" \
+            "normal" "$GH_FZF_NOTIFY_ICON"
+    else
+        notify "$workflow" "Failed${branch:+ on branch: $branch}" \
+            "critical" "$GH_FZF_NOTIFY_ICON"
+    fi
+}
+
 util_cmd() {
     util="$1"
     [ -n "$util" ] && shift || error "missing util name"
 
     case $util in
         copy-url) copy_url "$@" ;;
+        notify-run-completed) notify_run_completed "$@" ;;
         branch-prompt) branch_prompt "$@" ;;
         develop-issue) develop_issue "$@" ;;
         *) error "invalid util: \"$command\"" ;;

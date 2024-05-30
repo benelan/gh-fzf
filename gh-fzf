@@ -587,7 +587,7 @@ Filters > (alt-p: public) (alt-s: secret)
 }
 
 # --------------------------------------------------------------------- }}}
-# Command > util                                                       {{{
+# Command > util                                                        {{{
 # --------------------------------------------------------------------- {|}
 
 # arg1: issue number
@@ -656,24 +656,34 @@ notify_run_completed() {
 
     if has dunstify; then
         [ -n "$urgency" ] &&
-            conditional_action="rerun,Rerun failed jobs" ||
-            conditional_action="download,Download artifacts"
+            conditional_action="rerun,rerun failed jobs" ||
+            conditional_action="download,download artifacts"
 
         action_response=$(
             dunstify "$title" "$body" ${urgency:+-u "$urgency"} \
                 ${GH_FZF_NOTIFY_ICON:+-i "$GH_FZF_NOTIFY_ICON"} -a "gh-fzf" \
-                -A "web,Open in browser" -A "$conditional_action" -A "log,View logs"
+                -A "web,wpen in browser" -A "log,view logs" -A "$conditional_action"
         )
 
         case $action_response in
-            log) $TERMINAL -- sh -c "cd \"$PWD\" && gh run view --log \"$run_id\"" ;;
-            web) gh run view --web "$run_id" & ;;
-            download) gh run download "$run_id" ;;
+            web) gh run view --web $run_id & ;;
+            download) gh run download $run_id ;;
             rerun)
-                gh run rerun --failed "$run_id"
-                gh fzf util notify-run-completed "$run_id"
+                gh run rerun --failed $run_id
+                gh fzf util notify-run-completed $run_id
                 ;;
-            *) exit ;;
+            log)
+                case $TERMINAL in
+                    x-terminal-emulator | xterm | wezterm | kitty | gnome-terminal | alacritty | konsole | foot | eterm | st)
+                        $TERMINAL -e sh -c "gh run view --log $run_id $repo_flag" &
+                        ;;
+                    *)
+                        tmp="$(mktemp)"
+                        gh run view $run_id --log $repo_flag >$tmp
+                        xdg-open "$tmp" &
+                        ;;
+                esac
+                ;;
         esac
     elif has notify-send; then
         notify-send "$title" "$body${url:+: \n$url}" ${urgency:+-u "$urgency"} \

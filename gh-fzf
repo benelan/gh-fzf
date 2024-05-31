@@ -689,7 +689,7 @@ notify_run_completed() {
         notify-send "$title" "$body${url:+: \n$url}" ${urgency:+-u "$urgency"} \
             ${GH_FZF_NOTIFY_ICON:+-i "$GH_FZF_NOTIFY_ICON"} -a "gh-fzf"
     elif has osascript; then
-        osascript -e "display notification '$body${url:+: \n$url}' with title '$title'"
+        osascript -e "display notification \"$body${url:+: \n$url}\" with title \"$title\""
     else
         error "no notification support found." \
             "Supported: osascript, dunstify, notify-send"

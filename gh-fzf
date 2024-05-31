@@ -188,9 +188,6 @@ $global_binds
 
 "
 
-    # increase the limit when showing labels
-    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
-
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
@@ -201,14 +198,8 @@ $global_binds
         --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
         --bind='alt-o:execute(gh fzf util develop-issue {1})+abort' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
-        --bind='alt-l:execute(
-            label="$(gh fzf label '"$label_limit"')"
-            [ -n "$label" ] && gh issue edit --add-label "$label" {1} '"$repo_flag"'
-        )+refresh-preview' \
-        --bind='alt-L:execute(
-            label="$(gh fzf label '"$label_limit"')"
-            [ -n "$label" ] && gh issue edit --remove-label "$label" {1} '"$repo_flag"'
-        )+refresh-preview' \
+        --bind='alt-l:execute(gh fzf util select-labels add issue {1})+refresh-preview' \
+        --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
@@ -265,8 +256,6 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 
 "
-    # increase the limit when showing labels
-    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
@@ -280,14 +269,8 @@ $global_binds
         --bind="alt-d:execute(gh pr diff {1} $repo_flag)+refresh-preview" \
         --bind="alt-o:execute(gh pr checkout {1} $repo_flag)+refresh-preview" \
         --bind="alt-r:execute(gh pr review {1} $repo_flag)+refresh-preview" \
-        --bind='alt-l:execute(
-            label="$(gh fzf label '"$label_limit"')"
-            [ -n "$label" ] && gh issue edit --add-label "$label" {1} '"$repo_flag"'
-        )+refresh-preview' \
-        --bind='alt-L:execute(
-            label="$(gh fzf label '"$label_limit"')"
-            [ -n "$label" ] && gh issue edit --remove-label "$label" {1} '"$repo_flag"'
-        )+refresh-preview' \
+        --bind='alt-l:execute(gh fzf util select-labels add pr {1})+refresh-preview' \
+        --bind='alt-L:execute(gh fzf util select-labels remove pr {1})+refresh-preview' \
         --bind='alt-C:execute<gh fzf run -b $(
             gh pr view {1} --json headRefName --jq .headRefName '"$repo_flag"'
         ) '"$repo_flag"'>+refresh-preview' \
@@ -483,11 +466,11 @@ $global_binds
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh label list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
+        --multi \
         --no-preview \
         --header-lines=4 \
         --header="$label_header" \
         --bind="start:$on_start" \
-        --bind="enter:execute(printf {1})+abort" \
         --bind="ctrl-o:execute-silent(gh label list --web $repo_flag &)" \
         --bind='alt-n:execute(
             read -rp "Enter new label name: " name;
@@ -595,6 +578,38 @@ Filters > (alt-p: public) (alt-s: secret)
 # Command > util                                                        {{{
 # --------------------------------------------------------------------- {|}
 
+# arg1: the flag to append to the each of the following arguments
+# arg2...n: the values for the flag
+# example: $ flagify --add-label "foo" "bar baz" "etc., etc."
+#          => --add-label="foo" --add-label="bar baz" --add-label="etc., etc."
+flagify() {
+    flag="$1"
+    [ -n "$flag" ] && shift || error "missing argument(s)." \
+        "Usage: gh fzf util flagify <flag> [<value>...]"
+
+    awk -F"  " '{str = sprintf("'"${flag}"'=\"%s\"", $1)}; {print str}' |
+        tr -t '\n' ' '
+}
+
+# arg1: the type of edit, either "add" or "remove"
+# arg2: the gh command, either "issue" or "pr"
+# arg3: the issue or pr <number>
+select_labels() {
+    [ -n "$3" ] && { [ "$1" = "add" ] || [ "$1" = "remove" ]; } &&
+        { [ "$2" = "pr" ] || [ "$2" = "issue" ]; } ||
+        error "missing argument(s)." \
+            "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifer>"
+
+    # increase the limit when selecting labels
+    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
+
+    label_flags="$(
+        gh fzf label $label_limit | flagify "--$1-label"
+    )"
+
+    [ -n "$label_flags" ] && eval "gh $2 edit \"$3\" $label_flags $repo_flag"
+}
+
 # arg1: issue number
 branch_prompt() {
     [ -z "$1" ] && error "missing argument." \
@@ -628,7 +643,15 @@ copy_url() {
     [ -z "$2" ] && error "missing argument(s)." \
         "Usage: gh fzf util copy_url (issue | pr | run | release | repo) <identifier>"
 
-    gh $1 view --json 'url' -q '.url' $2 $repo_flag | $GH_FZF_COPY_CMD
+    case $1 in
+        issue | pr | run | release | repo)
+            gh $1 view --json 'url' -q '.url' $2 $repo_flag | $GH_FZF_COPY_CMD
+            ;;
+        *)
+            error "invalid command: \"$1\"" \
+                "Valid commands: issue, pr, run, release, repo"
+            ;;
+    esac
 }
 
 # arg1: run id
@@ -739,7 +762,8 @@ util_cmd() {
         notify-run-completed) notify_run_completed "$@" ;;
         branch-prompt) branch_prompt "$@" ;;
         develop-issue) develop_issue "$@" ;;
-        *) error "invalid util: \"$command\"" ;;
+        select-labels) select_labels "$@" ;;
+        *) error "invalid util: \"$util\"" ;;
     esac
 }
 

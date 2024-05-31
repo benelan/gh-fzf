@@ -354,7 +354,7 @@ run_cmd() {
     '\'''
 
     run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
-Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
+Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
 
 "
@@ -381,6 +381,7 @@ $global_binds
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
+        --bind='alt-i:reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
         --bind='alt-u:reload(
             eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)"
         )'

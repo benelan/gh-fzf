@@ -208,6 +208,7 @@ that can be used with any `gh fzf` command:
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
+  - `alt-i`: Filter the list, showing in_progress runs
 - **Examples:**
   - Filter the initial list to runs for the "tests" workflow:
     ```sh

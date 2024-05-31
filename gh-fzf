@@ -617,11 +617,11 @@ develop_issue() {
     fi
 }
 
-# arg1: github command ("issue", "run", etc.)
-# arg2: item identifier for the command (<issue-number>, <run-id>, etc.)
+# arg1: github command, supports: "issue", "pr", "run", "release", "repo"
+# arg2: item identifier for the command (<number>, <run-id>, etc.)
 copy_url() {
     [ -z "$2" ] && error "missing argument(s)." \
-        "Usage: gh fzf util copy_url <command> <identifier>"
+        "Usage: gh fzf util copy_url (issue | pr | run | release | repo) <identifier>"
 
     gh "$1" view "$2" --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
 }
@@ -674,7 +674,8 @@ notify_run_completed() {
                 ;;
             log)
                 case $TERMINAL in
-                    x-terminal-emulator | xterm | wezterm | kitty | gnome-terminal | alacritty | konsole | foot | eterm | st)
+                    x-terminal-emulator | xterm | wezterm | kitty | alacritty | \
+                        gnome-terminal | konsole | foot | eterm | st)
                         $TERMINAL -e sh -c "gh run view --log $run_id $repo_flag" &
                         ;;
                     *)
@@ -694,7 +695,7 @@ notify_run_completed() {
         osascript -e "display notification \"$body${url:+: \n$url}\" with title \"$title\""
     else
         error "no notification support found." \
-            "Supported: osascript, dunstify, notify-send"
+            "Supported: dunstify, notify-send, osascript"
     fi
 }
 

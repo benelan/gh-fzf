@@ -607,13 +607,13 @@ develop_issue() {
     [ -z "$1" ] && error "missing argument." \
         "Usage: gh fzf util develop-issue <issue-number>"
 
-    branch="$(gh issue develop --list "$1" | tail | cut -f1)"
+    branch="$(gh issue develop --list $1 $repo_flag | tail | cut -f1)"
 
     if git show-ref --quiet "refs/heads/$branch"; then
         git checkout "$branch"
     else
-        name="$(gh fzf util branch-prompt "$1")"
-        gh issue develop "$1" --checkout ${name:+--name "$name"} $repo_flag
+        name="$(gh fzf util branch-prompt $1)"
+        gh issue develop --checkout ${name:+--name "$name"} $1 $repo_flag
     fi
 }
 
@@ -623,22 +623,22 @@ copy_url() {
     [ -z "$2" ] && error "missing argument(s)." \
         "Usage: gh fzf util copy_url (issue | pr | run | release | repo) <identifier>"
 
-    gh "$1" view "$2" --json 'url' -q '.url' $repo_flag | $GH_FZF_COPY_CMD
+    gh $1 view --json 'url' -q '.url' $2 $repo_flag | $GH_FZF_COPY_CMD
 }
 
 # arg1: run id
 notify_run_completed() {
     run_id="$1"
-    [ -z "$run_id" ] && error "missing argument." \
+    [ -n "$run_id" ] && shift || error "missing argument." \
         "Usage: gh fzf util notify-run-completed <run-id>"
 
-    gh run watch --exit-status "$run_id" || urgency="critical"
+    gh run watch --exit-status $run_id $repo_flag || urgency="critical"
 
     OLDIFS=$IFS
     IFS=$'\n'
 
     run_info="$(
-        gh run view "$run_id" \
+        gh run view $run_id $repo_flag \
             --json name,headBranch,conclusion,url \
             --jq .name,.headBranch,.conclusion,.url
     )"
@@ -662,15 +662,15 @@ notify_run_completed() {
         action_response=$(
             dunstify "$title" "$body" ${urgency:+-u "$urgency"} \
                 ${GH_FZF_NOTIFY_ICON:+-i "$GH_FZF_NOTIFY_ICON"} -a "gh-fzf" \
-                -A "web,wpen in browser" -A "log,view logs" -A "$conditional_action"
+                -A "web,open in browser" -A "log,view logs" -A "$conditional_action"
         )
 
         case $action_response in
-            web) gh run view --web $run_id & ;;
-            download) gh run download $run_id ;;
+            web) gh run view --web $run_id $repo_flag & ;;
+            download) gh run download $run_id $repo_flag ;;
             rerun)
-                gh run rerun --failed $run_id
-                gh fzf util notify-run-completed $run_id
+                gh run rerun --failed $run_id $repo_flag
+                gh fzf util notify-run-completed $run_id $repo_flag
                 ;;
             log)
                 case $TERMINAL in
@@ -717,10 +717,12 @@ util_cmd() {
 # --------------------------------------------------------------------- {|}
 
 find_repo_flag() {
-    for i in "$@"; do
-        case $i in
-            -R | --repo) repo_flag="--repo $2" && shift 2 ;;
-            -R=* | --repo=*) repo_flag="--repo=${i#*=}" && shift ;;
+    args=("$@")
+    for i in $(seq 0 ${#args[@]}); do
+        val=${args[$i]}
+        case $val in
+            -R | --repo) repo_flag="--repo=${args[$((i + 1))]}" ;;
+            -R=* | --repo=*) repo_flag="--repo=${val#*=}" ;;
         esac
     done
 }

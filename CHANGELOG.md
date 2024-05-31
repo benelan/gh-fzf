@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.11.0](https://github.com/benelan/gh-fzf/compare/v0.10.0...v0.11.0) (2024-05-31)
+
+
+### Features
+
+* Add command for viewing gh-fzf's changelog ([f8d5b23](https://github.com/benelan/gh-fzf/commit/f8d5b23e283e234557cbed615993e618fd45ccf3))
+* **run:** Add actions to experimental notifications ([a5c3c50](https://github.com/benelan/gh-fzf/commit/a5c3c5032fea1f5d4b9a7c706862b8c3fdcf6148))
+* **run:** Add keybind to filter by in_progress ([89580c0](https://github.com/benelan/gh-fzf/commit/89580c0ec4c37f3ec632d2b7409164028e29aa6d))
+* **run:** Add keybind to notify desktop on completion ([b4185b7](https://github.com/benelan/gh-fzf/commit/b4185b71727c69c70b49fcf668d5cc83854f9bbf))
+* **run:** Improve fallback for dunst's log action ([31d4199](https://github.com/benelan/gh-fzf/commit/31d419911033d8c2063a9bee1a8be2341c8c86cc))
+* **run:** Notify desktop when completed (experimental) ([009598c](https://github.com/benelan/gh-fzf/commit/009598c4271dba7a2d4ef2b1c866606bfa02368a))
+
+
+### Bug Fixes
+
+* **run:** Errors opening logs from notification ([922fb4b](https://github.com/benelan/gh-fzf/commit/922fb4b5a591eeb5506cc28e7eac3ae882cc6ca7))
+* **run:** Escape quotes when notifying via osascript ([8a86ee7](https://github.com/benelan/gh-fzf/commit/8a86ee7861cbe45b63bb3f2f17f4553feb5c71a1))
+* **run:** Fix quotes error in osascript notification ([36c5676](https://github.com/benelan/gh-fzf/commit/36c5676c2cd11ccce1429b7dd65b5bff73616070))
+* **util:** Correctly pass --repo and -R flags to gh ([46adb7e](https://github.com/benelan/gh-fzf/commit/46adb7e7f030d768457c10e2f83e23756cae931e))
+
+
+### Performance Improvements
+
+* **issue, pr:** Abort label change if none selected ([86b4457](https://github.com/benelan/gh-fzf/commit/86b445769884c829d56b7f193aa970e32f2eae52))
+
 ## [0.10.0](https://github.com/benelan/gh-fzf/compare/v0.9.0...v0.10.0) (2024-05-18)
 
 

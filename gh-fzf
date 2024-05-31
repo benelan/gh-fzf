@@ -658,7 +658,7 @@ notify_run_completed() {
     IFS=$OLDIFS
 
     title="${workflow:-GitHub Action run completed}"
-    body="${conclusion}${branch:+ on \"$branch\" branch}"
+    body="${conclusion}${branch:+" on '$branch' branch"}"
 
     if has dunstify; then
         [ -n "$urgency" ] &&

@@ -678,9 +678,11 @@ notify_run_completed() {
                         $TERMINAL -e sh -c "gh run view --log $run_id $repo_flag" &
                         ;;
                     *)
-                        tmp="$(mktemp)"
-                        gh run view $run_id --log $repo_flag >$tmp
-                        xdg-open "$tmp" &
+                        tmpfile="$(
+                            mktemp gh-fzf-run-${run_id}_XXX --tmpdir --suffix .log
+                        )"
+                        gh run view --log $run_id $repo_flag >"$tmpfile"
+                        xdg-open "$tmpfile" &
                         ;;
                 esac
                 ;;

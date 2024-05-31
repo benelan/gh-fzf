@@ -196,6 +196,15 @@ that can be used with any `gh fzf` command:
   - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
   - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as HEAD
     (see [`pr`](#pr))
+  - `alt-n`: Create a desktop notification with conclusion info when the
+    selected run ends. The supported notification tools (tried in order) are
+    `dunstify`, `notify-send`, and `osascript`. The notification has
+    [actions](https://dunst-project.org/documentation#ACTIONS) for rerun, view
+    logs, etc. when using `dunstify`.
+    > [!NOTE]
+    > The process that watches the run and notifies on completion is executed in
+    > the background, however it is still tied to `gh-fzf`. This means closing
+    > `gh-fzf` will prevent the notification from occurring.
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
@@ -324,6 +333,7 @@ Environment variables are used to configure `gh-fzf`.
 | `GH_FZF_HIDE_HINTS`              | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                                                                                                     | unset                                                                                                        |
 | `GH_FZF_BRANCH_PREFIX`           | A string to prepend to the branch name entered for the `pr` command's `alt-o` keybinding. Spaces are replaced with hyphens. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples.                                                          | unset                                                                                                        |
 | `GH_FZF_BRANCH_ADD_ISSUE_NUMBER` | When set, the issue number is added after the prefix (if specified) for the `pr` command's `alt-o` keybinding. The variable's value is added after the number, unless it is a space. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples. | unset                                                                                                        |
+| `GH_FZF_NOTIFY_ICON`             | A path to an icon for the desktop notification displayed by the `run` command's `alt-n` keybinding. Only supported by `dunstify` and `notify-send` for now.                                                                                                                                            | unset                                                                                                        |
 | `GH_FZF_COPY_CMD`                | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                                                                                                           | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
 
 You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)

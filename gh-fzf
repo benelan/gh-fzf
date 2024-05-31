@@ -67,6 +67,7 @@ Other Commands:
   help        Print this help message.
   version     Print the version of gh-fzf.
   changelog   View gh-fzf's changelog via the release command.
+  util        Functions used internally that may be useful for scripting.
 
 Check out the project homepage for more information, such as keybindings,
 configuration, and examples.
@@ -352,7 +353,7 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-p: pr) (alt-d: download)
+    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed runs) (alt-b: current branch) (alt-u: current user)
 $global_binds
 
@@ -370,6 +371,9 @@ $global_binds
         --bind="alt-r:execute(gh run rerun {-1} $repo_flag)+refresh-preview" \
         --bind="alt-d:execute(gh run download {-1} $repo_flag)+refresh-preview" \
         --bind="alt-x:execute(gh run cancel {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-n:execute-silent(
+            gh fzf util notify-run-completed {-1} $repo_flag &
+        )+refresh-preview" \
         --bind='alt-p:execute<gh fzf pr --head $(
             gh run view {-1} --json headBranch --jq .headBranch '"$repo_flag"'
         ) '"$repo_flag"'>+refresh-preview' \
@@ -629,6 +633,7 @@ copy_url() {
 # arg1: run id
 notify_run_completed() {
     run_id="$1"
+
     [ -n "$run_id" ] && shift || error "missing argument." \
         "Usage: gh fzf util notify-run-completed <run-id>"
 
@@ -694,7 +699,7 @@ notify_run_completed() {
     elif has osascript; then
         osascript -e "display notification \"$body${url:+: \n$url}\" with title \"$title\""
     else
-        error "no notification support found." \
+        error "notification support not found." \
             "Supported: dunstify, notify-send, osascript"
     fi
 }
@@ -729,12 +734,7 @@ find_repo_flag() {
 
 main() {
     command="$1"
-
-    if [ -z "$command" ]; then
-        default_cmd
-    else
-        shift
-    fi
+    [ -n "$command" ] && shift || default_cmd
 
     find_repo_flag "$@"
 

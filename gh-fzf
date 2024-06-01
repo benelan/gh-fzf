@@ -682,22 +682,41 @@ notify_run_completed() {
             download) gh run download $run_id $repo_flag ;;
             rerun)
                 gh run rerun --failed $run_id $repo_flag
-                gh fzf util notify-run-completed $run_id $repo_flag
+                gh fzf util notify-run-completed $run_id $repo_flag &
                 ;;
             log)
                 case $TERMINAL in
                     x-terminal-emulator | xterm | wezterm | kitty | alacritty | \
                         gnome-terminal | konsole | foot | eterm | st)
-                        $TERMINAL -e sh -c "gh run view --log $run_id $repo_flag" &
+                        $TERMINAL -e sh -c "gh run view --log $run_id $repo_flag"
                         ;;
                     *)
                         tmpfile="$(
                             mktemp gh-fzf-run-${run_id}_XXX --tmpdir --suffix .log
                         )"
                         gh run view --log $run_id $repo_flag >"$tmpfile"
-                        xdg-open "$tmpfile" &
+                        xdg-open "$tmpfile"
                         ;;
                 esac
+
+                if [ -n "$urgency" ]; then
+                    if has rofi; then
+                        rerun_response="$(
+                            printf "%s\n%s" "yes" "no" | rofi -dmenu -l 2 -i -p \
+                                "Rerun${workflow:+ \"$workflow\"}${branch:+ on \"$branch\" branch}?"
+                        )"
+                    elif has dmenu; then
+                        rerun_response="$(
+                            printf "%s\n%s" "yes" "no" | dmenu -i -p \
+                                "Rerun${workflow:+ \"$workflow\"}${branch:+ on \"$branch\" branch}?"
+                        )"
+                    fi
+
+                    if [ "$rerun_response" = "yes" ]; then
+                        gh run rerun --failed $run_id $repo_flag
+                        gh fzf util notify-run-completed $run_id $repo_flag &
+                    fi
+                fi
                 ;;
         esac
     elif has notify-send; then

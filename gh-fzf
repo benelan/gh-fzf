@@ -657,7 +657,13 @@ notify_run_completed() {
 
     IFS=$OLDIFS
 
-    title="${workflow:-GitHub Action run completed}"
+    title="${workflow:-GitHub Action run concluded}"
+
+    # The `conclusion` field is the run's URL if it is still in progress. This
+    # causes weird notification formatting in an edge case where the watch
+    # process gets killed (e.g., by `killall gh`.)
+    case $conclusion in https://*) conclusion="notification cancelled for run" ;; esac
+
     body="${conclusion}${branch:+" on '$branch' branch"}"
 
     if has dunstify; then

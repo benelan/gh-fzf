@@ -471,6 +471,7 @@ $global_binds
         --header-lines=4 \
         --header="$label_header" \
         --bind="start:$on_start" \
+        --bind="enter:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="ctrl-o:execute-silent(gh label list --web $repo_flag &)" \
         --bind='alt-n:execute(
             read -rp "Enter new name for {1} label: " name;

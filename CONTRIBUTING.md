@@ -1,6 +1,6 @@
 # Contributing
 
-I welcome and appreciate contributions from anyone and everyone!
+I welcome and appreciate contributions!
 
 ## What should I work on?
 
@@ -22,14 +22,16 @@ Some other things to consider:
 - Detail what is happening now vs what should happen
 - Describe how to reproduce the issue, including step by step instructions,
   environment, version, and any other relevant information.
-- Can it be reliably reproduced If not, mention how often it happens and under
+- Can it be reliably reproduced? If not, mention how often it happens and under
   what circumstances.
 - Did this problem start after a recent release? If so, which version?
 
 ## Before submitting a pull request
 
-I am accepting and appreciate pull requests, but please log an issue first.
-I would hate to turn down your hard work for some reason. Mention your interest
-in working on the issue when you log it, and I'll provide feedback/guidance.
+I am accepting and appreciate pull requests, but please log an issue first if
+the change isn't trivial. I would hate to turn down your hard work for some
+reason. Mention your interest in working on the issue when you log it, and I'll
+provide feedback/guidance.
 
-Also, this project follows [conventional commits](https://www.conventionalcommits.org).
+Make sure the pull request's title adheres to the
+[conventional commits](https://www.conventionalcommits.org) specification.

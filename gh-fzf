@@ -196,7 +196,7 @@ $global_binds
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $repo_flag)+refresh-preview" \
-        --bind='alt-o:execute(gh fzf util develop-issue {1})+abort' \
+        --bind='alt-o:become(gh fzf util develop-issue {1})' \
         --bind="alt-c:execute(gh issue comment {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(gh fzf util select-labels add issue {1})+refresh-preview' \
         --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
@@ -267,7 +267,7 @@ $global_binds
         --bind="enter:execute(gh pr edit {1} $repo_flag)+refresh-preview" \
         --bind="alt-c:execute(gh pr comment {1} $repo_flag)+refresh-preview" \
         --bind="alt-d:execute(gh pr diff {1} $repo_flag)+refresh-preview" \
-        --bind="alt-o:execute(gh pr checkout {1} $repo_flag)+refresh-preview" \
+        --bind="alt-o:become(gh pr checkout {1} $repo_flag)" \
         --bind="alt-r:execute(gh pr review {1} $repo_flag)+refresh-preview" \
         --bind='alt-l:execute(gh fzf util select-labels add pr {1})+refresh-preview' \
         --bind='alt-L:execute(gh fzf util select-labels remove pr {1})+refresh-preview' \

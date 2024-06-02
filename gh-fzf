@@ -473,16 +473,16 @@ $global_binds
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh label list --web $repo_flag &)" \
         --bind='alt-n:execute(
-            read -rp "Enter new label name: " name;
+            read -rp "Enter new name for {1} label: " name;
             [ -n "$name" ] && gh label edit {1} --name "$name" '"$repo_flag"'
         )' \
         --bind='alt-d:execute(
-            read -rp "Enter new label description: " description;
+            read -rp "Enter new description for {1} label: " description;
             [ -n "$description" ] &&
                 gh label edit {1} --description "$description" '"$repo_flag"'
         )' \
         --bind='alt-c:execute(
-            read -rp "Enter new label color: " color;
+            read -rp "Enter new color for {1} label: " color;
             [ -n "$color" ] && gh label edit {1} --color "$color" '"$repo_flag"'
         )' \
         --bind="alt-X:execute(gh label delete {1} $repo_flag)" \

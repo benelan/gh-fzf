@@ -182,7 +182,7 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
-    issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add label) (alt-L: remove label) (alt-X: close) (alt-O: reopen)
+    issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add labels) (alt-L: remove labels) (alt-X: close) (alt-O: reopen)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 $global_binds
 
@@ -250,8 +250,8 @@ pr_cmd() {
             {{- end -}}
     '\'''
 
-    pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add label)
-        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-X: close) (alt-O: reopen) (alt-L: remove label)
+    pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
+        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 

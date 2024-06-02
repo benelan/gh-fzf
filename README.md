@@ -123,8 +123,8 @@ that can be used with any `gh fzf` command:
   - `alt-o`: Create/checkout a branch linked to the selected issue, prompting
     for the name (see `gh issue develop --help`)
   - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
-  - `alt-l`: Open `gh fzf label` and add the selected label to the issue
-  - `alt-L`: Open `gh fzf label` and remove the selected label from the issue
+  - `alt-l`: Open `gh fzf label` and add the selected label(s) to the issue
+  - `alt-L`: Open `gh fzf label` and remove the selected label(s) from the issue
   - `alt-X`: Close the selected issue (see `gh issue close --help`)
   - `alt-O`: Reopen the selected issue (see `gh issue reopen --help`)
   - `alt-a`: Filter the list, showing issues assigned to you
@@ -156,8 +156,8 @@ that can be used with any `gh fzf` command:
   - `alt-d`: Show the diff for the selected PR (see `gh pr diff --help`)
   - `alt-r`: Start/continue/finish a review for the selected PR
     (see `gh pr review --help`)
-  - `alt-l`: Open `gh fzf label` and add the selected label to the PR
-  - `alt-L`: Open `gh fzf label` and remove the selected label from the PR
+  - `alt-l`: Open `gh fzf label` and add the selected label(s) to the PR
+  - `alt-L`: Open `gh fzf label` and remove the selected label(s) from the PR
   - `alt-R`: Mark the selected draft PR as "ready for review"
     (see `gh pr ready --help`)
   - `alt-M`: Merge the selected PR (see `gh pr merge --help`)
@@ -262,12 +262,12 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `labels`, `--label`, `--labels`
 - **Flags**: See `gh label list --help` for available options
 - **Keybindings**:
-  - `enter`: Print the name of the selected label
-  - `alt-n`: Edit the name of the selected label (see `gh label edit --help`)
-  - `alt-d`: Edit the description of the selected label
+  - `enter`: Print the name of the selected label(s) to stdout
+  - `alt-n`: Edit the name of the most recently selected label (see `gh label edit --help`)
+  - `alt-d`: Edit the description of the most recently selected label
     (see `gh label edit --help`)
-  - `alt-c`: Edit the color of the selected label (see `gh label edit --help`)
-  - `alt-X`: Delete the selected label (see `gh label delete --help`)
+  - `alt-c`: Edit the color of the mostly recently selected label (see `gh label edit --help`)
+  - `alt-X`: Delete the most recently selected label (see `gh label delete --help`)
   - `alt-N`: Filter the list, sorting labels by name (defaults to creation date)
   - `alt-D`: Filter the list, showing labels in descending order
     (defaults to ascending)
@@ -334,7 +334,7 @@ Environment variables are used to configure `gh-fzf`.
 | `GH_FZF_HIDE_HINTS`              | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                                                                                                     | unset                                                                                                        |
 | `GH_FZF_BRANCH_PREFIX`           | A string to prepend to the branch name entered for the `pr` command's `alt-o` keybinding. Spaces are replaced with hyphens. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples.                                                          | unset                                                                                                        |
 | `GH_FZF_BRANCH_ADD_ISSUE_NUMBER` | When set, the issue number is added after the prefix (if specified) for the `pr` command's `alt-o` keybinding. The variable's value is added after the number, unless it is a space. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples. | unset                                                                                                        |
-| `GH_FZF_NOTIFY_ICON`             | A path to an icon for the desktop notification displayed by the `run` command's `alt-n` keybinding. Only supported by `dunstify` and `notify-send` for now.                                                                                                                                            | unset                                                                                                        |
+| `GH_FZF_NOTIFY_ICON`             | A path to an icon for the desktop notification displayed by the `run` command's `alt-n` keybinding. Only supported by `dunstify` and `notify-send` for now.                                                                                                                                                    | unset                                                                                                        |
 | `GH_FZF_COPY_CMD`                | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                                                                                                           | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
 
 You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
@@ -362,7 +362,7 @@ aliases:
   r: |
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
       --bind='alt-e:execute(gh run view --log-failed {-1})'
-      --bind='alt-i:reload(eval \"\$FZF_DEFAULT_COMMAND --status in_progress\")'
+      --bind='alt-q:reload(eval \"\$FZF_DEFAULT_COMMAND --status queued\")'
     " gh fzf run $*
 ```
 

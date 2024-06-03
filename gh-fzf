@@ -58,6 +58,7 @@ Core Commands:
   workflow    Search for and interact with GitHub Action workflows.
   release     Search for and interact with GitHub releases.
   label       Search for and interact with GitHub labels.
+  milestone   Search for and interact with GitHub milestones via \`gh api\`.
   repo        Search for and interact with GitHub repos.
   gist        Search for and interact with GitHub gists.
 
@@ -146,10 +147,17 @@ export FZF_DEFAULT_OPTS='
 # --------------------------------------------------------------------- {|}
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
-        issue pr run workflow release label repo gist" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
+        issue pr run workflow release label milestone repo gist" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help {}' \
+        --preview='
+            cmd={};
+            if [ $cmd = "milestone" ]; then
+                cmd="api"
+                printf "%s\n\n" "There is no \`gh milestone\` command so \`gh api\` is used:"
+            fi
+            GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help $cmd
+        ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
 }
@@ -549,7 +557,7 @@ milestone_cmd() {
 
     milestone_header="Actions > (enter: print) (alt-i: issues) (alt-X: close) (alt-O: reopen) (alt-t: edit title) (alt-d: edit description)
 Filters > (alt-s: state=all) (alt-c: sort by completeness) (alt-D: descending order)
-Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) 
+Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 "
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh api --paginate $milestone_template \

@@ -517,12 +517,12 @@ milestone_cmd() {
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
-                ("NUMBER" | autocolor $headerColor)
-                ("OPEN" | autocolor $headerColor)
-                ("CLOSED" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
                 ("DUE" | autocolor $headerColor)
+                ("OPEN" | autocolor $headerColor)
+                ("CLOSED" | autocolor $headerColor)
                 ("DESCRIPTION" | autocolor $headerColor)
+                ("NUMBER" | autocolor $headerColor)
             -}}
 
             {{- range . -}}
@@ -537,12 +537,12 @@ milestone_cmd() {
                     {{- $stateColor = "red" -}}
                 {{- end -}}
                 {{- tablerow
-                    (.number | autocolor $stateColor)
-                    (.open_issues | autocolor "white+h")
-                    (.closed_issues | autocolor "white+d")
                     (.title | autocolor "white+h")
                     ($due | autocolor "white+d")
+                    (.open_issues | autocolor "white+h")
+                    (.closed_issues | autocolor "white+d")
                     (.description | autocolor "white+h")
+                    (.number | autocolor $stateColor)
                 -}}
             {{- end -}}
     '\'''
@@ -565,41 +565,41 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
             gh api --jq '.html_url' \
                 -H 'Accept: application/vnd.github+json' \
                 -H 'X-GitHub-Api-Version: 2022-11-28' \
-                /repos/{owner}/{repo}/milestones/{1} | $GH_FZF_COPY_CMD
+                /repos/{owner}/{repo}/milestones/{-1} | $GH_FZF_COPY_CMD
         )" \
         --bind="ctrl-o:execute-silent(
             url=\"\$(gh api --jq '.html_url' \
                 -H 'Accept: application/vnd.github+json' \
                 -H 'X-GitHub-Api-Version: 2022-11-28' \
-                /repos/{owner}/{repo}/milestones/{1})\"
+                /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
-        --bind="alt-i:execute(gh fzf issue --milestone {1} $repo_flag)" \
+        --bind="alt-i:execute(gh fzf issue --milestone {-1} $repo_flag)" \
         --bind='alt-X:execute(
             gh api --silent --method PATCH -f "state=closed" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                /repos/{owner}/{repo}/milestones/{1}
+                /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-O:execute(
             gh api --silent --method PATCH -f "state=open" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                /repos/{owner}/{repo}/milestones/{1}
+                /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-t:execute(
             read -rp "Enter new milestone title: " t;
             [ -n "$t" ] && gh api --silent --method PATCH -f "title=$t" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                /repos/{owner}/{repo}/milestones/{1}
+                /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-d:execute(
             read -rp "Enter new milestone description: " d;
             [ -n "$d" ] && gh api --silent --method PATCH -f "description=$d" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
-                /repos/{owner}/{repo}/milestones/{1}
+                /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-c:reload(eval "${FZF_DEFAULT_COMMAND}?sort=completeness")' \
         --bind='alt-s:reload(eval "${FZF_DEFAULT_COMMAND}?state=all")' \

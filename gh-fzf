@@ -29,7 +29,6 @@ set -e
 GH_FZF_VERSION="v0.11.0" # x-release-please-version
 
 # USAGE INFO AND LOGS                                                   {{{1
-# --------------------------------------------------------------------------
 
 has() { command -v "$1" >/dev/null 2>&1; }
 
@@ -80,7 +79,6 @@ global_binds="Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) (
 
 # ----------------------------------------------------------------------1}}}
 # CONFIGURATION                                                         {{{1
-# --------------------------------------------------------------------------
 
 GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-69}"
 
@@ -144,7 +142,6 @@ export FZF_DEFAULT_OPTS='
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > DEFAULT                                                     {{{1
-# --------------------------------------------------------------------------
 
 default_cmd() {
     FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
@@ -164,7 +161,6 @@ default_cmd() {
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > ISSUE                                                       {{{1
-# --------------------------------------------------------------------------
 
 issue_cmd() {
     # go template      {{{2
@@ -240,7 +236,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > PR                                                          {{{1
-# --------------------------------------------------------------------------
 
 pr_cmd() {
     # go template      {{{2
@@ -321,7 +316,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > RUN                                                         {{{1
-# --------------------------------------------------------------------------
 
 run_cmd() {
     # go template      {{{2
@@ -371,7 +365,7 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    # key hints   {{{2
+    # keybinding hints {{{2
     run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
@@ -411,7 +405,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > WORKFLOW                                                    {{{1
-# --------------------------------------------------------------------------
 
 workflow_cmd() {
     # keybinding hints {{{2
@@ -439,7 +432,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > RELEASE                                                     {{{1
-# --------------------------------------------------------------------------
 
 release_cmd() {
     # go template      {{{2
@@ -504,7 +496,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > LABEL                                                       {{{1
-# --------------------------------------------------------------------------
 
 label_cmd() {
     # keybinding hints {{{2
@@ -543,11 +534,11 @@ $global_binds
     #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# COMMAND > MILESTONE                                                   {{{
-# --------------------------------------------------------------------- {|}
+# --------------------------------------------------------------------- 1}}}
+# COMMAND > MILESTONE                                                   {{{1
 
 milestone_cmd() {
+    # go template      {{{2
     milestone_template='\
         --template '\''
             {{- $headerColor := "blue+b" -}}
@@ -582,11 +573,13 @@ milestone_cmd() {
             {{- end -}}
     '\'''
 
+    # keybinding hints {{{2
     milestone_header="Actions > (enter: print) (alt-i: issues) (alt-X: close) (alt-O: reopen) (alt-t: edit title) (alt-d: edit description)
 Filters > (alt-s: state=all) (alt-c: sort by completeness) (alt-D: descending order)
 Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh api --paginate $milestone_template \
     -H 'Accept: application/vnd.github+json' \
     -H 'X-GitHub-Api-Version: 2022-11-28' \
@@ -649,11 +642,12 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
         --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# COMMAND > REPO                                                        {{{
-# --------------------------------------------------------------------- {|}
+# --------------------------------------------------------------------- 1}}}
+# COMMAND > REPO                                                        {{{1
 
 repo_cmd() {
     # go template      {{{2
@@ -715,7 +709,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > GIST                                                        {{{1
-# --------------------------------------------------------------------------
 
 gist_cmd() {
     # keybinding hints {{{2
@@ -746,7 +739,6 @@ Filters > (alt-p: public) (alt-s: secret)
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > UTIL                                                        {{{1
-# --------------------------------------------------------------------------
 
 # append a given flag to each argument {{{2
 # arg1: the flag to append to the each of the following arguments
@@ -947,7 +939,6 @@ util_cmd() {
 
 # ----------------------------------------------------------------------1}}}
 # PARSE ARGUMENTS                                                       {{{1
-# --------------------------------------------------------------------------
 
 # parse args to find a repo flag {{{2
 find_repo_flag() {

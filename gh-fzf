@@ -29,7 +29,6 @@ set -e
 GH_FZF_VERSION="v0.11.0" # x-release-please-version
 
 # USAGE INFO AND LOGS                                                   {{{1
-# --------------------------------------------------------------------------
 
 has() { command -v "$1" >/dev/null 2>&1; }
 
@@ -58,6 +57,7 @@ Core Commands:
   workflow    Search for and interact with GitHub Action workflows.
   release     Search for and interact with GitHub releases.
   label       Search for and interact with GitHub labels.
+  milestone   Search for and interact with GitHub milestones via \`gh api\`.
   repo        Search for and interact with GitHub repos.
   gist        Search for and interact with GitHub gists.
 
@@ -79,7 +79,6 @@ global_binds="Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) (
 
 # ----------------------------------------------------------------------1}}}
 # CONFIGURATION                                                         {{{1
-# --------------------------------------------------------------------------
 
 GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-69}"
 
@@ -94,6 +93,22 @@ if [ -z "$GH_FZF_COPY_CMD" ]; then
         GH_FZF_COPY_CMD="wl-copy" # Linux (Wayland)
     elif has pbcopy; then
         GH_FZF_COPY_CMD="pbcopy" # OSX
+    fi
+fi
+
+if [ -z "$GH_FZF_OPEN_CMD" ]; then
+    if [ -n "$BROWSER" ]; then
+        GH_FZF_OPEN_CMD="$BROWSER"
+    elif has wslview; then
+        GH_FZF_OPEN_CMD="wslview"
+    elif has cygstart; then
+        GH_FZF_OPEN_CMD="cygstart"
+    elif has start; then
+        GH_FZF_OPEN_CMD="start"
+    elif has xdg-open; then
+        GH_FZF_OPEN_CMD="xdg-open"
+    elif has open; then
+        GH_FZF_OPEN_CMD="open"
     fi
 fi
 
@@ -131,20 +146,25 @@ export FZF_DEFAULT_OPTS='
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > DEFAULT                                                     {{{1
-# --------------------------------------------------------------------------
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
-        issue pr run workflow release label repo gist" \
+    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
+        issue pr run workflow release label milestone repo gist" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help {}' \
+        --preview='
+            cmd={};
+            if [ $cmd = "milestone" ]; then
+                cmd="api"
+                printf "%s\n\n" "There is no \`gh milestone\` command so \`gh api\` is used:"
+            fi
+            GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help $cmd
+        ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
 }
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > ISSUE                                                       {{{1
-# --------------------------------------------------------------------------
 
 issue_cmd() {
     # go template      {{{2
@@ -185,7 +205,7 @@ issue_cmd() {
 
     # keybinding hints {{{2
     issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add labels) (alt-L: remove labels) (alt-X: close) (alt-O: reopen)
-Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
+Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-M: milestone) (alt-s: state=all)
 $global_binds
 
 "
@@ -205,6 +225,11 @@ $global_binds
         --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)+refresh-preview" \
+        --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
+            m="$(cat /tmp/gh-fzf-milestone)"
+            rm -f /tmp/gh-fzf-milestone;
+            eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
+        )' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
@@ -215,7 +240,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > PR                                                          {{{1
-# --------------------------------------------------------------------------
 
 pr_cmd() {
     # go template      {{{2
@@ -296,7 +320,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > RUN                                                         {{{1
-# --------------------------------------------------------------------------
 
 run_cmd() {
     # go template      {{{2
@@ -346,7 +369,7 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    # key hints   {{{2
+    # keybinding hints {{{2
     run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
@@ -386,7 +409,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > WORKFLOW                                                    {{{1
-# --------------------------------------------------------------------------
 
 workflow_cmd() {
     # keybinding hints {{{2
@@ -414,7 +436,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > RELEASE                                                     {{{1
-# --------------------------------------------------------------------------
 
 release_cmd() {
     # go template      {{{2
@@ -479,7 +500,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > LABEL                                                       {{{1
-# --------------------------------------------------------------------------
 
 label_cmd() {
     # keybinding hints {{{2
@@ -518,9 +538,120 @@ $global_binds
     #2}}}
 }
 
-# ----------------------------------------------------------------------1}}}
+# --------------------------------------------------------------------- 1}}}
+# COMMAND > MILESTONE                                                   {{{1
+
+milestone_cmd() {
+    # go template      {{{2
+    milestone_template='\
+        --template '\''
+            {{- $headerColor := "blue+b" -}}
+            {{- tablerow
+                ("TITLE" | autocolor $headerColor)
+                ("DUE" | autocolor $headerColor)
+                ("OPEN" | autocolor $headerColor)
+                ("CLOSED" | autocolor $headerColor)
+                ("DESCRIPTION" | autocolor $headerColor)
+                ("NUMBER" | autocolor $headerColor)
+            -}}
+
+            {{- range . -}}
+                {{- $due := .due_on }}
+                {{- if ne .due_on nil -}}
+                    {{- $due = (timefmt "2006-01-02" .due_on) -}}
+                {{- end -}}
+                {{- $stateColor := "white+d" -}}
+                {{- if eq .state "open" -}}
+                    {{- $stateColor = "green" -}}
+                {{- else -}}
+                    {{- $stateColor = "red" -}}
+                {{- end -}}
+                {{- tablerow
+                    (.title | autocolor "white+h")
+                    ($due | autocolor "white+d")
+                    (.open_issues | autocolor "white+h")
+                    (.closed_issues | autocolor "white+d")
+                    (.description | autocolor "white+h")
+                    (.number | autocolor $stateColor)
+                -}}
+            {{- end -}}
+    '\'''
+
+    # keybinding hints {{{2
+    milestone_header="Actions > (enter: print) (alt-i: issues) (alt-X: close) (alt-O: reopen) (alt-t: edit title) (alt-d: edit description)
+Filters > (alt-s: state=all) (alt-c: sort by completeness) (alt-D: descending order)
+Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
+"
+
+    # fzf command      {{{2
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh api --paginate $milestone_template \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    '/repos/{owner}/{repo}/milestones'" \
+        fzf \
+        --no-preview \
+        --header="$milestone_header" \
+        --bind="start:$on_start" \
+        --bind="enter:become(echo {1})" \
+        --bind="ctrl-y:execute-silent(
+            gh api --jq '.html_url' \
+                -H 'Accept: application/vnd.github+json' \
+                -H 'X-GitHub-Api-Version: 2022-11-28' \
+                /repos/{owner}/{repo}/milestones/{-1} | $GH_FZF_COPY_CMD
+        )" \
+        --bind="ctrl-o:execute-silent(
+            url=\"\$(gh api --jq '.html_url' \
+                -H 'Accept: application/vnd.github+json' \
+                -H 'X-GitHub-Api-Version: 2022-11-28' \
+                /repos/{owner}/{repo}/milestones/{-1})\"
+            [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
+        )" \
+        --bind="alt-i:execute(gh fzf issue --milestone {-1} $repo_flag)" \
+        --bind='alt-X:execute(
+            gh api --silent --method PATCH -f "state=closed" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/{owner}/{repo}/milestones/{-1}
+        )+reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-O:execute(
+            gh api --silent --method PATCH -f "state=open" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/{owner}/{repo}/milestones/{-1}
+        )+reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-t:execute(
+            read -rp "Enter new milestone title: " t;
+            [ -n "$t" ] && gh api --silent --method PATCH -f "title=$t" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/{owner}/{repo}/milestones/{-1}
+        )+reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-d:execute(
+            read -rp "Enter new milestone description: " d;
+            [ -n "$d" ] && gh api --silent --method PATCH -f "description=$d" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                /repos/{owner}/{repo}/milestones/{-1}
+        )+reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-c:reload(eval "${FZF_DEFAULT_COMMAND}?sort=completeness")' \
+        --bind='alt-s:reload(eval "${FZF_DEFAULT_COMMAND}?state=all")' \
+        --bind='alt-D:reload(eval "${FZF_DEFAULT_COMMAND}?direction=desc")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND")'
+
+    #2}}}
+}
+
+# --------------------------------------------------------------------- 1}}}
 # COMMAND > REPO                                                        {{{1
-# --------------------------------------------------------------------------
 
 repo_cmd() {
     # go template      {{{2
@@ -582,7 +713,6 @@ $global_binds
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > GIST                                                        {{{1
-# --------------------------------------------------------------------------
 
 gist_cmd() {
     # keybinding hints {{{2
@@ -613,7 +743,6 @@ Filters > (alt-p: public) (alt-s: secret)
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > UTIL                                                        {{{1
-# --------------------------------------------------------------------------
 
 # append a given flag to each argument {{{2
 # arg1: the flag to append to the each of the following arguments
@@ -814,7 +943,6 @@ util_cmd() {
 
 # ----------------------------------------------------------------------1}}}
 # PARSE ARGUMENTS                                                       {{{1
-# --------------------------------------------------------------------------
 
 # parse args to find a repo flag {{{2
 find_repo_flag() {
@@ -822,8 +950,14 @@ find_repo_flag() {
     for i in $(seq 0 ${#args[@]}); do
         val=${args[$i]}
         case $val in
-            -R | --repo) repo_flag="--repo=${args[$((i + 1))]}" ;;
-            -R=* | --repo=*) repo_flag="--repo=${val#*=}" ;;
+            -R | --repo)
+                export GH_REPO="${args[$((i + 1))]}"
+                repo_flag="--repo=${GH_REPO}"
+                ;;
+            -R=* | --repo=*)
+                export GH_REPO="${val#*=}"
+                repo_flag="--repo=${GH_REPO}"
+                ;;
         esac
     done
 }
@@ -845,6 +979,7 @@ main() {
         gist | gists | --gist | --gists) gist_cmd "$@" ;;
         workflow | workflows | --workflow | --workflows) workflow_cmd "$@" ;;
         label | labels | --label | --labels) label_cmd "$@" ;;
+        milestone | milestones | --milestone | --milestones) milestone_cmd "$@" ;;
         util | utils | --util | --utils) util_cmd "$@" ;;
         changelog) gh fzf release --repo benelan/gh-fzf ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;

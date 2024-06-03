@@ -14,6 +14,7 @@ An fzf wrapper around the GitHub CLI.
     - [`workflow`](#workflow)
     - [`release`](#release)
     - [`label`](#label)
+    - [`milestone`](#milestone)
     - [`repo`](#repo)
     - [`gist`](#gist)
   - [Configuration](#configuration)
@@ -277,6 +278,24 @@ that can be used with any `gh fzf` command:
     gh fzf label --sort name --order desc
     ```
 
+### `milestone`
+
+- **Usage**: `gh fzf milestone`
+- **Aliases**: `milestones`, `--milestone`, `--milestones`
+- **Flags**: N/A
+- **Keybindings**:
+  - `enter`: Print the name of the selected milestone to stdout
+  - `alt-t`: Edit the title of the selected milestone
+  - `alt-d`: Edit the description of the selected milestone
+  - `alt-X`: Close the selected milestone
+  - `alt-O`: Reopen the selected milestone
+  - `alt-s`: Filter the list, showing both open and closed milestones
+    (defaults to open)
+  - `alt-c`: Filter the list, sorting milestones by completeness
+    (defaults to due date)
+  - `alt-D`: Filter the list, showing milestones in descending order
+    (defaults to ascending)
+
 ### `repo`
 
 - **Usage**: `gh fzf repo [flags]`
@@ -341,7 +360,8 @@ You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/m
 environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
 For example, create aliases in the `gh` config file that add new keybindings to
-the [`issue`](#issue), [`pr`](#pr), and [`run`](#run) commands:
+the [`issue`](#issue), [`pr`](#pr), [`run`](#run), and [`milestone`](#milestone)
+commands:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -350,6 +370,10 @@ aliases:
     !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
       --bind='alt-+:execute(gh issue edit --add-assignee @me {1})'
       --bind='alt--:execute(gh issue edit --remove-assignee @me {1})'
+      --bind='alt-@:execute(
+        selected=\"\$(gh fzf milestone)\"
+        [ -n \"\$selected\" ] && gh issue edit --milestone \"\$selected\" {1}
+      )'
     " gh fzf issue $*
 
   p: |
@@ -364,6 +388,13 @@ aliases:
       --bind='alt-e:execute(gh run view --log-failed {-1})'
       --bind='alt-q:reload(eval \"\$FZF_DEFAULT_COMMAND --status queued\")'
     " gh fzf run $*
+
+  m: |
+    !FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+      --bind='alt-bspace:execute(
+        gh api --silent --method DELETE /repos/{owner}/{repo}/milestones/{-1}
+      )+reload(eval \"\$FZF_DEFAULT_COMMAND\")'
+    " gh fzf milestone
 ```
 
 When adding or modifying fzf keybindings:
@@ -376,6 +407,7 @@ When adding or modifying fzf keybindings:
 - Use `{-1}` in place of:
   - the `<run-id>` for the [`run`](#run) command
   - the `<workflow-id>` for the [`workflow`](#workflow) command
+  - the `<number>` for the [`milestone`](#milestone) command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
 [source code](https://github.com/benelan/gh-fzf/blob/f8d5b23e283e234557cbed615993e618fd45ccf3/gh-fzf#L109-L129).

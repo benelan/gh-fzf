@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.12.0](https://github.com/benelan/gh-fzf/compare/v0.11.0...v0.12.0) (2024-06-03)
+
+
+### Features
+
+* Add milestone command ([#23](https://github.com/benelan/gh-fzf/issues/23)) ([86cb9da](https://github.com/benelan/gh-fzf/commit/86cb9dad3e3edd2ad57f3742d12cbeac1af66d12)), closes [#21](https://github.com/benelan/gh-fzf/issues/21)
+* **issue, pr:** Support multi-select label changes ([cac5f20](https://github.com/benelan/gh-fzf/commit/cac5f209d27b5958eaa8d0e7b042522953a24ec7))
+* **label:** Include label's name in edit prompts ([d45ea06](https://github.com/benelan/gh-fzf/commit/d45ea067405e0973b88fae84bb27cdcfeab6c3df))
+* **label:** Reload list after edit keybinds ([b76453a](https://github.com/benelan/gh-fzf/commit/b76453a1bec2ceeb3875b5ed4a239146df07e3d6))
+* **run:** Ask to rerun after dunstify's log action ([ff14747](https://github.com/benelan/gh-fzf/commit/ff1474732b3bab78bf2d5fddf5bf86773ce04184))
+
+
+### Bug Fixes
+
+* **issue, pr:** Exit properly after branch checkout ([2dbea75](https://github.com/benelan/gh-fzf/commit/2dbea75be3260cbcd89555901f978cefa927ba43))
+* **label:** Enter only prints the name vs whole row ([44bd0af](https://github.com/benelan/gh-fzf/commit/44bd0afbb347e3d41e7254f298e3952d16202590))
+* **run:** Notification message when process killed ([b419d35](https://github.com/benelan/gh-fzf/commit/b419d352e78fdc3ad1beaad452932c7d5d2ac40a))
+
 ## [0.11.0](https://github.com/benelan/gh-fzf/compare/v0.10.0...v0.11.0) (2024-05-31)
 
 

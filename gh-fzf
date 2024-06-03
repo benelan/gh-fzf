@@ -96,16 +96,20 @@ if [ -z "$GH_FZF_COPY_CMD" ]; then
     fi
 fi
 
-if has wslview; then
-    GH_FZF_OPEN_CMD="wslview"
-elif has cygstart; then
-    GH_FZF_OPEN_CMD="cygstart"
-elif has start; then
-    GH_FZF_OPEN_CMD="start"
-elif has xdg-open; then
-    GH_FZF_OPEN_CMD="xdg-open"
-elif has open; then
-    GH_FZF_OPEN_CMD="open"
+if [ -z "$GH_FZF_OPEN_CMD" ]; then
+    if [ -n "$BROWSER" ]; then
+        GH_FZF_OPEN_CMD="$BROWSER"
+    elif has wslview; then
+        GH_FZF_OPEN_CMD="wslview"
+    elif has cygstart; then
+        GH_FZF_OPEN_CMD="cygstart"
+    elif has start; then
+        GH_FZF_OPEN_CMD="start"
+    elif has xdg-open; then
+        GH_FZF_OPEN_CMD="xdg-open"
+    elif has open; then
+        GH_FZF_OPEN_CMD="open"
+    fi
 fi
 
 if [ -n "$GH_FZF_HIDE_HINTS" ]; then

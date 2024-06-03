@@ -97,6 +97,18 @@ if [ -z "$GH_FZF_COPY_CMD" ]; then
     fi
 fi
 
+if has wslview; then
+    GH_FZF_OPEN_CMD="wslview"
+elif has cygstart; then
+    GH_FZF_OPEN_CMD="cygstart"
+elif has start; then
+    GH_FZF_OPEN_CMD="start"
+elif has xdg-open; then
+    GH_FZF_OPEN_CMD="xdg-open"
+elif has open; then
+    GH_FZF_OPEN_CMD="open"
+fi
+
 if [ -n "$GH_FZF_HIDE_HINTS" ]; then
     on_start="toggle-header"
 fi
@@ -537,7 +549,7 @@ milestone_cmd() {
 
     milestone_header="Actions > (enter: print) (alt-i: issues) (alt-X: close) (alt-O: reopen) (alt-t: edit title) (alt-d: edit description)
 Filters > (alt-s: state=all) (alt-c: sort by completeness) (alt-D: descending order)
-Globals > (ctrl-r: reload)
+Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) 
 "
 
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh api --paginate $milestone_template \
@@ -549,6 +561,19 @@ Globals > (ctrl-r: reload)
         --header="$milestone_header" \
         --bind="start:$on_start" \
         --bind="enter:become(echo {1})" \
+        --bind="ctrl-y:execute-silent(
+            gh api --jq '.html_url' \
+                -H 'Accept: application/vnd.github+json' \
+                -H 'X-GitHub-Api-Version: 2022-11-28' \
+                /repos/{owner}/{repo}/milestones/{1} | $GH_FZF_COPY_CMD
+        )" \
+        --bind="ctrl-o:execute-silent(
+            url=\"\$(gh api --jq '.html_url' \
+                -H 'Accept: application/vnd.github+json' \
+                -H 'X-GitHub-Api-Version: 2022-11-28' \
+                /repos/{owner}/{repo}/milestones/{1})\"
+            [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
+        )" \
         --bind="alt-i:execute(gh fzf issue --milestone {1} $repo_flag)" \
         --bind='alt-X:execute(
             gh api --silent --method PATCH -f "state=closed" \

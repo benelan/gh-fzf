@@ -603,7 +603,17 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-c:reload(eval "${FZF_DEFAULT_COMMAND}?sort=completeness")' \
         --bind='alt-s:reload(eval "${FZF_DEFAULT_COMMAND}?state=all")' \
-        --bind='alt-D:reload(eval "${FZF_DEFAULT_COMMAND}?direction=desc")'
+        --bind='alt-D:reload(eval "${FZF_DEFAULT_COMMAND}?direction=desc")' \
+        --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-4:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-5:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-6:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-7:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-8:reload(eval "$FZF_DEFAULT_COMMAND")' \
+        --bind='alt-9:reload(eval "$FZF_DEFAULT_COMMAND")'
 }
 
 # --------------------------------------------------------------------- }}}

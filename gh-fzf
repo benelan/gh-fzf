@@ -514,6 +514,10 @@ milestone_cmd() {
             -}}
 
             {{- range . -}}
+                {{- $due := .due_on }}
+                {{- if ne .due_on nil -}}
+                    {{- $due = (timefmt "2006-01-02" .due_on) -}}
+                {{- end -}}
                 {{- $stateColor := "white+d" -}}
                 {{- if eq .state "open" -}}
                     {{- $stateColor = "green" -}}
@@ -525,7 +529,7 @@ milestone_cmd() {
                     (.open_issues | autocolor "white+h")
                     (.closed_issues | autocolor "white+d")
                     (.title | autocolor "white+h")
-                    (.due_on | autocolor "white+d")
+                    ($due | autocolor "white+d")
                     (.description | autocolor "white+h")
                 -}}
             {{- end -}}

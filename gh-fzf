@@ -226,9 +226,9 @@ $global_binds
         --bind="alt-O:execute(gh issue reopen {1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $repo_flag)+refresh-preview" \
         --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
-            eval "m=$(cat /tmp/gh-fzf-milestone)";
+            m="$(cat /tmp/gh-fzf-milestone)"
             rm -f /tmp/gh-fzf-milestone;
-            eval "$FZF_DEFAULT_COMMAND ${m:+--milestone \"$m\"}"
+            eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
         )' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \

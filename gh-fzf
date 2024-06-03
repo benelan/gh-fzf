@@ -28,8 +28,8 @@ set -e
 
 GH_FZF_VERSION="v0.11.0" # x-release-please-version
 
-# Usage info and logs                                                   {{{
-# --------------------------------------------------------------------- {|}
+# USAGE INFO AND LOGS                                                   {{{1
+# --------------------------------------------------------------------------
 
 has() { command -v "$1" >/dev/null 2>&1; }
 
@@ -77,9 +77,9 @@ configuration, and examples.
 
 global_binds="Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
 
-# --------------------------------------------------------------------- }}}
-# Configuration                                                         {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# CONFIGURATION                                                         {{{1
+# --------------------------------------------------------------------------
 
 GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-69}"
 
@@ -129,9 +129,9 @@ export FZF_DEFAULT_OPTS='
 '"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi'
 # Overriding the three options above breaks gh-fzf, so append them instead.
 
-# --------------------------------------------------------------------- }}}
-# Command > default                                                     {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > DEFAULT                                                     {{{1
+# --------------------------------------------------------------------------
 
 default_cmd() {
     FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
@@ -142,11 +142,12 @@ default_cmd() {
         --bind="enter:execute(gh fzf {})"
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > issue                                                       {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > ISSUE                                                       {{{1
+# --------------------------------------------------------------------------
 
 issue_cmd() {
+    # go template      {{{2
     issue_template='\
         --json "number,title,author,assignees,state,milestone,labels,updatedAt" \
         --template '\''
@@ -182,12 +183,14 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
+    # keybinding hints {{{2
     issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add labels) (alt-L: remove labels) (alt-X: close) (alt-O: reopen)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-s: state=all)
 $global_binds
 
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$repo_flag" \
@@ -206,13 +209,16 @@ $global_binds
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > pr                                                          {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > PR                                                          {{{1
+# --------------------------------------------------------------------------
 
 pr_cmd() {
+    # go template      {{{2
     pr_template='\
         --json "number,title,state,headRefName,milestone,updatedAt,labels" \
         --template '\''
@@ -250,13 +256,14 @@ pr_cmd() {
             {{- end -}}
     '\'''
 
+    # keybinding hints {{{2
     pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
         > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 
 "
-
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$repo_flag" \
@@ -283,13 +290,16 @@ $global_binds
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --head \
             $(git symbolic-ref --short HEAD)")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > run                                                         {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > RUN                                                         {{{1
+# --------------------------------------------------------------------------
 
 run_cmd() {
+    # go template      {{{2
     run_template='\
         --json "updatedAt,event,displayTitle,headBranch,databaseId,conclusion,status,name" \
         --template '\''
@@ -336,12 +346,14 @@ run_cmd() {
             {{- end -}}
     '\'''
 
+    # key hints   {{{2
     run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
 
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$repo_flag" \
@@ -368,19 +380,23 @@ $global_binds
         --bind='alt-u:reload(
             eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)"
         )'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > workflow                                                    {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > WORKFLOW                                                    {{{1
+# --------------------------------------------------------------------------
 
 workflow_cmd() {
+    # keybinding hints {{{2
     workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
 Filters > (alt-a: all)
 $global_binds
 
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$repo_flag" \
@@ -392,13 +408,16 @@ $global_binds
         --bind="alt-E:execute(gh workflow enable {-1} $repo_flag)+refresh-preview" \
         --bind="alt-X:execute(gh workflow disable {-1} $repo_flag)+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > release                                                     {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > RELEASE                                                     {{{1
+# --------------------------------------------------------------------------
 
 release_cmd() {
+    # go template      {{{2
     release_template='\
         --json "publishedAt,isDraft,isLatest,isPrerelease,name,tagName" \
         --template '\''
@@ -434,12 +453,14 @@ release_cmd() {
             {{- end -}}
     '\'''
 
+    # keybinding hints {{{2
     release_header="Actions > (enter: download) (alt-X: delete)
 Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
 $global_binds
 
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh release list $release_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1} '"$repo_flag" \
@@ -452,18 +473,22 @@ $global_binds
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > label                                                       {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > LABEL                                                       {{{1
+# --------------------------------------------------------------------------
 
 label_cmd() {
+    # keybinding hints {{{2
     label_header="Actions > (enter: print) (alt-n: edit name) (alt-d: edit description) (alt-c: edit color) (alt-X: delete)
 Filters > (alt-N: sort by name) (alt-D: descending order)
 $global_binds
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh label list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --multi \
@@ -489,13 +514,16 @@ $global_binds
         --bind="alt-X:execute(gh label delete {1} $repo_flag)" \
         --bind='alt-N:reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
         --bind='alt-D:reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > repo                                                        {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > REPO                                                        {{{1
+# --------------------------------------------------------------------------
 
 repo_cmd() {
+    # go template      {{{2
     # repo_template='\
     #     --json "nameWithOwner,description,stargazerCount,forkCount,updatedAt,viewerPermission,visibility" \
     #     --template '\''
@@ -523,11 +551,13 @@ repo_cmd() {
     #         {{- end -}}
     # '\'''
 
+    # keybinding hints {{{2
     repo_header="Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
 Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
 $global_binds
 "
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
@@ -546,19 +576,23 @@ $global_binds
         --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --fork")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > gist                                                        {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > GIST                                                        {{{1
+# --------------------------------------------------------------------------
 
 gist_cmd() {
+    # keybinding hints {{{2
     gist_header='Actions > (enter: edit) (alt-c: clone) (alt-X: delete)
         > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
 Filters > (alt-p: public) (alt-s: secret)
 
 '
 
+    # fzf command      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$gh_columns gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
@@ -573,12 +607,15 @@ Filters > (alt-p: public) (alt-s: secret)
         --bind="alt-X:execute(gh gist delete {1})+refresh-preview" \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --public")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --secret")'
+
+    #2}}}
 }
 
-# --------------------------------------------------------------------- }}}
-# Command > util                                                        {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# COMMAND > UTIL                                                        {{{1
+# --------------------------------------------------------------------------
 
+# append a given flag to each argument {{{2
 # arg1: the flag to append to the each of the following arguments
 # arg2...n: the values for the flag
 # example: $ flagify --add-label "foo" "bar baz" "etc., etc."
@@ -592,6 +629,7 @@ flagify() {
         tr -t '\n' ' '
 }
 
+# select labels to add/remove from an issue or pr {{{2
 # arg1: the type of edit, either "add" or "remove"
 # arg2: the gh command, either "issue" or "pr"
 # arg3: the issue or pr <number>
@@ -611,6 +649,7 @@ select_labels() {
     [ -n "$label_flags" ] && eval "gh $2 edit \"$3\" $label_flags $repo_flag"
 }
 
+# prompt for a branch name {{{2
 # arg1: issue number
 branch_prompt() {
     [ -z "$1" ] && error "missing argument." \
@@ -623,6 +662,7 @@ branch_prompt() {
     echo "${GH_FZF_BRANCH_PREFIX}${sanitized_issue}${name// /-}"
 }
 
+# create/checkout a branch linked to the issue {{{2
 # arg1: issue number
 develop_issue() {
     [ -z "$1" ] && error "missing argument." \
@@ -638,6 +678,7 @@ develop_issue() {
     fi
 }
 
+# copy url to clipboard {{{2
 # arg1: github command, supports: "issue", "pr", "run", "release", "repo"
 # arg2: item identifier for the command (<number>, <run-id>, etc.)
 copy_url() {
@@ -655,6 +696,7 @@ copy_url() {
     esac
 }
 
+# desktop notification when run has completed {{{2
 # arg1: run id
 notify_run_completed() {
     run_id="$1"
@@ -754,6 +796,7 @@ notify_run_completed() {
     fi
 }
 
+# parse and call util subcommand {{{2
 util_cmd() {
     util="$1"
     [ -n "$util" ] && shift || error "missing util name"
@@ -767,11 +810,13 @@ util_cmd() {
         *) error "invalid util: \"$util\"" ;;
     esac
 }
+#2}}}
 
-# --------------------------------------------------------------------- }}}
-# Parse arguments                                                       {{{
-# --------------------------------------------------------------------- {|}
+# ----------------------------------------------------------------------1}}}
+# PARSE ARGUMENTS                                                       {{{1
+# --------------------------------------------------------------------------
 
+# parse args to find a repo flag {{{2
 find_repo_flag() {
     args=("$@")
     for i in $(seq 0 ${#args[@]}); do
@@ -783,6 +828,7 @@ find_repo_flag() {
     done
 }
 
+# entry function {{{2
 main() {
     command="$1"
     [ -n "$command" ] && shift || default_cmd
@@ -804,8 +850,6 @@ main() {
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac
-}
-
-# --------------------------------------------------------------------- }}}
+} #2}}}
 
 main "$@"

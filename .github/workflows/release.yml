@@ -33,5 +33,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-          git tag -fa stable -m "Current Stable Release"
-          git push -f origin stable
+          git tag -d stable || true
+          git push origin :stable || true
+          git tag -a stable -m "Last Stable Release"
+          git push origin stable

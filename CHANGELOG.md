@@ -9,12 +9,12 @@
 * **issue, pr:** Support fzf multi-selection when adding or removing labels via `alt-l` or `alt-L` keybindings, respectively ([cac5f20](https://github.com/benelan/gh-fzf/commit/cac5f209d27b5958eaa8d0e7b042522953a24ec7))
 * **label:** Include the selected label's name in the prompt for editing the name via `alt-n`, description via `alt-d`, and color via `alt-c` ([d45ea06](https://github.com/benelan/gh-fzf/commit/d45ea067405e0973b88fae84bb27cdcfeab6c3df))
 * **label:** Reload list after the edit keybindings (`alt-n`, `alt-d`, `alt-c`) to ensure info is up to date ([b76453a](https://github.com/benelan/gh-fzf/commit/b76453a1bec2ceeb3875b5ed4a239146df07e3d6))
-* **run:** Prompt to rerun (if failed) after viewing logs via the `dunstify` notification action ([ff14747](https://github.com/benelan/gh-fzf/commit/ff1474732b3bab78bf2d5fddf5bf86773ce04184))
+* **run:** Prompt to rerun (if failed) after viewing logs via the dunstify notification action ([ff14747](https://github.com/benelan/gh-fzf/commit/ff1474732b3bab78bf2d5fddf5bf86773ce04184))
 
 
 ### Bug Fixes
 
-* **issue, pr:** Exit with code `0` after checking out a branch via the `alt-o` keybindings ([2dbea75](https://github.com/benelan/gh-fzf/commit/2dbea75be3260cbcd89555901f978cefa927ba43))
+* **issue, pr:** Exit with code 0 after checking out a branch via the `alt-o` keybindings ([2dbea75](https://github.com/benelan/gh-fzf/commit/2dbea75be3260cbcd89555901f978cefa927ba43))
 * **label:** Fix regression where `enter` keybinding printed the whole row of the selected item(s), rather than only the name ([44bd0af](https://github.com/benelan/gh-fzf/commit/44bd0afbb347e3d41e7254f298e3952d16202590))
 * **run:** Fix the message/format of notifications when the run watcher's process is killed before completion ([b419d35](https://github.com/benelan/gh-fzf/commit/b419d352e78fdc3ad1beaad452932c7d5d2ac40a))
 
@@ -26,16 +26,16 @@
 * **changelog:** Add `changelog` command as a shortcut for `gh fzf release --repo "benelan/gh-fzf"` ([f8d5b23](https://github.com/benelan/gh-fzf/commit/f8d5b23e283e234557cbed615993e618fd45ccf3))
 * **run:** Add `alt-i` keybinding to filter by `in_progress` ([89580c0](https://github.com/benelan/gh-fzf/commit/89580c0ec4c37f3ec632d2b7409164028e29aa6d))
 * **run:** Add `alt-n` keybinding to to display a desktop notification on completion ([b4185b7](https://github.com/benelan/gh-fzf/commit/b4185b71727c69c70b49fcf668d5cc83854f9bbf))
-* **run:** Improve fallback log viewer for the `dunstify` action ([31d4199](https://github.com/benelan/gh-fzf/commit/31d419911033d8c2063a9bee1a8be2341c8c86cc))
-* **run:** Add [actions](https://dunst-project.org/documentation#ACTIONS) to notifications created by `dunstify` ([a5c3c50](https://github.com/benelan/gh-fzf/commit/a5c3c5032fea1f5d4b9a7c706862b8c3fdcf6148))
+* **run:** Improve fallback log viewer for the dunstify action ([31d4199](https://github.com/benelan/gh-fzf/commit/31d419911033d8c2063a9bee1a8be2341c8c86cc))
+* **run:** Add [actions](https://dunst-project.org/documentation#ACTIONS) to notifications created by dunstify ([a5c3c50](https://github.com/benelan/gh-fzf/commit/a5c3c5032fea1f5d4b9a7c706862b8c3fdcf6148))
 * **run:** Add util for displaying a desktop notification when the selected run completes. Requires `dunstify`, `notify-send`, or `osascript` ([009598c](https://github.com/benelan/gh-fzf/commit/009598c4271dba7a2d4ef2b1c866606bfa02368a))
 
 
 ### Bug Fixes
 
-* **run:** Resolve issues opening logs from a `dunstify` notification action ([922fb4b](https://github.com/benelan/gh-fzf/commit/922fb4b5a591eeb5506cc28e7eac3ae882cc6ca7))
-* **run:** Fix quoting errors in the `osascript` notification ([8a86ee7](https://github.com/benelan/gh-fzf/commit/8a86ee7861cbe45b63bb3f2f17f4553feb5c71a1), [36c5676](https://github.com/benelan/gh-fzf/commit/36c5676c2cd11ccce1429b7dd65b5bff73616070))
-* **util:** Ensure --repo and -R flags are correctly passed to gh ([46adb7e](https://github.com/benelan/gh-fzf/commit/46adb7e7f030d768457c10e2f83e23756cae931e))
+* **run:** Resolve issues opening logs from a dunstify notification action ([922fb4b](https://github.com/benelan/gh-fzf/commit/922fb4b5a591eeb5506cc28e7eac3ae882cc6ca7))
+* **run:** Fix quoting errors in the osascript notification ([8a86ee7](https://github.com/benelan/gh-fzf/commit/8a86ee7861cbe45b63bb3f2f17f4553feb5c71a1), [36c5676](https://github.com/benelan/gh-fzf/commit/36c5676c2cd11ccce1429b7dd65b5bff73616070))
+* **util:** Ensure `--repo` and `-R` flags are correctly passed to gh ([46adb7e](https://github.com/benelan/gh-fzf/commit/46adb7e7f030d768457c10e2f83e23756cae931e))
 
 
 ### Performance Improvements

@@ -197,15 +197,16 @@ that can be used with any `gh fzf` command:
   - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
   - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as HEAD
     (see [`pr`](#pr))
-  - `alt-n`: Create a desktop notification with conclusion info when the
-    selected run ends. The supported notification tools (tried in order) are
-    `dunstify`, `notify-send`, and `osascript`. The notification has
-    [actions](https://dunst-project.org/documentation#ACTIONS) for rerun, view
-    logs, etc. when using `dunstify`.
-    > [!NOTE]
-    > The process that watches the run and notifies on completion is executed in
-    > the background, however it is still tied to `gh-fzf`. This means closing
-    > `gh-fzf` will prevent the notification from occurring.
+  - `alt-n`: Create a desktop notification with the conclusion (failed, passed,
+    etc.) when the selected run ends. The supported notification tools (tried in
+    order) are `dunstify`, `notify-send`, and `osascript`. The notification has
+    [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs"
+    and "open in browser" when using `dunstify`. There is an additional
+    "download artifacts" or "rerun failed jobs" action depending on whether the
+    run passed or failed, respectively.
+    > **NOTE:** The run watching process is executed in the background, so
+    > closing `gh-fzf` won't prevent the desktop notification from displaying.
+    > Use `killall gh` to end all `gh` processes, including the run watcher.
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs

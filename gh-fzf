@@ -282,7 +282,7 @@ pr_cmd() {
 
     # keybinding hints {{{2
     pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
-        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
+        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-y: copy branch) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
 Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 
@@ -295,6 +295,9 @@ $global_binds
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh pr view --web {1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
+        --bind="alt-y:execute-silent(
+            gh pr view --json 'headRefName' -q '.headRefName' {1} $repo_flag | $GH_FZF_COPY_CMD
+        )+refresh-preview" \
         --bind="enter:execute(gh pr edit {1} $repo_flag)+refresh-preview" \
         --bind="alt-c:execute(gh pr comment {1} $repo_flag)+refresh-preview" \
         --bind="alt-d:execute(gh pr diff {1} $repo_flag)+refresh-preview" \

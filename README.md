@@ -157,6 +157,7 @@ that can be used with any `gh fzf` command:
   - `alt-d`: Show the diff for the selected PR (see `gh pr diff --help`)
   - `alt-r`: Start/continue/finish a review for the selected PR
     (see `gh pr review --help`)
+  - `alt-y`: Copy the branch name of the selected PR
   - `alt-l`: Open `gh fzf label` and add the selected label(s) to the PR
   - `alt-L`: Open `gh fzf label` and remove the selected label(s) from the PR
   - `alt-R`: Mark the selected draft PR as "ready for review"

@@ -373,7 +373,7 @@ run_cmd() {
     '\'''
 
     # keybinding hints {{{2
-    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
+    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-R: rerun failed) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
 
@@ -390,6 +390,7 @@ $global_binds
         --bind="enter:execute(gh run watch {-1} $repo_flag)+refresh-preview" \
         --bind="alt-l:execute(gh run view --log {-1} $repo_flag)+refresh-preview" \
         --bind="alt-r:execute(gh run rerun {-1} $repo_flag)+refresh-preview" \
+        --bind="alt-R:execute(gh run rerun --failed {-1} $repo_flag)+refresh-preview" \
         --bind="alt-d:execute(gh run download {-1} $repo_flag)+refresh-preview" \
         --bind="alt-x:execute(gh run cancel {-1} $repo_flag)+refresh-preview" \
         --bind="alt-n:execute-silent(

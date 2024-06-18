@@ -195,6 +195,7 @@ that can be used with any `gh fzf` command:
   - `alt-d`: Download artifacts from the selected run
     (see `gh run download --help`)
   - `alt-r`: Rerun the selected run (see `gh run rerun --help`)
+  - `alt-R`: Rerun only failed jobs of the selected run (see `gh run rerun --help`)
   - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
   - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as HEAD
     (see [`pr`](#pr))

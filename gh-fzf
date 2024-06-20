@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# vim:foldmethod=marker:
 # shellcheck disable=2086,2015,2016
 set -e
 
@@ -373,7 +374,7 @@ run_cmd() {
     '\'''
 
     # keybinding hints {{{2
-    run_header="Actions > (enter: watch) (alt-l: logs) (alt-r: rerun) (alt-R: rerun failed) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
+    run_header="Actions > (enter: watch/logs) (alt-r: rerun) (alt-R: rerun failed) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
 Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
 $global_binds
 
@@ -387,7 +388,12 @@ $global_binds
         --bind="start:$on_start" \
         --bind="ctrl-o:execute-silent(gh run view --web {-1} $repo_flag &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
-        --bind="enter:execute(gh run watch {-1} $repo_flag)+refresh-preview" \
+        --bind="enter:execute(
+            case {1} in
+                in_progress | queued | requested | waiting) gh run watch {-1} $repo_flag ;;
+                *) gh run view --log {-1} $repo_flag ;;
+            esac
+        )+refresh-preview" \
         --bind="alt-l:execute(gh run view --log {-1} $repo_flag)+refresh-preview" \
         --bind="alt-r:execute(gh run rerun {-1} $repo_flag)+refresh-preview" \
         --bind="alt-R:execute(gh run rerun --failed {-1} $repo_flag)+refresh-preview" \

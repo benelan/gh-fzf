@@ -189,9 +189,10 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `r`, `runs`, `-r`, `--run`, `--runs`
 - **Flags**: See `gh run list --help` for available options
 - **Keybindings**:
-  - `enter`: Watch for status updates on the selected run
-    (see `gh run watch --help`)
-  - `alt-l`: Display logs for the selected run (see `gh run view --help`)
+  - `enter`: Watch for status changes or view logs, depending on whether the
+    selected run is in progress or completed.
+    (see `gh run watch --help` and `gh run view --help`)
+  - `alt-l`: Display logs for the selected run (**deprecated**, use `enter` instead)
   - `alt-d`: Download artifacts from the selected run
     (see `gh run download --help`)
   - `alt-r`: Rerun the selected run (see `gh run rerun --help`)

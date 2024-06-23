@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.13.0](https://github.com/benelan/gh-fzf/compare/v0.12.0...v0.13.0) (2024-06-23)
+
+
+### Features
+
+* **pr:** Add `alt-y` keybinding to copy the selected item's branch name ([07a85db](https://github.com/benelan/gh-fzf/commit/07a85dbd7e68e08309487c5208d415c4187ff4b5)), closes [#24](https://github.com/benelan/gh-fzf/issues/24)
+* **run:** Add `alt-R` keybinding to rerun only failed jobs ([#27](https://github.com/benelan/gh-fzf/issues/27)) ([bdd80f9](https://github.com/benelan/gh-fzf/commit/bdd80f98c824aff14a2800fd07f7b4d03d4d3f58)), closes [#26](https://github.com/benelan/gh-fzf/issues/26)
+* **run:** Modify `enter` keybinding to view logs if the selected run is completed, deprecates `alt-l` ([b15f6a9](https://github.com/benelan/gh-fzf/commit/b15f6a99502a5617365ef076d809ab5e10906cf5))
+
 ## [0.12.0](https://github.com/benelan/gh-fzf/compare/v0.11.0...v0.12.0) (2024-06-03)
 
 

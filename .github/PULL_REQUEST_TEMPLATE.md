@@ -1,3 +1,3 @@
 
 
-Resolve #
+Resolves #

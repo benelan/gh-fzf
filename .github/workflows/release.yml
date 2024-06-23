@@ -11,17 +11,11 @@ jobs:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v3.7.9
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           release-type: simple
-          package-name: gh-fzf
           token: ${{ secrets.GITHUB_TOKEN }}
-          default-branch: main
-          extra-files: |
-            gh-fzf
-            .github/ISSUE_TEMPLATE/bug.yml
-          plugins: sentence-case
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

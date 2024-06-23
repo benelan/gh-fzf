@@ -3,7 +3,6 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "package-name": "gh-fzf",
       "extra-files": ["gh-fzf", ".github/ISSUE_TEMPLATE/bug.yml"]
     }
   },

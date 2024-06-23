@@ -1,5 +1,86 @@
 # Changelog
 
+## [0.13.0](https://github.com/benelan/gh-fzf/compare/gh-fzf-v0.12.0...gh-fzf-v0.13.0) (2024-06-23)
+
+
+### Features
+
+* Add 'run', 'issue', and 'pr' commands ([9e254a0](https://github.com/benelan/gh-fzf/commit/9e254a05e3f230c1ab0a9474a6a186d1a13f92ba))
+* Add command for viewing gh-fzf's changelog ([f8d5b23](https://github.com/benelan/gh-fzf/commit/f8d5b23e283e234557cbed615993e618fd45ccf3))
+* Add config option for setting the default limit ([71e9722](https://github.com/benelan/gh-fzf/commit/71e97227a62f3255d693c7cfc2366ea068a59a8e))
+* Add config option to hide the header by default ([ed6b3d2](https://github.com/benelan/gh-fzf/commit/ed6b3d2265b7561bcdac97a60be26c9471939ac5))
+* Add GH_FZF_TRUNCATE_FIELDS config option ([aa9984b](https://github.com/benelan/gh-fzf/commit/aa9984b221bc7e4a822ea1ada59307c5ec9194df))
+* Add gist command ([#12](https://github.com/benelan/gh-fzf/issues/12)) ([13ac32c](https://github.com/benelan/gh-fzf/commit/13ac32c90865a7c4484824d080583948af35ab97))
+* Add keybinding for copying the url to clipboard ([44bf38c](https://github.com/benelan/gh-fzf/commit/44bf38ca487c535c5f13568c9ada415d25c4588e))
+* Add label command ([#15](https://github.com/benelan/gh-fzf/issues/15)) ([abec1bd](https://github.com/benelan/gh-fzf/commit/abec1bde9f12310d6a7c8cd7af38aba16caa70b4))
+* Add milestone command ([#23](https://github.com/benelan/gh-fzf/issues/23)) ([86cb9da](https://github.com/benelan/gh-fzf/commit/86cb9dad3e3edd2ad57f3742d12cbeac1af66d12)), closes [#21](https://github.com/benelan/gh-fzf/issues/21)
+* Add release command ([#10](https://github.com/benelan/gh-fzf/issues/10)) ([8b9fa6f](https://github.com/benelan/gh-fzf/commit/8b9fa6fa125412a2673e6ba482d3180888e70250))
+* Add repo command ([#9](https://github.com/benelan/gh-fzf/issues/9)) ([4ce7fbd](https://github.com/benelan/gh-fzf/commit/4ce7fbdf8cba5d524b3acb91e0e92329b71ac402))
+* Add version and help commands ([c20abc8](https://github.com/benelan/gh-fzf/commit/c20abc8933c9dccbbdb9685ce76ae817c68319d1))
+* Add workflow command ([#13](https://github.com/benelan/gh-fzf/issues/13)) ([09e402b](https://github.com/benelan/gh-fzf/commit/09e402bf40525b86be51b2d08bab02722f37c440))
+* Display command picker when one is not provided ([ea326e1](https://github.com/benelan/gh-fzf/commit/ea326e1ba242d3affb513dd2320f0469ea5654b7))
+* Improve default user interface ([d891a07](https://github.com/benelan/gh-fzf/commit/d891a07056838e97b9e8155e3eb4adf65445a924))
+* **issue, pr, run:** Add newline between keybind hints and column headers ([4ee118a](https://github.com/benelan/gh-fzf/commit/4ee118a8f91d886cbacc89b669bb6e52d1471dc4))
+* **issue, pr, run:** Format lists to provide more fuzzy finding fields ([af83fdd](https://github.com/benelan/gh-fzf/commit/af83fdd2e797f88a8a6f2eb0fbde2020dac9468b))
+* **issue, pr:** Add filter keybindings for state=all and current branch ([0c2c377](https://github.com/benelan/gh-fzf/commit/0c2c3773432bf2f5093ff78badd1ee1dccffd769))
+* **issue, pr:** Display all comments in the preview window ([b15f973](https://github.com/benelan/gh-fzf/commit/b15f9737e5f8ac47d6a4100b8bdf2ca088cc213c))
+* **issue, pr:** Increase labels limit in keybinds ([1b81c6f](https://github.com/benelan/gh-fzf/commit/1b81c6f3e9b1018d8b67203a46740366b45ccc39))
+* **issue, pr:** Keybindings to add/remove label ([fea7b42](https://github.com/benelan/gh-fzf/commit/fea7b4238dddf9c4e374782f5071beaa62a87cc3))
+* **issue, pr:** Support multi-select label changes ([cac5f20](https://github.com/benelan/gh-fzf/commit/cac5f209d27b5958eaa8d0e7b042522953a24ec7))
+* **issue:** Add options for naming linked branch ([f6f78e2](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119))
+* **issue:** Checkout existing linked branch if exists ([ecfd426](https://github.com/benelan/gh-fzf/commit/ecfd4269419131a9861da21f7cfffb64c48f7d79))
+* **issue:** Prompt for branch name in develop keybind ([1aca50f](https://github.com/benelan/gh-fzf/commit/1aca50fbf8a159dc36504891bf13877642d0ec99))
+* **label:** Include label's name in edit prompts ([d45ea06](https://github.com/benelan/gh-fzf/commit/d45ea067405e0973b88fae84bb27cdcfeab6c3df))
+* **label:** Reload list after edit keybinds ([b76453a](https://github.com/benelan/gh-fzf/commit/b76453a1bec2ceeb3875b5ed4a239146df07e3d6))
+* Manually truncate results columns to improve search matches and readability ([0f08e40](https://github.com/benelan/gh-fzf/commit/0f08e40a1f9db4c35addac5bddbfb79177c40227))
+* **pr:** Add alt-y keybinding to copy branch name ([07a85db](https://github.com/benelan/gh-fzf/commit/07a85dbd7e68e08309487c5208d415c4187ff4b5)), closes [#24](https://github.com/benelan/gh-fzf/issues/24)
+* **preview, header:** Readable on small width terminals ([ca8bbf5](https://github.com/benelan/gh-fzf/commit/ca8bbf596fd66dd5687e17c38b977f832175db79))
+* **pr:** Replace the 'gh pr checks' keybinding with 'gh fzf run' ([7ffca65](https://github.com/benelan/gh-fzf/commit/7ffca650924a58d3fc64747977f1dc8c7173a867))
+* Refresh preview after keybind actions execute ([f3b5fad](https://github.com/benelan/gh-fzf/commit/f3b5fad561ff5d99199c40f582bd5c4dd6025dee))
+* **run:** Add actions to experimental notifications ([a5c3c50](https://github.com/benelan/gh-fzf/commit/a5c3c5032fea1f5d4b9a7c706862b8c3fdcf6148))
+* **run:** Add additional status colors to further differentiate conclusions ([932579f](https://github.com/benelan/gh-fzf/commit/932579fe734b4793beb470fe440cba6b0299a993))
+* **run:** Add keybind to filter by in_progress ([89580c0](https://github.com/benelan/gh-fzf/commit/89580c0ec4c37f3ec632d2b7409164028e29aa6d))
+* **run:** Add keybind to notify desktop on completion ([b4185b7](https://github.com/benelan/gh-fzf/commit/b4185b71727c69c70b49fcf668d5cc83854f9bbf))
+* **run:** Add keybinding to show the pr for the run's branch ([f836706](https://github.com/benelan/gh-fzf/commit/f8367060da9608cb40170fb0964214a554e6eef8))
+* **run:** Add keymap to download artifacts ([#6](https://github.com/benelan/gh-fzf/issues/6)) ([8bc2f1a](https://github.com/benelan/gh-fzf/commit/8bc2f1a90c1e2860d6fa0dc35b32c0fdb2b4ffd2))
+* **run:** Add keymap to rerun only failed jobs ([#27](https://github.com/benelan/gh-fzf/issues/27)) ([bdd80f9](https://github.com/benelan/gh-fzf/commit/bdd80f98c824aff14a2800fd07f7b4d03d4d3f58)), closes [#26](https://github.com/benelan/gh-fzf/issues/26)
+* **run:** Ask to rerun after dunstify's log action ([ff14747](https://github.com/benelan/gh-fzf/commit/ff1474732b3bab78bf2d5fddf5bf86773ce04184))
+* **run:** Improve fallback for dunst's log action ([31d4199](https://github.com/benelan/gh-fzf/commit/31d419911033d8c2063a9bee1a8be2341c8c86cc))
+* **run:** Notify desktop when completed (experimental) ([009598c](https://github.com/benelan/gh-fzf/commit/009598c4271dba7a2d4ef2b1c866606bfa02368a))
+* **run:** View logs via enter keybind if completed ([b15f6a9](https://github.com/benelan/gh-fzf/commit/b15f6a99502a5617365ef076d809ab5e10906cf5))
+
+
+### Bug Fixes
+
+* Allow most fzf options to be overridden ([c455e30](https://github.com/benelan/gh-fzf/commit/c455e3034f49da1ae81c26779de2419fda87e4a8))
+* Blocked process when opening item in browser ([0284389](https://github.com/benelan/gh-fzf/commit/0284389b07d039ead201803be47acbbfd0ddb8ad))
+* Config issues when user hasn't set FZF_DEFAULT_OPTS ([5ae01a4](https://github.com/benelan/gh-fzf/commit/5ae01a44dd546473fb29f15f5438ff3255040446))
+* Ensure all commands respect --repo flag ([526452b](https://github.com/benelan/gh-fzf/commit/526452b58488ddd63331377906b831b6eb5a3bf1))
+* **issue, pr:** Exit properly after branch checkout ([2dbea75](https://github.com/benelan/gh-fzf/commit/2dbea75be3260cbcd89555901f978cefa927ba43))
+* **issue:** Syntax error setting linked branch name ([9c484d8](https://github.com/benelan/gh-fzf/commit/9c484d894c25578e4aeb97628d7eb40351f5fa58))
+* **issue:** Typo in comments flag ([6c29bc4](https://github.com/benelan/gh-fzf/commit/6c29bc4598b0feffebe8809aeff23cb1df96e2c0))
+* **label:** Enter only prints the name vs whole row ([44bd0af](https://github.com/benelan/gh-fzf/commit/44bd0afbb347e3d41e7254f298e3952d16202590))
+* **label:** Handle spaces in label names ([b7697a0](https://github.com/benelan/gh-fzf/commit/b7697a0212231419ab5630ca32dc288db207e351))
+* Pass repo flag to preview and keybinding commands ([#8](https://github.com/benelan/gh-fzf/issues/8)) ([d97c8cb](https://github.com/benelan/gh-fzf/commit/d97c8cbcdac5d2559e80c6a313238b5103e87937))
+* **pr:** Typo in the previous commit to use 'gh fzf run' for viewing checks ([7f4e869](https://github.com/benelan/gh-fzf/commit/7f4e86975f021ae7ef023e8192fe1f9e2a2ee02c))
+* **run:** Display status when the run hasn't concluded ([830e656](https://github.com/benelan/gh-fzf/commit/830e6562f9494a5489d5c4c38c99ed409908cf32))
+* **run:** Errors opening logs from notification ([922fb4b](https://github.com/benelan/gh-fzf/commit/922fb4b5a591eeb5506cc28e7eac3ae882cc6ca7))
+* **run:** Escape quotes when notifying via osascript ([8a86ee7](https://github.com/benelan/gh-fzf/commit/8a86ee7861cbe45b63bb3f2f17f4553feb5c71a1))
+* **run:** Fix quotes error in osascript notification ([36c5676](https://github.com/benelan/gh-fzf/commit/36c5676c2cd11ccce1429b7dd65b5bff73616070))
+* **run:** Notification message when process killed ([b419d35](https://github.com/benelan/gh-fzf/commit/b419d352e78fdc3ad1beaad452932c7d5d2ac40a))
+* **util:** Correctly pass --repo and -R flags to gh ([46adb7e](https://github.com/benelan/gh-fzf/commit/46adb7e7f030d768457c10e2f83e23756cae931e))
+* Wrap lines at correct column in preview window ([9177fd6](https://github.com/benelan/gh-fzf/commit/9177fd66fd3aad60dcea66cc40e30320fb261f3e))
+
+
+### Performance Improvements
+
+* **issue, pr:** Abort label change if none selected ([86b4457](https://github.com/benelan/gh-fzf/commit/86b445769884c829d56b7f193aa970e32f2eae52))
+
+
+### Reverts
+
+* Docs(readme): fix yml code block indenting ([39d262a](https://github.com/benelan/gh-fzf/commit/39d262a57a5b321f2144cbd2dee55853a2464534))
+
 ## [0.12.0](https://github.com/benelan/gh-fzf/compare/v0.11.0...v0.12.0) (2024-06-03)
 
 

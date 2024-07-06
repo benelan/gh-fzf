@@ -81,7 +81,7 @@ global_binds="Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload) (
 # ----------------------------------------------------------------------1}}}
 # CONFIGURATION                                                         {{{1
 
-GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-69}"
+GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-75}"
 
 if [ -z "$GH_FZF_COPY_CMD" ]; then
     if has /mnt/c/Windows/System32/clip.exe; then
@@ -779,7 +779,7 @@ select_labels() {
             "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifer>"
 
     # increase the limit when selecting labels
-    [ "$GH_FZF_DEFAULT_LIMIT" -lt 420 ] && label_limit="-L 420"
+    [ "$GH_FZF_DEFAULT_LIMIT" -lt 500 ] && label_limit="-L 500"
 
     label_flags="$(
         gh fzf label $label_limit | flagify "--$1-label"

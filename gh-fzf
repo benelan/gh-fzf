@@ -939,7 +939,7 @@ util_cmd() {
 
     case $util in
         copy-url) copy_url "$@" ;;
-        notify-run-completed) notify_run_completed "$@" ;;
+        notify-run-completed) notify_run_completed "$@" >/dev/null 2>&1 </dev/null & ;;
         branch-prompt) branch_prompt "$@" ;;
         develop-issue) develop_issue "$@" ;;
         select-labels) select_labels "$@" ;;

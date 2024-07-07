@@ -87,12 +87,12 @@ GH_FZF_DEFAULT_LIMIT="${GH_FZF_DEFAULT_LIMIT:-75}"
 if [ -z "$GH_FZF_COPY_CMD" ]; then
     if has /mnt/c/Windows/System32/clip.exe; then
         GH_FZF_COPY_CMD="/mnt/c/Windows/System32/clip.exe" # Windows (WSL)
+    elif has wl-copy && [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+        GH_FZF_COPY_CMD="wl-copy" # Linux (Wayland)
     elif has xsel; then
         GH_FZF_COPY_CMD="xsel -bi" # Linux (X11)
     elif has xclip; then
         GH_FZF_COPY_CMD="xclip -selection clipboard" # Linux (X11)
-    elif has wl-copy; then
-        GH_FZF_COPY_CMD="wl-copy" # Linux (Wayland)
     elif has pbcopy; then
         GH_FZF_COPY_CMD="pbcopy" # OSX
     fi

@@ -65,26 +65,25 @@ To upgrade `gh-fzf` to the latest commit on `main` **(recommended)**:
 gh extension upgrade gh-fzf
 ```
 
-Alternatively, you can pin a tag when installing `gh` extensions. If you already
-have `gh-fzf` installed, you need to remove it first before pinning a version:
+Alternatively, you can pin a tag when installing `gh` extensions. A convenience
+command is provided for upgrading to the `stable` tag, which always points to
+the latest version:
 
 ```sh
-gh extension remove fzf && gh extension install benelan/gh-fzf --pin "v0.8.0"
+gh fzf upgrade
 ```
 
-There is also a `stable` tag, which always points to the latest release.
+You can check which version `gh-fzf` you currently have installed:
+
+```sh
+gh fzf version
+```
 
 The [changelog](./CHANGELOG.md) contains a list of features and fixes released
 in each version. You can also view the release notes on the command line with:
 
 ```sh
 gh fzf changelog
-```
-
-To see the version of `gh-fzf` you currently have installed:
-
-```sh
-gh fzf -v
 ```
 
 ## Usage

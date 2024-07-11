@@ -124,8 +124,8 @@ fi
 # The following fzf options are shared by all commands. They are prepended to
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
 export FZF_DEFAULT_OPTS='
---no-hscroll --no-exit-0 --header-lines=1 --cycle --reverse --delimiter="  "
---preview-window="right,50%,wrap,~2,<60(down,40%,wrap)"
+--no-hscroll --no-exit-0 --header-lines=1 --cycle
+--preview-window="right,border-left,50%,wrap,~2,<60(down,border-top,40%,wrap)"
 --preview-label="(alt+P: toggle preview) (alt+H: toggle hints)"
 --bind="alt-P:toggle-preview" --bind="alt-H:toggle-header"
 --color "fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b,info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
@@ -140,7 +140,7 @@ export FZF_DEFAULT_OPTS='
 --bind="alt-7:reload(eval \"$FZF_DEFAULT_COMMAND -L700\")"
 --bind="alt-8:reload(eval \"$FZF_DEFAULT_COMMAND -L800\")"
 --bind="alt-9:reload(eval \"$FZF_DEFAULT_COMMAND -L900\")"
-'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi'
+'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --reverse --no-multi --delimiter="  "'
 # Overriding the three options above breaks gh-fzf, so append them instead.
 
 # ----------------------------------------------------------------------1}}}

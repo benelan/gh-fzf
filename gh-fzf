@@ -214,7 +214,16 @@ $global_binds
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
         --header="$issue_header" \
-        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --prompt="Find Issues > " \
+        --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind 'change:reload-sync:sleep 0.25; $FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true' \
+        --bind 'alt-/:transform:[[ ! $FZF_PROMPT =~ Search ]] &&
+            echo "rebind(change)+change-prompt(Search Issues > )+disable-search+transform-query(
+                echo \{q} > /tmp/gh-fzf-issue-query-f; cat /tmp/gh-fzf-issue-query-s
+            )" ||
+            echo "unbind(change)+change-prompt(Find Issues > )+enable-search+transform-query(
+                echo \{q} > /tmp/gh-fzf-issue-query-s; cat /tmp/gh-fzf-issue-query-f
+            )"' \
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $REPO_FLAG &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $REPO_FLAG)+refresh-preview" \
@@ -224,9 +233,9 @@ $global_binds
         --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
         --bind="alt-O:execute(gh issue reopen {1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $REPO_FLAG)+refresh-preview" \
-        --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
-            m="$(cat /tmp/gh-fzf-milestone)"
-            rm -f /tmp/gh-fzf-milestone;
+        --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-issue-milestone)+reload(
+            m="$(cat /tmp/gh-fzf-issue-milestone)"
+            rm -f /tmp/gh-fzf-issue-milestone;
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
         )' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \

@@ -218,18 +218,18 @@ $global_binds
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
         --header="$issue_header" \
-        --prompt="issues $* > " \
+        --prompt="issues${*:+ $*} ❯ " \
         --border="bottom" \
         --border-label="[mode: fzf] " \
         --border-label-pos=-99999 \
         --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
         --bind "change:reload-sync:sleep 0.25; $ISSUE_COMMAND $* \${FZF_QUERY:+-S {q}} || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
-            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+            echo "rebind(change)+change-prompt(issues'"${*:+ $*}"' ❱ )+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh
             )" ||
-            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
+            echo "unbind(change)+change-prompt(issues'"${*:+ $*}"' ❯ )+change-border-label([mode: fzf] )+enable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf
             )"' \

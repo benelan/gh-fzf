@@ -424,7 +424,7 @@ run_cmd() {
 
     # KEYBINDING HINTS {{{2
     run_header="Actions > (enter: watch/logs) (alt-r: rerun) (alt-R: rerun failed) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
-Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user)
+Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user) (alt-w: workflow)
 $global_binds
 
 "
@@ -448,6 +448,7 @@ $global_binds
         --bind="alt-R:execute(gh run rerun --failed {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-d:execute(gh run download {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-x:execute(gh run cancel {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="alt-w:execute(gh fzf workflow $REPO_FLAG)" \
         --bind="alt-n:execute-silent(
             gh fzf util notify-run-completed {-1} $REPO_FLAG &
         )+refresh-preview" \

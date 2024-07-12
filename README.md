@@ -209,6 +209,8 @@ that can be used with any `gh fzf` command:
     > **NOTE:** The run watching process is executed in the background, so
     > closing `gh-fzf` won't prevent the desktop notification from displaying.
     > Use `killall gh` to end all `gh` processes, including the run watcher.
+  - `alt-w`: Filter the list, showing runs for the selected item from
+    `gh fzf workflow` (see [`workflow`](#workflow))
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs

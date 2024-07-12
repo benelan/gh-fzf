@@ -756,6 +756,45 @@ Filters > (alt-p: public) (alt-s: secret)
     #2}}}
 }
 
+search_cmd() {
+    SEARCH_SUBCOMMAND="$1"
+    case $SEARCH_SUBCOMMAND in
+        issues | prs | repos | commits | code) shift ;;
+        *)
+            error "invalid search command: \"$1\"" \
+                "Valid commands: issues, prs, repos, commits, code"
+            ;;
+    esac
+
+    # FZF COMMAND      {{{2
+    SEARCH_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh search $SEARCH_SUBCOMMAND -L $GH_FZF_DEFAULT_LIMIT"
+
+    fzf \
+        --header-lines=4 \
+        --disabled \
+        --query="$*" \
+        --border="bottom" \
+        --border-label="[mode: gh] " \
+        --border-label-pos=-99999 \
+        --prompt="search $SEARCH_SUBCOMMAND ❱ " \
+        --bind="start:reload($SEARCH_COMMAND \$FZF_QUERY || true)${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind "change:reload-sync:sleep 0.25; $SEARCH_COMMAND \$FZF_QUERY || true" \
+        --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf;
+                cat ${TMPDIR:-/tmp}/gh-fzf-search-query-gh
+            )+reload-sync('"$SEARCH_COMMAND"' $FZF_QUERY || true)" ||
+            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-gh;
+                cat ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf
+            )"' \
+        --bind='ctrl-r:execute-silent(
+                rm -f  ${TMPDIR:-/tmp}/gh-fzf-search-query-{gh,fzf}
+            )+clear-query+first+reload:'"$SEARCH_COMMAND"
+
+    #2}}}
+}
+
 # ----------------------------------------------------------------------1}}}
 # COMMAND > UTIL                                                        {{{1
 
@@ -989,6 +1028,7 @@ main() {
         i | -i | issue | issues | --issue | --issues) issue_cmd "$@" ;;
         p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
         r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
+        s | -s | search | --search) search_cmd "$@" ;;
         repo | repos | --repo | --repos) repo_cmd "$@" ;;
         release | releases | --release | --releases) release_cmd "$@" ;;
         gist | gists | --gist | --gists) gist_cmd "$@" ;;

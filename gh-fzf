@@ -229,11 +229,14 @@ $global_binds
             echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh
-            )" ||
+            )+change-prompt(issues'"${*:+ $*}"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
             echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf
             )"' \
+            --bind='ctrl-r:change-prompt(issues'"${*:+ $*}"' ❱ )+execute-silent(
+                rm -f  ${TMPDIR:-/tmp}/gh-fzf-issue-query-*
+            )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $REPO_FLAG &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="enter:execute(gh issue edit {1} $REPO_FLAG)+refresh-preview" \

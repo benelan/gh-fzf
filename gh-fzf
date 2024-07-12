@@ -250,7 +250,7 @@ $global_binds
             rm -f "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
             gh fzf milestone > "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
         )+transform-prompt(
-            echo "issues'"${*:+ $*}"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❯ "
+            echo "issues'"${*:+ $*}"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❱ "
         )+reload(
             m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
@@ -258,24 +258,24 @@ $global_binds
         --bind 'alt-a:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
-            )+change-prompt:issues'"${*:+ $*}"' --assignee @me ❯ " ||
+            )+change-prompt:issues'"${*:+ $*}"' --assignee @me ❱ " ||
            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
         )' \
         --bind 'alt-A:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --author @me\"
-            )+change-prompt:issues'"${*:+ $*}"' --author @me ❯ " ||
+            )+change-prompt:issues'"${*:+ $*}"' --author @me ❱ " ||
            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
         )' \
         --bind 'alt-m:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
-            )+change-prompt:issues'"${*:+ $*}"' --mention @me ❯ " ||
+            )+change-prompt:issues'"${*:+ $*}"' --mention @me ❱ " ||
            [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
         )' \
         --bind 'alt-s:reload(
             eval "$FZF_DEFAULT_COMMAND --state all"
-        )+change-prompt:issues'"${*:+ $*}"' --state all ❯ '
+        )+change-prompt:issues'"${*:+ $*}"' --state all ❱ '
 
     #2}}}
 }

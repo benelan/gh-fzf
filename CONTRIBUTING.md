@@ -11,12 +11,13 @@ You can help most by:
 
 ## Before filing an issue
 
-If something isn't working the way you expect, take a look at the
-[existing issues](https://github.com/benelan/gh-fzf/issues) before logging
-a new one. If there are no duplicates, please log a new issue! Make sure to
-provide all of the requested info from the appropriate
-[issue template](https://github.com/benelan/gh-fzf/issues/new/choose).
-Some other things to consider:
+Please check for an [existing issue](/../../issues) before logging a new one. If you
+find one that matches, give it a thumbs up and comment any additional info that
+might help resolve the issue. If there isn't an existing issue, choose the
+appropriate [template](/../../issues/new/choose) and fill out the requested
+information.
+
+Here are some items to consider while writing the issue:
 
 - Use a clear and descriptive title
 - Detail what is happening now vs what should happen

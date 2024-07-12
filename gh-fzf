@@ -756,20 +756,33 @@ Filters > (alt-p: public) (alt-s: secret)
     #2}}}
 }
 
+# COMMAND > SEARCH                                                      {{{1
 search_cmd() {
     SEARCH_SUBCOMMAND="$1"
+
     case $SEARCH_SUBCOMMAND in
-        issues | prs | repos | commits | code) shift ;;
+        issues) SEARCH_OPEN_COMMAND="gh issue view --web {2} --repo {1}" ;;
+        prs) SEARCH_OPEN_COMMAND="gh pr view --web {2} --repo {1}" ;;
+        repos) SEARCH_OPEN_COMMAND="gh repo view --web {1}" ;;
+        commits) SEARCH_OPEN_COMMAND="$GH_FZF_OPEN_CMD https://github.com/{1}/commit/{2}" ;;
+        code)
+            # shellcheck disable=2089
+            SEARCH_SUBCOMMAND_OPTS="--header-lines=2 --read0 --highlight-line"
+            MULTILINE_CHUNKER="| perl -0 -pe 's/^\n/\n\0/gm'"
+            ;;
         *)
             error "invalid search command: \"$1\"" \
                 "Valid commands: issues, prs, repos, commits, code"
             ;;
     esac
+    shift
 
     # FZF COMMAND      {{{2
     SEARCH_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh search $SEARCH_SUBCOMMAND -L $GH_FZF_DEFAULT_LIMIT"
 
+    # shellcheck disable=2090
     fzf \
+        --delimiter="\s\s+" \
         --header-lines=4 \
         --disabled \
         --query="$*" \
@@ -777,8 +790,8 @@ search_cmd() {
         --border-label="[mode: gh] " \
         --border-label-pos=-99999 \
         --prompt="search $SEARCH_SUBCOMMAND ❱ " \
-        --bind="start:reload($SEARCH_COMMAND \$FZF_QUERY || true)${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
-        --bind "change:reload-sync:sleep 0.25; $SEARCH_COMMAND \$FZF_QUERY || true" \
+        --bind="start:reload($SEARCH_COMMAND \$FZF_QUERY $MULTILINE_CHUNKER || true)${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind "change:reload-sync:sleep 0.25; $SEARCH_COMMAND \$FZF_QUERY $MULTILINE_CHUNKER || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf;
@@ -789,8 +802,10 @@ search_cmd() {
                 cat ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf
             )"' \
         --bind='ctrl-r:execute-silent(
-                rm -f  ${TMPDIR:-/tmp}/gh-fzf-search-query-{gh,fzf}
-            )+clear-query+first+reload:'"$SEARCH_COMMAND"
+            rm -f  ${TMPDIR:-/tmp}/gh-fzf-search-query-{gh,fzf}
+        )+clear-query+first+reload:'"$SEARCH_COMMAND" \
+        --bind="ctrl-o:execute-silent($SEARCH_OPEN_COMMAND)" \
+        $SEARCH_SUBCOMMAND_OPTS
 
     #2}}}
 }

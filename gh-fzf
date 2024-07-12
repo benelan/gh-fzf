@@ -28,8 +28,6 @@
 
 set -e
 
-trap 'rm -f ${TMPDIR:-/tmp}/gh-fzf-*' SIGINT SIGTERM EXIT
-
 GH_FZF_VERSION="v0.13.0" # x-release-please-version
 
 # USAGE INFO AND LOGS                                                   {{{1
@@ -168,6 +166,9 @@ default_cmd() {
 # COMMAND > ISSUE                                                       {{{1
 
 issue_cmd() {
+    # make sure state from the previous execution is destroyed
+    rm -f /tmp/gh-fzf-issue-*
+
     # GO TEMPLATE      {{{2
     issue_template='\
         --json "number,title,author,assignees,state,milestone,labels,updatedAt" \
@@ -218,18 +219,18 @@ $global_binds
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
         --header="$issue_header" \
-        --prompt="issues${*:+ $*} ❯ " \
+        --prompt="issues${*:+ $*} ❱ " \
         --border="bottom" \
         --border-label="[mode: fzf] " \
         --border-label-pos=-99999 \
         --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
         --bind "change:reload-sync:sleep 0.25; $ISSUE_COMMAND $* \${FZF_QUERY:+-S {q}} || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
-            echo "rebind(change)+change-prompt(issues'"${*:+ $*}"' ❱ )+change-border-label([mode:  gh] )+disable-search+transform-query(
+            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh
             )" ||
-            echo "unbind(change)+change-prompt(issues'"${*:+ $*}"' ❯ )+change-border-label([mode: fzf] )+enable-search+transform-query(
+            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf
             )"' \
@@ -242,15 +243,36 @@ $global_binds
         --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
         --bind="alt-O:execute(gh issue reopen {1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-X:execute(gh issue close {1} $REPO_FLAG)+refresh-preview" \
-        --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-issue-milestone)+reload(
-            m="$(cat /tmp/gh-fzf-issue-milestone)"
-            rm -f /${TMPDIR:-/tmp}/gh-fzf-issue-milestone;
+        --bind='alt-M:execute(
+            rm -f "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
+            gh fzf milestone > "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
+        )+transform-prompt(
+            echo "issues'"${*:+ $*}"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❯ "
+        )+reload(
+            m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
         )' \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
-        --bind='alt-m:reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")'
+        --bind 'alt-a:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
+            )+change-prompt:issues'"${*:+ $*}"' --assignee @me ❯ " ||
+           [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+        )' \
+        --bind 'alt-A:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --author @me\"
+            )+change-prompt:issues'"${*:+ $*}"' --author @me ❯ " ||
+           [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+        )' \
+        --bind 'alt-m:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
+            )+change-prompt:issues'"${*:+ $*}"' --mention @me ❯ " ||
+           [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
+        )' \
+        --bind 'alt-s:reload(
+            eval "$FZF_DEFAULT_COMMAND --state all"
+        )+change-prompt:issues'"${*:+ $*}"' --state all ❯ '
 
     #2}}}
 }
@@ -261,13 +283,14 @@ $global_binds
 pr_cmd() {
     # GO TEMPLATE      {{{2
     pr_template='\
-        --json "number,title,state,headRefName,milestone,updatedAt,labels" \
+        --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
                 ("PR" | autocolor $headerColor)
                 ("LAST UPDATE" | autocolor $headerColor)
                 ("TITLE" | autocolor $headerColor)
+                ("DIFF STAT" | autocolor $headerColor)
                 ("BRANCH" | autocolor $headerColor)
                 ("LABELS" | autocolor $headerColor)
                 ("MILESTONE" | autocolor $headerColor)
@@ -289,10 +312,15 @@ pr_cmd() {
                 {{- tablerow
                     (printf "#%v" .number | autocolor $stateColor)
                     ((timeago .updatedAt) | autocolor "white+d")
-                    (truncate 100 (.title | autocolor "white+h"))
-                    (truncate 60 (.headRefName | autocolor "white+d"))
-                    (pluck "name" .labels | join ", " | autocolor "white+h")
-                    ($milestoneTitle | autocolor "white+d")
+                    (truncate 90 (.title | autocolor "white+h"))
+                    (printf "%s %s %s"
+                    (printf "+%v" .additions | autocolor "green+d")
+                    (printf "-%v" .deletions | autocolor "red+d")
+                    (printf "(%v files)" .changedFiles | autocolor "white+d")
+                )
+                    (truncate 60 (.headRefName | autocolor "white+h"))
+                    (pluck "name" .labels | join ", " | autocolor "white+d")
+                    ($milestoneTitle | autocolor "white+h")
                 -}}
             {{- end -}}
     '\'''

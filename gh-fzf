@@ -292,6 +292,8 @@ $global_binds
 # COMMAND > PR                                                          {{{1
 
 pr_cmd() {
+    # make sure state from the previous execution is destroyed
+    rm -f /tmp/gh-fzf-pr-*
     # GO TEMPLATE      {{{2
     pr_template='\
         --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles" \
@@ -343,12 +345,33 @@ Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
 $global_binds
 
 "
+    # INITIAL STATE    {{{2
+    pr_command="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT"
+    pr_prompt="prs${*:+ $*}"
+
     # FZF COMMAND      {{{2
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="$pr_command $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$REPO_FLAG" \
         --header="$pr_header" \
-        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --prompt="$pr_prompt ❱ " \
+        --border="bottom" \
+        --border-label="[mode: fzf] " \
+        --border-label-pos=-99999 \
+        --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind "change:reload-sync:sleep 0.25; $pr_command $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf;
+                cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh
+            )+change-prompt('"$pr_prompt"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
+            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh;
+                cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf
+            )"' \
+        --bind='ctrl-r:change-prompt('"$pr_prompt"' ❱ )+execute-silent(
+                rm -f  ${TMPDIR:-/tmp}/gh-fzf-pr-query-*
+            )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="ctrl-o:execute-silent(gh pr view --web {1} $REPO_FLAG &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
         --bind="alt-y:execute-silent(
@@ -368,11 +391,35 @@ $global_binds
         --bind="alt-M:execute(gh pr merge {1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-O:execute(gh pr reopen {1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-X:execute(gh pr close {1} $REPO_FLAG)+refresh-preview" \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
-        --bind='alt-b:reload(eval "$FZF_DEFAULT_COMMAND --head \
-            $(git symbolic-ref --short HEAD)")'
+        --bind 'alt-a:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
+            )+change-prompt:'"$pr_prompt"' --assignee @me ❱ " ||
+           [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+        ' \
+        --bind 'alt-A:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --author @me\"
+            )+change-prompt:'"$pr_prompt"' --author @me ❱ " ||
+           [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+        ' \
+        --bind 'alt-b:transform:
+            branch="$(git symbolic-ref --short HEAD)";
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "reload(
+                    eval \"\$FZF_DEFAULT_COMMAND --head $branch\"
+                )+change-prompt:'"$pr_prompt"' --head $branch ❱ " ||
+           [[ ! $FZF_QUERY =~ head:$branch ]] && echo "put( head:$branch)"
+        ' \
+        --bind 'alt-s:transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --state all\"
+            )+change-prompt:'"$pr_prompt"' --state all ❱ "
+        else
+            [[ ! $FZF_QUERY =~ state:open ]] && act="put( state:open)"
+            [[ ! $FZF_QUERY =~ state:closed ]] && act="${act:+$act+}put( state:closed)"
+            echo "$act"
+        fi'
 
     #2}}}
 }

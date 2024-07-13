@@ -257,19 +257,19 @@ $global_binds
             m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
         )' \
-        --bind 'alt-a:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+        --bind 'alt-a:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
             )+change-prompt:'"$issue_prompt"' --assignee @me ❱ " ||
            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
-        )' \
-        --bind 'alt-A:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+        ' \
+        --bind 'alt-A:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --author @me\"
             )+change-prompt:'"$issue_prompt"' --author @me ❱ " ||
            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
-        )' \
-        --bind 'alt-m:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+        ' \
+        --bind 'alt-m:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
             )+change-prompt:'"$issue_prompt"' --mention @me ❱ " ||

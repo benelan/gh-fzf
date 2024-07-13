@@ -274,10 +274,16 @@ $global_binds
                 eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
             )+change-prompt:'"$issue_prompt"' --mention @me ❱ " ||
            [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
-        )' \
-        --bind 'alt-s:reload(
-            eval "$FZF_DEFAULT_COMMAND --state all"
-        )+change-prompt:'"$issue_prompt"' --state all ❱ '
+        ' \
+        --bind 'alt-s:transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --state all\"
+            )+change-prompt:'"$issue_prompt"' --state all ❱ "
+        else
+            [[ ! $FZF_QUERY =~ state:open ]] && act="put( state:open)"
+            [[ ! $FZF_QUERY =~ state:closed ]] && act="${act:+$act+}put( state:closed)"
+            echo "$act"
+        fi'
 
     #2}}}
 }

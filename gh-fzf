@@ -170,7 +170,7 @@ issue_cmd() {
     rm -f /tmp/gh-fzf-issue-*
 
     # GO TEMPLATE      {{{2
-    ISSUE_TEMPLATE='\
+    issue_template='\
         --json "number,title,author,assignees,state,milestone,labels,updatedAt" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
@@ -206,37 +206,37 @@ issue_cmd() {
     '\'''
 
     # KEYBINDING HINTS {{{2
-    ISSUE_HEADER="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add labels) (alt-L: remove labels) (alt-X: close) (alt-O: reopen)
+    issue_header="Actions > (enter: edit) (alt-c: comment) (alt-o: checkout) (alt-l: add labels) (alt-L: remove labels) (alt-X: close) (alt-O: reopen)
 Filters > (alt-a: assignee) (alt-A: author) (alt-m: mention) (alt-M: milestone) (alt-s: state=all)
 $global_binds
 
 "
 
     # INITIAL STATE    {{{2
-    ISSUE_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $ISSUE_TEMPLATE -L $GH_FZF_DEFAULT_LIMIT"
-    ISSUE_PROMPT="issues${*:+ $*}"
+    issue_command="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT"
+    issue_prompt="issues${*:+ $*}"
 
     # FZF COMMAND      {{{2
-    FZF_DEFAULT_COMMAND="$ISSUE_COMMAND $*" \
+    FZF_DEFAULT_COMMAND="$issue_command $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
-        --header="$ISSUE_HEADER" \
-        --prompt="$ISSUE_PROMPT ❱ " \
+        --header="$issue_header" \
+        --prompt="$issue_prompt ❱ " \
         --border="bottom" \
         --border-label="[mode: fzf] " \
         --border-label-pos=-99999 \
         --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
-        --bind "change:reload-sync:sleep 0.25; $ISSUE_COMMAND $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind "change:reload-sync:sleep 0.25; $issue_command $* \${FZF_QUERY:+-S {q}} || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh
-            )+change-prompt('"$ISSUE_PROMPT"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
+            )+change-prompt('"$issue_prompt"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
             echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh;
                 cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf
             )"' \
-        --bind='ctrl-r:change-prompt('"$ISSUE_PROMPT"' ❱ )+execute-silent(
+        --bind='ctrl-r:change-prompt('"$issue_prompt"' ❱ )+execute-silent(
                 rm -f  ${TMPDIR:-/tmp}/gh-fzf-issue-query-*
             )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $REPO_FLAG &)+refresh-preview" \
@@ -252,7 +252,7 @@ $global_binds
             rm -f "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
             gh fzf milestone > "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
         )+transform-prompt(
-            echo "'"$ISSUE_PROMPT"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❱ "
+            echo "'"$issue_prompt"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❱ "
         )+reload(
             m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
@@ -260,24 +260,24 @@ $global_binds
         --bind 'alt-a:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
-            )+change-prompt:'"$ISSUE_PROMPT"' --assignee @me ❱ " ||
+            )+change-prompt:'"$issue_prompt"' --assignee @me ❱ " ||
            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
         )' \
         --bind 'alt-A:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --author @me\"
-            )+change-prompt:'"$ISSUE_PROMPT"' --author @me ❱ " ||
+            )+change-prompt:'"$issue_prompt"' --author @me ❱ " ||
            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
         )' \
         --bind 'alt-m:transform:([[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
-            )+change-prompt:'"$ISSUE_PROMPT"' --mention @me ❱ " ||
+            )+change-prompt:'"$issue_prompt"' --mention @me ❱ " ||
            [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
         )' \
         --bind 'alt-s:reload(
             eval "$FZF_DEFAULT_COMMAND --state all"
-        )+change-prompt:'"$ISSUE_PROMPT"' --state all ❱ '
+        )+change-prompt:'"$issue_prompt"' --state all ❱ '
 
     #2}}}
 }

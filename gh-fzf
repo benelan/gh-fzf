@@ -212,19 +212,19 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments' \
         --prompt="issue ❱ " \
         --header="$issue_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="ctrl-o:execute-silent(gh issue view --web {1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-o:execute-silent(gh issue view --web {1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
-        --bind="enter:execute(gh issue edit {1} $REPO_FLAG)+refresh-preview" \
+        --bind="enter:execute(gh issue edit {1})+refresh-preview" \
         --bind='alt-o:become(gh fzf util develop-issue {1})' \
-        --bind="alt-c:execute(gh issue comment {1} $REPO_FLAG)+refresh-preview" \
+        --bind="alt-c:execute(gh issue comment {1})+refresh-preview" \
         --bind='alt-l:execute(gh fzf util select-labels add issue {1})+refresh-preview' \
         --bind='alt-L:execute(gh fzf util select-labels remove issue {1})+refresh-preview' \
-        --bind="alt-O:execute(gh issue reopen {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh issue close {1} $REPO_FLAG)+refresh-preview" \
+        --bind="alt-O:execute(gh issue reopen {1})+refresh-preview" \
+        --bind="alt-X:execute(gh issue close {1})+refresh-preview" \
         --bind='alt-M:execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
             m="$(cat /tmp/gh-fzf-milestone)"
             rm -f /tmp/gh-fzf-milestone;
@@ -296,29 +296,29 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments' \
         --prompt="pr ❱ " \
         --header="$pr_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="ctrl-o:execute-silent(gh pr view --web {1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-o:execute-silent(gh pr view --web {1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
         --bind="alt-y:execute-silent(
-            gh pr view --json 'headRefName' -q '.headRefName' {1} $REPO_FLAG | $GH_FZF_COPY_CMD
+            gh pr view --json 'headRefName' -q '.headRefName' {1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
-        --bind="enter:execute(gh pr edit {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-c:execute(gh pr comment {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-d:execute(gh pr diff {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-o:become(gh pr checkout {1} $REPO_FLAG)" \
-        --bind="alt-r:execute(gh pr review {1} $REPO_FLAG)+refresh-preview" \
+        --bind="enter:execute(gh pr edit {1})+refresh-preview" \
+        --bind="alt-c:execute(gh pr comment {1})+refresh-preview" \
+        --bind="alt-d:execute(gh pr diff {1})+refresh-preview" \
+        --bind="alt-o:become(gh pr checkout {1})" \
+        --bind="alt-r:execute(gh pr review {1})+refresh-preview" \
         --bind='alt-l:execute(gh fzf util select-labels add pr {1})+refresh-preview' \
         --bind='alt-L:execute(gh fzf util select-labels remove pr {1})+refresh-preview' \
         --bind='alt-C:execute<gh fzf run -b $(
-            gh pr view {1} --json headRefName --jq .headRefName '"$REPO_FLAG"'
-        ) '"$REPO_FLAG"'>+refresh-preview' \
-        --bind="alt-R:execute(gh pr ready {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-M:execute(gh pr merge {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-O:execute(gh pr reopen {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh pr close {1} $REPO_FLAG)+refresh-preview" \
+            gh pr view {1} --json headRefName --jq .headRefName
+        )>+refresh-preview' \
+        --bind="alt-R:execute(gh pr ready {1})+refresh-preview" \
+        --bind="alt-M:execute(gh pr merge {1})+refresh-preview" \
+        --bind="alt-O:execute(gh pr reopen {1})+refresh-preview" \
+        --bind="alt-X:execute(gh pr close {1})+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind='alt-A:reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
@@ -389,30 +389,30 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1}' \
         --prompt="run ❱ " \
         --header="$run_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="ctrl-o:execute-silent(gh run view --web {-1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-o:execute-silent(gh run view --web {-1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
         --bind="enter:execute(
             case {1} in
-                in_progress | queued | requested | waiting) gh run watch {-1} $REPO_FLAG ;;
-                *) gh run view --log {-1} $REPO_FLAG ;;
+                in_progress | queued | requested | waiting) gh run watch {-1} ;;
+                *) gh run view --log {-1} ;;
             esac
         )+refresh-preview" \
-        --bind="alt-l:execute(gh run view --log {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-r:execute(gh run rerun {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-R:execute(gh run rerun --failed {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-d:execute(gh run download {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-x:execute(gh run cancel {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-w:execute(gh fzf workflow $REPO_FLAG)" \
+        --bind="alt-l:execute(gh run view --log {-1})+refresh-preview" \
+        --bind="alt-r:execute(gh run rerun {-1})+refresh-preview" \
+        --bind="alt-R:execute(gh run rerun --failed {-1})+refresh-preview" \
+        --bind="alt-d:execute(gh run download {-1})+refresh-preview" \
+        --bind="alt-x:execute(gh run cancel {-1})+refresh-preview" \
+        --bind="alt-w:execute(gh fzf workflow)" \
         --bind="alt-n:execute-silent(
-            gh fzf util notify-run-completed {-1} $REPO_FLAG &
+            gh fzf util notify-run-completed {-1} &
         )+refresh-preview" \
         --bind='alt-p:execute<gh fzf pr --head $(
-            gh run view {-1} --json headBranch --jq .headBranch '"$REPO_FLAG"'
-        ) '"$REPO_FLAG"'>+refresh-preview' \
+            gh run view {-1} --json headBranch --jq .headBranch
+        )>+refresh-preview' \
         --bind='alt-b:reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
@@ -464,15 +464,15 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list $workflow_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --prompt="workflow ❱ " \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1}' \
         --header="$workflow_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-o:execute-silent(gh workflow view --web {-1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
-        --bind="enter:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-d:execute(gh workflow run {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-E:execute(gh workflow enable {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh workflow disable {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="enter:execute(gh fzf run --workflow {-1})+refresh-preview" \
+        --bind="alt-d:execute(gh workflow run {-1})+refresh-preview" \
+        --bind="alt-E:execute(gh workflow enable {-1})+refresh-preview" \
+        --bind="alt-X:execute(gh workflow disable {-1})+refresh-preview" \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
 
     #2}}}
@@ -528,14 +528,14 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh release list $release_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1}' \
         --prompt="release ❱ " \
         --header="$release_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="ctrl-o:execute-silent(gh release view --web {1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-o:execute-silent(gh release view --web {1} &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
-        --bind="alt-enter:execute(gh release download {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh release delete {1} $REPO_FLAG)+refresh-preview" \
+        --bind="alt-enter:execute(gh release download {1})+refresh-preview" \
+        --bind="alt-X:execute(gh release delete {1})+refresh-preview" \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
         --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
@@ -563,21 +563,21 @@ $global_binds
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="enter:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
-        --bind="ctrl-o:execute-silent(gh label list --web $REPO_FLAG &)" \
+        --bind="ctrl-o:execute-silent(gh label list --web &)" \
         --bind='alt-n:execute(
             read -rp "Enter new name for {1} label: " name;
-            [ -n "$name" ] && gh label edit {1} --name "$name" '"$REPO_FLAG"'
+            [ -n "$name" ] && gh label edit {1} --name "$name"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-d:execute(
             read -rp "Enter new description for {1} label: " description;
             [ -n "$description" ] &&
-                gh label edit {1} --description "$description" '"$REPO_FLAG"'
+                gh label edit {1} --description "$description"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-c:execute(
             read -rp "Enter new color for {1} label: " color;
-            [ -n "$color" ] && gh label edit {1} --color "$color" '"$REPO_FLAG"'
+            [ -n "$color" ] && gh label edit {1} --color "$color"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind="alt-X:execute(gh label delete {1} $REPO_FLAG)" \
+        --bind="alt-X:execute(gh label delete {1})" \
         --bind='alt-N:reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
         --bind='alt-D:reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
 
@@ -653,7 +653,7 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
                 /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
-        --bind="alt-i:execute(gh fzf issue --milestone {-1} $REPO_FLAG)" \
+        --bind="alt-i:execute(gh fzf issue --milestone {-1})" \
         --bind='alt-X:execute(
             gh api --silent --method PATCH -f "state=closed" \
                 -H "Accept: application/vnd.github+json" \
@@ -824,7 +824,7 @@ select_labels() {
         gh fzf label $label_limit | flagify "--$1-label"
     )"
 
-    [ -n "$label_flags" ] && eval "gh $2 edit \"$3\" $label_flags $REPO_FLAG"
+    [ -n "$label_flags" ] && eval "gh $2 edit \"$3\" $label_flags"
 }
 
 # PROMPT FOR A BRANCH NAME {{{2
@@ -846,13 +846,13 @@ develop_issue() {
     [ -z "$1" ] && error "missing argument." \
         "Usage: gh fzf util develop-issue <issue-number>"
 
-    branch="$(gh issue develop --list $1 $REPO_FLAG | tail | cut -f1)"
+    branch="$(gh issue develop --list $1 | tail | cut -f1)"
 
     if git show-ref --quiet "refs/heads/$branch"; then
         git checkout "$branch"
     else
         name="$(gh fzf util branch-prompt $1)"
-        gh issue develop --checkout ${name:+--name "$name"} $1 $REPO_FLAG
+        gh issue develop --checkout ${name:+--name "$name"} $1
     fi
 }
 
@@ -882,13 +882,13 @@ notify_run_completed() {
     [ -n "$run_id" ] && shift || error "missing argument." \
         "Usage: gh fzf util notify-run-completed <run-id>"
 
-    gh run watch --exit-status $run_id $REPO_FLAG || urgency="critical"
+    gh run watch --exit-status $run_id || urgency="critical"
 
     OLDIFS=$IFS
     IFS=$'\n'
 
     run_info="$(
-        gh run view $run_id $REPO_FLAG \
+        gh run view $run_id \
             --json name,headBranch,conclusion,url \
             --jq .name,.headBranch,.conclusion,.url
     )"
@@ -922,23 +922,23 @@ notify_run_completed() {
         )
 
         case $action_response in
-            web) gh run view --web $run_id $REPO_FLAG & ;;
-            download) gh run download $run_id $REPO_FLAG ;;
+            web) gh run view --web $run_id & ;;
+            download) gh run download $run_id ;;
             rerun)
-                gh run rerun --failed $run_id $REPO_FLAG
-                gh fzf util notify-run-completed $run_id $REPO_FLAG &
+                gh run rerun --failed $run_id
+                gh fzf util notify-run-completed $run_id &
                 ;;
             log)
                 case $TERMINAL in
                     x-terminal-emulator | xterm | wezterm | kitty | alacritty | \
                         gnome-terminal | konsole | foot | eterm | st)
-                        $TERMINAL -e sh -c "gh run view --log $run_id $REPO_FLAG"
+                        $TERMINAL -e sh -c "gh run view --log $run_id"
                         ;;
                     *)
                         tmpfile="$(
                             mktemp gh-fzf-run-${run_id}_XXX --tmpdir --suffix .log
                         )"
-                        gh run view --log $run_id $REPO_FLAG >"$tmpfile"
+                        gh run view --log $run_id >"$tmpfile"
                         xdg-open "$tmpfile"
                         ;;
                 esac
@@ -957,8 +957,8 @@ notify_run_completed() {
                     fi
 
                     if [ "$rerun_response" = "yes" ]; then
-                        gh run rerun --failed $run_id $REPO_FLAG
-                        gh fzf util notify-run-completed $run_id $REPO_FLAG &
+                        gh run rerun --failed $run_id
+                        gh fzf util notify-run-completed $run_id &
                     fi
                 fi
                 ;;
@@ -1001,11 +1001,9 @@ find_repo_flag() {
         case $val in
             -R | --repo)
                 export GH_REPO="${args[$((i + 1))]}"
-                REPO_FLAG="--repo=${GH_REPO}"
                 ;;
             -R=* | --repo=*)
                 export GH_REPO="${val#*=}"
-                REPO_FLAG="--repo=${GH_REPO}"
                 ;;
         esac
     done

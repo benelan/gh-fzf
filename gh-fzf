@@ -227,7 +227,7 @@ $global_binds
 
     # INITIAL STATE    {{{2
     issue_command="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT"
-    issue_prompt="issues${*:+ $*}"
+    issue_prompt="issue${*:+ $*}"
 
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="$issue_command $*" \
@@ -239,7 +239,7 @@ $global_binds
         --border-label="[mode: fzf] " \
         --border-label-pos=-99999 \
         --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
-        --bind "change:reload-sync:sleep 0.25; $issue_command $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind "change:reload-sync:sleep 0.5; $issue_command $* \${FZF_QUERY:+-S {q}} || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
@@ -362,7 +362,7 @@ $global_binds
 "
     # INITIAL STATE    {{{2
     pr_command="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT"
-    pr_prompt="prs${*:+ $*}"
+    pr_prompt="pr${*:+ $*}"
 
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="$pr_command $*" \
@@ -374,16 +374,20 @@ $global_binds
         --border-label="[mode: fzf] " \
         --border-label-pos=-99999 \
         --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
-        --bind "change:reload-sync:sleep 0.25; $pr_command $* \${FZF_QUERY:+-S {q}} || true" \
-        --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
-            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
-                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf;
-                cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh
-            )+change-prompt('"$pr_prompt"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
+        --bind "change:reload-sync:sleep 0.5; $pr_command $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind 'alt-/:transform:
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+                    echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf;
+                    cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh
+                )+change-prompt('"$pr_prompt"' ❱ )+reload-sync(
+                    $FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true
+                )" ||
             echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
                 echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh;
                 cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf
-            )"' \
+            )"
+        ' \
         --bind='ctrl-r:change-prompt('"$pr_prompt"' ❱ )+execute-silent(
                 rm -f  ${TMPDIR:-/tmp}/gh-fzf-pr-query-*
             )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \

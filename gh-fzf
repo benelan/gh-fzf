@@ -30,9 +30,22 @@ set -e
 
 GH_FZF_VERSION="v0.13.0" # x-release-please-version
 
-# USAGE INFO AND LOGS                                                   {{{1
+FZF_USER_VERSION="$(fzf --version | awk '{print $1}')"
+
+# USAGE INFO AND INTERNAL FUNCTIONS                                     {{{1
 
 has() { command -v "$1" >/dev/null 2>&1; }
+
+# https://apple.stackexchange.com/a/123408
+version_number() {
+    echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
+}
+
+requires_version() {
+    if [ "$(version_number "$1")" -gt "$(version_number "$FZF_USER_VERSION")" ]; then
+        error "the minimum fzf version is $1 (found $FZF_USER_VERSION)"
+    fi
+}
 
 error() {
     if [ -n "$1" ]; then
@@ -1077,28 +1090,62 @@ find_repo_flag() {
 
 # ENTRY FUNCTION {{{2
 main() {
+    requires_version "0.45.0"
+
     command="$1"
     [ -n "$command" ] && shift || default_cmd
 
     find_repo_flag "$@"
 
     case $command in
-        h | -h | help | --help) help_cmd "$@" ;;
-        i | -i | issue | issues | --issue | --issues) issue_cmd "$@" ;;
-        p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
-        r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
-        repo | repos | --repo | --repos) repo_cmd "$@" ;;
-        release | releases | --release | --releases) release_cmd "$@" ;;
-        gist | gists | --gist | --gists) gist_cmd "$@" ;;
-        workflow | workflows | --workflow | --workflows) workflow_cmd "$@" ;;
-        label | labels | --label | --labels) label_cmd "$@" ;;
-        milestone | milestones | --milestone | --milestones) milestone_cmd "$@" ;;
-        util | utils | --util | --utils) util_cmd "$@" ;;
-        changelog) gh fzf release --repo benelan/gh-fzf ;;
-        upgrade) gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
-            gh extension install benelan/gh-fzf --pin "stable" ;;
-        v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
-        *) error "invalid command: \"$command\"" ;;
+        h | -h | help | --help)
+            help_cmd "$@"
+            ;;
+        i | -i | issue | issues | --issue | --issues)
+            requires_version "0.49.0"
+            issue_cmd "$@"
+            ;;
+        p | -p | pr | prs | --pr | --prs)
+            requires_version "0.49.0"
+            pr_cmd "$@"
+            ;;
+        r | -r | run | runs | --run | --runs)
+            run_cmd "$@"
+            ;;
+        repo | repos | --repo | --repos)
+            repo_cmd "$@"
+            ;;
+        release | releases | --release | --releases)
+            release_cmd "$@"
+            ;;
+        gist | gists | --gist | --gists)
+            gist_cmd "$@"
+            ;;
+        workflow | workflows | --workflow | --workflows)
+            workflow_cmd "$@"
+            ;;
+        label | labels | --label | --labels)
+            label_cmd "$@"
+            ;;
+        milestone | milestones | --milestone | --milestones)
+            milestone_cmd "$@"
+            ;;
+        util | utils | --util | --utils)
+            util_cmd "$@"
+            ;;
+        changelog)
+            gh fzf release --repo benelan/gh-fzf
+            ;;
+        upgrade)
+            gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
+                gh extension install benelan/gh-fzf --pin "stable"
+            ;;
+        v | V | -v | -V | version | --version)
+            printf "%s\n" "$GH_FZF_VERSION"
+            ;;
+        *)
+            error "invalid command: \"$command\""
+            ;;
     esac
 } #2}}}
 

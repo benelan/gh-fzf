@@ -153,7 +153,7 @@ export FZF_DEFAULT_OPTS='
 --bind="alt-7:reload(eval \"$FZF_DEFAULT_COMMAND -L700\")"
 --bind="alt-8:reload(eval \"$FZF_DEFAULT_COMMAND -L800\")"
 --bind="alt-9:reload(eval \"$FZF_DEFAULT_COMMAND -L900\")"
-'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi --delimiter="  "'
+'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi --delimiter="\\s\\s+"'
 # Overriding the three options above breaks gh-fzf, so append them instead.
 
 # ----------------------------------------------------------------------1}}}
@@ -805,8 +805,8 @@ search_cmd() {
                 search_copy_cmd="gh browse --no-browser --repo \$(echo {1}) | $GH_FZF_COPY_CMD"
                 ;;
             *)
-                error "invalid search command: \"$search_subcmd\"" \
-                    "Valid commands: issues, prs, repos, commits, code"
+                error "invalid search subcommand: \"$search_subcmd\"" \
+                    "Valid subcommands: issues, prs, repos, commits, code"
                 ;;
         esac
         shift
@@ -817,14 +817,13 @@ search_cmd() {
             --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help search {}' \
             --preview-window='right,75%,wrap,<75(down,border-top,75%,wrap)' \
             --bind="enter:execute(gh fzf search {})"
-        exit
+        exit "$?"
     fi
 
     # FZF COMMAND      {{{2
     search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L $GH_FZF_DEFAULT_LIMIT"
 
     fzf \
-        --delimiter="\s\s+" \
         --header-lines=4 \
         --disabled \
         --query="$*" \

@@ -771,6 +771,8 @@ Filters > (alt-p: public) (alt-s: secret)
 
 # COMMAND > SEARCH                                                      {{{1
 search_cmd() {
+    rm -rf ${TMPDIR:-/tmp}/gh-fzf-search-*
+
     if [ -n "$1" ]; then
         search_subcmd="$1"
         case $search_subcmd in

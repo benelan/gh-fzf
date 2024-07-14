@@ -1037,7 +1037,7 @@ main() {
         changelog) gh fzf release --repo benelan/gh-fzf ;;
         upgrade) gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
             gh extension install benelan/gh-fzf --pin "stable" ;;
-        v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
+        v | -v | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac
 } #2}}}

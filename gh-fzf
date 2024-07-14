@@ -406,7 +406,6 @@ $global_binds
         --bind="alt-R:execute(gh run rerun --failed {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-d:execute(gh run download {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-x:execute(gh run cancel {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-w:execute(gh fzf workflow $REPO_FLAG)" \
         --bind="alt-n:execute-silent(
             gh fzf util notify-run-completed {-1} $REPO_FLAG &
         )+refresh-preview" \
@@ -415,6 +414,9 @@ $global_binds
         ) '"$REPO_FLAG"'>+refresh-preview' \
         --bind='alt-b:reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
+        )' \
+        --bind='alt-w:reload(
+            eval "$FZF_DEFAULT_COMMAND --workflow \"$(gh fzf workflow '"$REPO_FLAG"')\""
         )' \
         --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
         --bind='alt-i:reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
@@ -454,7 +456,7 @@ workflow_cmd() {
     '\'''
 
     # KEYBINDING HINTS {{{2
-    workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
+    workflow_header="Actions > (enter: print) (alt-r: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
 Filters > (alt-a: all)
 $global_binds
 
@@ -469,7 +471,8 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $REPO_FLAG &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
-        --bind="enter:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="enter:become(echo {-1})" \
+        --bind="alt-r:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-d:execute(gh workflow run {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-E:execute(gh workflow enable {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-X:execute(gh workflow disable {-1} $REPO_FLAG)+refresh-preview" \
@@ -519,7 +522,7 @@ release_cmd() {
     '\'''
 
     # KEYBINDING HINTS {{{2
-    release_header="Actions > (enter: download) (alt-X: delete)
+    release_header="Actions > (enter: print) (alt-d: download) (alt-X: delete)
 Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
 $global_binds
 
@@ -534,7 +537,8 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh release view --web {1} $REPO_FLAG &)+refresh-preview" \
         --bind="ctrl-y:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
-        --bind="alt-enter:execute(gh release download {1} $REPO_FLAG)+refresh-preview" \
+        --bind="enter:become(echo {1})" \
+        --bind="alt-d:execute(gh release download {1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-X:execute(gh release delete {1} $REPO_FLAG)+refresh-preview" \
         --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
         --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \

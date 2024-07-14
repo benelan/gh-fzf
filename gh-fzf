@@ -442,6 +442,30 @@ $global_binds
 # COMMAND > WORKFLOW                                                    {{{1
 
 workflow_cmd() {
+    # GO TEMPLATE      {{{2
+    workflow_template='\
+        --json "id,name,path,state" \
+        --template '\''
+            {{- $headerColor := "blue+b" -}}
+            {{- tablerow
+                ("NAME" | autocolor $headerColor)
+                ("PATH" | autocolor $headerColor)
+                ("ID" | autocolor $headerColor)
+            -}}
+
+            {{- range . -}}
+                {{- $stateColor := "green" }}
+                {{- if ne .state "active" -}}
+                    {{- $stateColor = "red" -}}
+                {{- end -}}
+                {{- tablerow
+                    (.name | autocolor "white+h")
+                    (.path | autocolor "white+d")
+                    (.id | autocolor $stateColor)
+                -}}
+            {{- end -}}
+    '\'''
+
     # KEYBINDING HINTS {{{2
     workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
 Filters > (alt-a: all)
@@ -450,13 +474,14 @@ $global_binds
 "
 
     # FZF COMMAND      {{{2
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list $workflow_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --prompt="workflow ❱ " \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$REPO_FLAG" \
         --header="$workflow_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $REPO_FLAG &)+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
         --bind="enter:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-d:execute(gh workflow run {-1} $REPO_FLAG)+refresh-preview" \
         --bind="alt-E:execute(gh workflow enable {-1} $REPO_FLAG)+refresh-preview" \

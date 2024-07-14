@@ -41,9 +41,9 @@ version_number() {
     echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
 }
 
-requires_version() {
+requires_fzf_version() {
     if [ "$(version_number "$1")" -gt "$(version_number "$FZF_USER_VERSION")" ]; then
-        error "the minimum fzf version is $1 (found $FZF_USER_VERSION)"
+        error "${2:-"gh-fzf"} requires fzf version >= $1 (found $FZF_USER_VERSION)"
     fi
 }
 
@@ -789,6 +789,7 @@ search_cmd() {
             code)
                 # NOTE: requires fzf >= v0.53.0 for multiline support
                 # https://github.com/junegunn/fzf/releases/tag/0.53.0
+                requires_fzf_version "0.53.0" "code search"
                 multiline_chunker="| perl -0 -pe 's/^\n/\n\0/gm'"
                 search_subcmd_opts="--header-lines=2 --read0 --highlight-line"
                 ;;
@@ -1070,8 +1071,6 @@ find_repo_flag() {
 
 # ENTRY FUNCTION {{{2
 main() {
-    requires_version "0.45.0"
-
     command="$1"
     [ -n "$command" ] && shift || default_cmd
 
@@ -1088,7 +1087,6 @@ main() {
             pr_cmd "$@"
             ;;
         s | -s | search | --search)
-            requires_version "0.53.0"
             search_cmd "$@"
             ;;
         r | -r | run | runs | --run | --runs)

@@ -264,12 +264,14 @@ $global_binds
         --bind='alt-M:execute(
             rm -f "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
             gh fzf milestone > "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
-        )+transform-prompt(
-            echo "'"$issue_prompt"' --milestone \"$(cat "${TMPDIR:-/tmp}/gh-fzf-issue-milestone")\" ❱ "
-        )+reload(
+        )+transform:
             m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
-            eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
-        )' \
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "reload(
+                    eval \"\$FZF_DEFAULT_COMMAND --milestone '\''$m'\''\"
+                )+change-prompt:'"$issue_prompt"' --milestone \"$m\" ❱ " ||
+            [[ ! $FZF_QUERY =~ milestone: ]] && echo "put( milestone:\"$m\")"
+        ' \
         --bind 'alt-a:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"

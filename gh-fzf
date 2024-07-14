@@ -825,13 +825,13 @@ search_cmd() {
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header+"}reload(
             $search_cmd \$FZF_QUERY $multiline_chunker || true
         )" \
-        --bind "change:reload-sync:sleep 0.25; $search_cmd \$FZF_QUERY $multiline_chunker || true" \
+        --bind "change:reload-sync:sleep 0.5; $search_cmd \$FZF_QUERY $multiline_chunker || true" \
         --bind 'alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "change-border-label([mode:  gh] )+transform-query(
                     echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf;
                     cat ${TMPDIR:-/tmp}/gh-fzf-search-query-gh
                 )+rebind(change)+disable-search+reload-sync(
-                    '"$search_cmd"' $FZF_QUERY || true
+                    '"$search_cmd"' $FZF_QUERY '"$multiline_chunker"' || true
                 )" ||
             echo "change-border-label([mode: fzf] )+transform-query(
                     echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-gh;
@@ -843,6 +843,15 @@ search_cmd() {
         )+clear-query+first+reload:'"$search_cmd" \
         --bind="ctrl-o:execute-silent:$search_open_cmd &" \
         --bind="ctrl-y:execute-silent:$search_copy_cmd" \
+        --bind="alt-1:reload-sync($search_cmd -L100 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-2:reload-sync($search_cmd -L200 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-3:reload-sync($search_cmd -L300 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-4:reload-sync($search_cmd -L400 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-5:reload-sync($search_cmd -L500 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-6:reload-sync($search_cmd -L600 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-7:reload-sync($search_cmd -L700 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-8:reload-sync($search_cmd -L800 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-9:reload-sync($search_cmd -L900 \$FZF_QUERY $multiline_chunker || true)" \
         </dev/null
 
     #2}}}

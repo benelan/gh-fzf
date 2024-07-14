@@ -213,7 +213,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
-        --prompt="issues ❱ " \
+        --prompt="issue ❱ " \
         --header="$issue_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh issue view --web {1} $REPO_FLAG &)+refresh-preview" \
@@ -297,7 +297,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$REPO_FLAG" \
-        --prompt="prs ❱ " \
+        --prompt="pr ❱ " \
         --header="$pr_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh pr view --web {1} $REPO_FLAG &)+refresh-preview" \
@@ -390,7 +390,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$REPO_FLAG" \
-        --prompt="runs ❱ " \
+        --prompt="run ❱ " \
         --header="$run_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh run view --web {-1} $REPO_FLAG &)+refresh-preview" \
@@ -439,7 +439,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --prompt="workflows ❱ " \
+        --prompt="workflow ❱ " \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$REPO_FLAG" \
         --header="$workflow_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -504,7 +504,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh release list $release_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1} '"$REPO_FLAG" \
-        --prompt="releases ❱ " \
+        --prompt="release ❱ " \
         --header="$release_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh release view --web {1} $REPO_FLAG &)+refresh-preview" \
@@ -533,7 +533,7 @@ $global_binds
         fzf \
         --multi \
         --no-preview \
-        --prompt="labels ❱ " \
+        --prompt="label ❱ " \
         --header-lines=4 \
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -611,7 +611,7 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
     '/repos/{owner}/{repo}/milestones'" \
         fzf \
         --no-preview \
-        --prompt="milestones ❱ " \
+        --prompt="milestone ❱ " \
         --header="$milestone_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="enter:become(echo {1})" \
@@ -714,7 +714,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
-        --prompt="repos ❱ " \
+        --prompt="repo ❱ " \
         --header="$repo_header" \
         --header-lines=4 \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -749,7 +749,7 @@ Filters > (alt-p: public) (alt-s: secret)
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
-        --prompt="gists ❱ " \
+        --prompt="gist ❱ " \
         --header="$gist_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind='ctrl-o:execute-silent(gh gist view --web {1} &)+refresh-preview' \

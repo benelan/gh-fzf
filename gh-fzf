@@ -774,24 +774,24 @@ search_cmd() {
     if [ -n "$1" ]; then
         search_subcmd="$1"
         case $search_subcmd in
-            issues | prs)
-                search_open_cmd="gh issue view --web {2} --repo {1}"
-                search_copy_cmd="gh issue view --json url --jq .url {2} --repo {1}"
+            issues | prs | commits)
+                search_open_cmd="gh browse --repo {1} {2}"
+                search_copy_cmd="gh browse --no-browser --repo {1} {2} | $GH_FZF_COPY_CMD"
                 ;;
             repos)
-                search_open_cmd="gh repo view --web {1}"
-                search_copy_cmd="gh repo view --json url --jq .url {1}"
-                ;;
-            commits)
-                search_open_cmd="$GH_FZF_OPEN_CMD \"https://github.com/{1}/commit/{2}\""
-                search_copy_cmd="echo \"https://github.com/{1}/commit/{2}\" | $GH_FZF_COPY_CMD"
+                search_open_cmd="gh browse --repo {1}"
+                search_copy_cmd="gh browse --no-browser --repo {1} | $GH_FZF_COPY_CMD"
                 ;;
             code)
                 # NOTE: requires fzf >= v0.53.0 for multiline support
                 # https://github.com/junegunn/fzf/releases/tag/0.53.0
                 requires_fzf_version "0.53.0" "code search"
+
                 multiline_chunker="| perl -0 -pe 's/^\n/\n\0/gm'"
                 search_subcmd_opts="--header-lines=2 --read0 --highlight-line"
+
+                search_open_cmd="gh browse --repo \$(echo {1})"
+                search_copy_cmd="gh browse --no-browser --repo \$(echo {1}) | $GH_FZF_COPY_CMD"
                 ;;
             *)
                 error "invalid search command: \"$search_subcmd\"" \
@@ -802,7 +802,7 @@ search_cmd() {
     else
         FZF_DEFAULT_COMMAND="printf '%s\n' issues prs repos commits code" \
             fzf --ansi --header="COMMAND" --header-lines=0 \
-            --bind="resize:refresh-previdew" \
+            --bind="resize:refresh-preview" \
             --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help search {}' \
             --preview-window='right,75%,wrap,<75(down,border-top,75%,wrap)' \
             --bind="enter:execute(gh fzf search {})"

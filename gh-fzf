@@ -86,6 +86,7 @@ See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
   help        Print this help message.
+  status      Print GitHub's service status from https://githubstatus.com/
   version     Print the version of gh-fzf.
   changelog   View gh-fzf's changelog via the release command.
   upgrade     Upgrade to the latest version of gh-fzf.

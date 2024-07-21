@@ -146,6 +146,9 @@ else
     GH_COLUMNS='9999999'
 fi
 
+# set shell so bash features can be used in subshells created by fzf
+export SHELL="bash"
+
 GH_STATUS="$(github_status)"
 [ "$GH_STATUS" == "All Systems Operational" ] && GH_STATUS="" ||
     GH_STATUS=" GitHub Service Alert: $GH_STATUS "
@@ -187,7 +190,7 @@ default_cmd() {
                 cmd="api"
                 printf "%s\n\n" "There is no \`gh milestone\` command so \`gh api\` is used:"
             fi
-            GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help $cmd
+            GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh help $cmd
         ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
@@ -243,7 +246,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh issue view {1} --comments '"$REPO_FLAG" \
         --prompt="issue ❱ " \
         --header="$issue_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -327,7 +330,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh pr view {1} --comments '"$REPO_FLAG" \
         --prompt="pr ❱ " \
         --header="$pr_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -420,7 +423,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh run view {-1} '"$REPO_FLAG" \
         --prompt="run ❱ " \
         --header="$run_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -495,7 +498,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list $workflow_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --prompt="workflow ❱ " \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh workflow view --yaml {-1} '"$REPO_FLAG" \
         --header="$workflow_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh workflow view --web {-1} $REPO_FLAG &)+refresh-preview" \
@@ -559,7 +562,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh release list $release_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1} '"$REPO_FLAG" \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh release view {1} '"$REPO_FLAG" \
         --prompt="release ❱ " \
         --header="$release_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -769,7 +772,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh repo view {1}' \
         --prompt="repo ❱ " \
         --header="$repo_header" \
         --header-lines=4 \
@@ -804,7 +807,7 @@ Filters > (alt-p: public) (alt-s: secret)
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh gist view {1}' \
         --prompt="gist ❱ " \
         --header="$gist_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \

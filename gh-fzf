@@ -53,6 +53,11 @@ github_status() {
     # )'
 }
 
+# https://apple.stackexchange.com/a/123408
+version_number() {
+    echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
+}
+
 error() {
     if [ -n "$1" ]; then
         printf "Error: " >&2
@@ -1058,8 +1063,15 @@ main() {
         util | utils | --util | --utils) util_cmd "$@" ;;
         status) github_status ;;
         changelog) gh fzf release --repo benelan/gh-fzf ;;
-        upgrade) gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
-            gh extension install benelan/gh-fzf --pin "stable" ;;
+        upgrade)
+            latest_version=$(gh release view --json tagName --jq .tagName --repo benelan/gh-fzf)
+            if [ "$(version_number "$latest_version")" -gt "$(version_number "$GH_FZF_VERSION")" ]; then
+                gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
+                    gh extension install benelan/gh-fzf --pin "$latest_version"
+            else
+                echo "You are up to date!"
+            fi
+            ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac

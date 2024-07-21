@@ -150,7 +150,6 @@ export FZF_DEFAULT_OPTS='
 --no-hscroll --no-exit-0 --header-lines=1 --cycle --reverse --info=right
 --color="fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b"
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
---color="preview-scrollbar:#7c6f64,preview-border:#665c54,preview-label:#7c6f64"
 '${GH_STATUS:+--preview-label=\"$GH_STATUS\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
 --bind="alt-P:change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"

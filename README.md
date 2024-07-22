@@ -102,14 +102,14 @@ resulting list. Each command has keybindings to further filter the list or to
 call other `gh` subcommands on the item. There are also a few global keybindings
 that can be used with any `gh fzf` command:
 
-- `ctrl-o`: Open the selected item in the browser
-- `ctrl-y`: Copy the selected item's URL to the clipboard
-- `ctrl-r`: Reload the list to its initial filter state and fetch changes from
-  GitHub
-- `alt-1` to `alt-9`: Change the number of items fetched from GitHub to 100,
-  200, ..., 900
-- `alt-P`: Toggle the preview window display
-- `alt-H`: Toggle the header display, where the keybinding hints are located
+| Key               | Description                                                               | Configuration Environment Variable |
+| ----------------- | ------------------------------------------------------------------------- | ---------------------------------- |
+| `ctrl-o`          | Open the selected item in the browser                                     | `GH_FZF_OPEN_KEY`                  |
+| `ctrl-y`          | Copy the selected item's URL to the clipboard                             | `GH_FZF_COPY_KEY`                  |
+| `ctrl-r`          | Reload the list to its initial filter state and fetch changes from GitHub | `GH_FZF_RELOAD_KEY`                |
+| `alt-P`           | Toggle the preview window layout from default, bottom, and hidden         | `GH_FZF_TOGGLE_PREVIEW_KEY`        |
+| `alt-H`           | Toggle displaying the header, where the keybinding hints are located      | `GH_FZF_TOGGLE_HINTS_KEY`          |
+| `alt-1` - `alt-9` | Change the number of items fetched from GitHub to 100, 200, ..., 900      | N/A                                |
 
 ### `issue`
 
@@ -117,19 +117,19 @@ that can be used with any `gh fzf` command:
 - **Aliases**: `i`, `issues`, `-i`, `--issue`, `--issues`
 - **Flags**: See `gh issue list --help` for available options
 - **Keybindings**:
-  - `enter`: Edit the selected issue via CLI prompts
-    (see `gh issue edit --help`)
-  - `alt-o`: Create/checkout a branch linked to the selected issue, prompting
-    for the name (see `gh issue develop --help`)
-  - `alt-c`: Add a comment to the selected issue (see `gh issue comment --help`)
-  - `alt-l`: Open `gh fzf label` and add the selected label(s) to the issue
-  - `alt-L`: Open `gh fzf label` and remove the selected label(s) from the issue
-  - `alt-X`: Close the selected issue (see `gh issue close --help`)
-  - `alt-O`: Reopen the selected issue (see `gh issue reopen --help`)
-  - `alt-a`: Filter the list, showing issues assigned to you
-  - `alt-A`: Filter the list, showing issues authored by you
-  - `alt-m`: Filter the list, showing issues where you are mentioned
-  - `alt-s`: Filter the list, showing issues with any state (open or closed)
+  | Key | Description | Configuration Environment Variable |
+  | ------- | -------------------------------------------------------------------- | ---------------------------------- |
+  | `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`) | `GH_FZF_ISSUE_EDIT_KEY` |
+  | `alt-o` | Create/checkout a branch linked to the selected issue, prompting | `GH_FZF_ISSUE_CHECKOUT_KEY` |
+  | `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`) | `GH_FZF_ISSUE_COMMENT_KEY` |
+  | `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue | `GH_FZF_ISSUE_ADD_LABEL_KEY` |
+  | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue | `GH_FZF_ISSUE_REMOVE_LABEL_KEY` |
+  | `alt-X` | Close the selected issue (see `gh issue close --help`) | `GH_FZF_ISSUE_CLOSE_KEY` |
+  | `alt-O` | Reopen the selected issue (see `gh issue reopen --help`) | `GH_FZF_ISSUE_REOPEN_KEY` |
+  | `alt-a` | Filter the list, showing issues assigned to you | `GH_FZF_ASSIGNED_FILTER_KEY` |
+  | `alt-A` | Filter the list, showing issues authored by you | `GH_FZF_AUTHOR_FILTER_KEY` |
+  | `alt-m` | Filter the list, showing issues where you are mentioned | `GH_FZF_MENTIONED_FILTER_KEY` |
+  | `alt-s` | Filter the list, showing issues with any state (open or closed) | `GH_FZF_STATE_FILTER_KEY` |
 - **Examples:**
   - Filter the initial list to open and closed issues assigned to you in the
     "v1.33.7" milestone:
@@ -414,7 +414,7 @@ When adding or modifying fzf keybindings:
   - the `<number>` for the [`milestone`](#milestone) command
 
 For a list of the fzf options shared by all `gh-fzf` commands, see the
-[source code](https://github.com/benelan/gh-fzf/blob/f8d5b23e283e234557cbed615993e618fd45ccf3/gh-fzf#L109-L129).
+[source code](https://github.com/benelan/gh-fzf/blob/a8ce3e75f6243ef781b6579d6235d367419f0076/gh-fzf#L163-L185).
 
 > [!WARNING]
 > If any of the shared keybindings set by `gh-fzf` don't work, you may be

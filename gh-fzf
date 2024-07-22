@@ -90,11 +90,11 @@ Core Commands:
 See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
-  help        Print this help message.
   status      Print GitHub's service status from https://githubstatus.com/
-  version     Print the version of gh-fzf.
   changelog   View gh-fzf's changelog via the release command.
   upgrade     Upgrade to the latest version of gh-fzf.
+  version     Print the version of gh-fzf.
+  help        Print this help message.
   util        Functions used internally that may be useful for scripting.
 
 Check out the project homepage for more information, such as keybindings,
@@ -144,7 +144,7 @@ else
     GH_COLUMNS='9999999'
 fi
 
-# set shell so bash features can be used in subshells created by fzf
+# export SHELL so bash features can be used in subshells created by fzf
 SHELL="$(which bash)"
 export SHELL
 
@@ -158,7 +158,7 @@ export GH_FZF_COPY_KEY="${GH_FZF_COPY_KEY:-ctrl-y}"
 export GH_FZF_TOGGLE_HINTS_KEY="${GH_FZF_TOGGLE_HINTS_KEY:-alt-H}"
 export GH_FZF_TOGGLE_PREVIEW_KEY="${GH_FZF_TOGGLE_PREVIEW_KEY:-alt-P}"
 
-global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) (alt+P: toggle preview) (alt+H: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
+global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) ($GH_FZF_TOGGLE_PREVIEW_KEY: toggle preview) ($GH_FZF_TOGGLE_HINTS_KEY: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
 
 # The following fzf options are shared by all commands. They are prepended to
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
@@ -182,7 +182,7 @@ export FZF_DEFAULT_OPTS='
 --bind="alt-8:reload(eval \"$FZF_DEFAULT_COMMAND -L800\")"
 --bind="alt-9:reload(eval \"$FZF_DEFAULT_COMMAND -L900\")"
 '"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi --delimiter="\\s\\s+"'
-# Overriding the three options above breaks gh-fzf, so append them instead.
+# Overriding the four options above breaks gh-fzf, so append them instead.
 
 # ----------------------------------------------------------------------1}}}
 # COMMAND > DEFAULT                                                     {{{1

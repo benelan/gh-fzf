@@ -28,11 +28,35 @@
 
 set -e
 
-GH_FZF_VERSION="v0.13.0" # x-release-please-version
+GH_FZF_VERSION="v0.14.0" # x-release-please-version
 
 # USAGE INFO AND LOGS                                                   {{{1
 
 has() { command -v "$1" >/dev/null 2>&1; }
+
+github_status() {
+    GH_PAGER="cat" gh api https://www.githubstatus.com/api/v2/status.json \
+        --jq '.status.description'
+    # 'def colors: {
+    #     "green":      "'"$(tput setaf 2)"'",
+    #     "magenta":    "'"$(tput setaf 5)"'",
+    #     "yellow":     "'"$(tput setaf 3)"'",
+    #     "red":        "'"$(tput setaf 1)"'",
+    #     "reset":      "'"$(tput sgr0)"'"
+    # };
+    # def colored(text; color): colors[color] + text + colors.reset;
+    # .status | (
+    #     if .indicator == "none" then colored(.description; "green")
+    #     elif .indicator == "minor" then colored(.description; "magenta")
+    #     elif .indicator == "major" then colored(.description; "yellow")
+    #     elif .indicator == "critical" then colored(.description; "red") end
+    # )'
+}
+
+# https://apple.stackexchange.com/a/123408
+version_number() {
+    echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
+}
 
 error() {
     if [ -n "$1" ]; then
@@ -67,6 +91,7 @@ See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
   help        Print this help message.
+  status      Print GitHub's service status from https://githubstatus.com/
   version     Print the version of gh-fzf.
   changelog   View gh-fzf's changelog via the release command.
   upgrade     Upgrade to the latest version of gh-fzf.
@@ -121,13 +146,22 @@ else
     GH_COLUMNS='9999999'
 fi
 
+# set shell so bash features can be used in subshells created by fzf
+export SHELL="bash"
+
+GH_STATUS="$(github_status)"
+[ "$GH_STATUS" == "All Systems Operational" ] && GH_STATUS="" ||
+    GH_STATUS=" GitHub Service Alert: $GH_STATUS "
+
 # The following fzf options are shared by all commands. They are prepended to
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
 export FZF_DEFAULT_OPTS='
 --no-hscroll --no-exit-0 --header-lines=1 --cycle --reverse --info=right
---color "fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b,info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
---preview-window="right,border-left,wrap,<75(down,border-top,wrap)"
---bind="alt-P:change-preview-window(down,70%,border-top,<75(down,70%,border-top,wrap)|hidden,<75(hidden)|)"
+--color="fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b"
+--color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
+'${GH_STATUS:+--preview-label=\"$GH_STATUS\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
+--preview-window="right,wrap,<75(down,wrap)"
+--bind="alt-P:change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"
 --bind="alt-H:toggle-header"
 --bind="ctrl-r:reload(eval \"$FZF_DEFAULT_COMMAND\")"
 --bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"
@@ -156,7 +190,7 @@ default_cmd() {
                 cmd="api"
                 printf "%s\n\n" "There is no \`gh milestone\` command so \`gh api\` is used:"
             fi
-            GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help $cmd
+            GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh help $cmd
         ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})"
@@ -212,7 +246,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh issue view {1} --comments' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh issue view {1} --comments' \
         --prompt="issue ❱ " \
         --header="$issue_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -296,7 +330,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh pr view {1} --comments' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh pr view {1} --comments' \
         --prompt="pr ❱ " \
         --header="$pr_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -389,7 +423,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh run list $run_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh run view {-1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh run view {-1}' \
         --prompt="run ❱ " \
         --header="$run_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -464,7 +498,7 @@ $global_binds
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh workflow list $workflow_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
         --prompt="workflow ❱ " \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh workflow view --yaml {-1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh workflow view --yaml {-1}' \
         --header="$workflow_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="ctrl-o:execute-silent(gh workflow view --web {-1} &)+refresh-preview" \
@@ -528,7 +562,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh release list $release_template -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh release view {1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh release view {1}' \
         --prompt="release ❱ " \
         --header="$release_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -738,7 +772,7 @@ $global_binds
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh repo list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh repo view {1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh repo view {1}' \
         --prompt="repo ❱ " \
         --header="$repo_header" \
         --header-lines=4 \
@@ -773,7 +807,7 @@ Filters > (alt-p: public) (alt-s: secret)
     # FZF COMMAND      {{{2
     FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh gist list -L $GH_FZF_DEFAULT_LIMIT $*" \
         fzf \
-        --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh gist view {1}' \
+        --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh gist view {1}' \
         --prompt="gist ❱ " \
         --header="$gist_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
@@ -1028,9 +1062,17 @@ main() {
         label | labels | --label | --labels) label_cmd "$@" ;;
         milestone | milestones | --milestone | --milestones) milestone_cmd "$@" ;;
         util | utils | --util | --utils) util_cmd "$@" ;;
+        status) github_status ;;
         changelog) gh fzf release --repo benelan/gh-fzf ;;
-        upgrade) gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
-            gh extension install benelan/gh-fzf --pin "stable" ;;
+        upgrade)
+            latest_version=$(gh release view --json tagName --jq .tagName --repo benelan/gh-fzf)
+            if [ "$(version_number "$latest_version")" -gt "$(version_number "$GH_FZF_VERSION")" ]; then
+                gh extension remove benelan/gh-fzf >/dev/null 2>&1 &&
+                    gh extension install benelan/gh-fzf --pin "$latest_version"
+            else
+                echo "You are up to date!"
+            fi
+            ;;
         v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
         *) error "invalid command: \"$command\"" ;;
     esac

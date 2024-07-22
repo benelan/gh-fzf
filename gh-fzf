@@ -652,9 +652,21 @@ $global_binds
 # COMMAND > LABEL                                                       {{{1
 
 label_cmd() {
-    # KEYBINDING HINTS {{{2
-    label_header="Actions > (enter: print) (alt-n: edit name) (alt-d: edit description) (alt-c: edit color) (alt-X: delete)
-Filters > (alt-N: sort by name) (alt-D: descending order)
+    # KEYBINDINGS {{{2
+    export GH_FZF_LABEL_PRINT_KEY="${GH_FZF_LABEL_PRINT_KEY:-enter}"
+    export GH_FZF_LABEL_EDIT_NAME_KEY="${GH_FZF_LABEL_EDIT_NAME_KEY:-alt-n}"
+    export GH_FZF_LABEL_EDIT_DESCRIPTION_KEY="${GH_FZF_LABEL_EDIT_DESCRIPTION_KEY:-alt-d}"
+    export GH_FZF_LABEL_EDIT_COLOR_KEY="${GH_FZF_LABEL_EDIT_COLOR_KEY:-alt-c}"
+    export GH_FZF_LABEL_DELETE_KEY="${GH_FZF_LABEL_DELETE_KEY:-alt-X}"
+
+    export GH_FZF_LABEL_STABLE_FILTER_KEY="${GH_FZF_LABEL_STABLE_FILTER_KEY:-alt-s}"
+    export GH_FZF_LABEL_PUBLISHED_FILTER_KEY="${GH_FZF_LABEL_PUBLISHED_FILTER_KEY:-alt-p}"
+
+    export GH_FZF_LABEL_NAME_SORT_KEY="${GH_FZF_LABEL_NAME_SORT_KEY:-alt-N}"
+    export GH_FZF_LABEL_DESCENDING_ORDER_KEY="${GH_FZF_LABEL_DESCENDING_ORDER_KEY:-alt-D}"
+
+    label_header="Actions > ($GH_FZF_LABEL_PRINT_KEY: print) ($GH_FZF_LABEL_EDIT_NAME_KEY: edit name) ($GH_FZF_LABEL_EDIT_DESCRIPTION_KEY: edit description) ($GH_FZF_LABEL_EDIT_COLOR_KEY: edit color) ($GH_FZF_LABEL_DELETE_KEY: delete)
+Filters > ($GH_FZF_LABEL_NAME_SORT_KEY: sort by name) ($GH_FZF_LABEL_DESCENDING_ORDER_KEY: descending order)
 $global_binds
 "
 
@@ -667,24 +679,24 @@ $global_binds
         --header-lines=4 \
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="enter:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
+        --bind="$GH_FZF_LABEL_PRINT_KEY:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh label list --web $REPO_FLAG &)" \
-        --bind='alt-n:execute(
+        --bind="$GH_FZF_LABEL_EDIT_NAME_KEY"':execute(
             read -rp "Enter new name for {1} label: " name;
             [ -n "$name" ] && gh label edit {1} --name "$name" '"$REPO_FLAG"'
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-d:execute(
+        --bind="$GH_FZF_LABEL_EDIT_DESCRIPTION_KEY"':execute(
             read -rp "Enter new description for {1} label: " description;
             [ -n "$description" ] &&
                 gh label edit {1} --description "$description" '"$REPO_FLAG"'
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-c:execute(
+        --bind="$GH_FZF_LABEL_EDIT_COLOR_KEY"':execute(
             read -rp "Enter new color for {1} label: " color;
             [ -n "$color" ] && gh label edit {1} --color "$color" '"$REPO_FLAG"'
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind="alt-X:execute(gh label delete {1} $REPO_FLAG)" \
-        --bind='alt-N:reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
-        --bind='alt-D:reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
+        --bind="$GH_FZF_LABEL_DELETE_KEY:execute(gh label delete {1} $REPO_FLAG)" \
+        --bind="$GH_FZF_LABEL_NAME_SORT_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --sort name")' \
+        --bind="$GH_FZF_LABEL_DESCENDING_ORDER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --order desc")' || true
 
     #2}}}
 }

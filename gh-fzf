@@ -740,9 +740,21 @@ milestone_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDING HINTS {{{2
-    milestone_header="Actions > (enter: print) (alt-i: issues) (alt-X: close) (alt-O: reopen) (alt-t: edit title) (alt-d: edit description)
-Filters > (alt-s: state=all) (alt-c: sort by completeness) (alt-D: descending order)
+    # KEYBINDINGS {{{2
+    export GH_FZF_MILESTONE_PRINT_KEY="${GH_FZF_MILESTONE_PRINT_KEY:-enter}"
+    export GH_FZF_MILESTONE_VIEW_ISSUES_KEY="${GH_FZF_MILESTONE_ISSUES_KEY:-alt-i}"
+    export GH_FZF_MILESTONE_CLOSE_KEY="${GH_FZF_MILESTONE_CLOSE_KEY:-alt-X}"
+    export GH_FZF_MILESTONE_REOPEN_KEY="${GH_FZF_MILESTONE_REOPEN_KEY:-alt-O}"
+    export GH_FZF_MILESTONE_EDIT_TITLE_KEY="${GH_FZF_MILESTONE_EDIT_TITLE_KEY:-alt-t}"
+    export GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY="${GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY:-alt-d}"
+
+    export GH_FZF_MILESTONE_STATE_FILTER_KEY="${GH_FZF_MILESTONE_STATE_FILTER_KEY:-alt-s}"
+
+    export GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY="${GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY:-alt-c}"
+    export GH_FZF_MILESTONE_DESCENDING_ORDER_KEY="${GH_FZF_MILESTONE_DESCENDING_ORDER_KEY:-alt-D}"
+
+    milestone_header="Actions > ($GH_FZF_MILESTONE_PRINT_KEY: print) ($GH_FZF_MILESTONE_VIEW_ISSUES_KEY: issues) ($GH_FZF_MILESTONE_CLOSE_KEY: close) ($GH_FZF_MILESTONE_REOPEN_KEY: reopen) ($GH_FZF_MILESTONE_EDIT_TITLE_KEY: edit title) ($GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY: edit description)
+Filters > ($GH_FZF_MILESTONE_STATE_FILTER_KEY: state=all) ($GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY: sort by completeness) ($GH_FZF_MILESTONE_DESCENDING_ORDER_KEY: descending order)
 Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload)
 "
 
@@ -756,7 +768,7 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
         --prompt="milestone ❱ " \
         --header="$milestone_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="enter:become(echo {1})" \
+        --bind="$GH_FZF_MILESTONE_PRINT_KEY:become(echo {1})" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             gh api --jq '.html_url' \
                 -H 'Accept: application/vnd.github+json' \
@@ -770,36 +782,36 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
                 /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
-        --bind="alt-i:execute(gh fzf issue --milestone {-1} $REPO_FLAG)" \
-        --bind='alt-X:execute(
+        --bind="$GH_FZF_MILESTONE_VIEW_ISSUES_KEY:execute(gh fzf issue --milestone {-1} $REPO_FLAG)" \
+        --bind="$GH_FZF_MILESTONE_CLOSE_KEY"':execute(
             gh api --silent --method PATCH -f "state=closed" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-O:execute(
+        --bind="$GH_FZF_MILESTONE_REOPEN_KEY"':execute(
             gh api --silent --method PATCH -f "state=open" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-t:execute(
+        --bind="$GH_FZF_MILESTONE_EDIT_TITLE_KEY"':execute(
             read -rp "Enter new milestone title: " t;
             [ -n "$t" ] && gh api --silent --method PATCH -f "title=$t" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-d:execute(
+        --bind="$GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY"':execute(
             read -rp "Enter new milestone description: " d;
             [ -n "$d" ] && gh api --silent --method PATCH -f "description=$d" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
-        --bind='alt-c:reload(eval "${FZF_DEFAULT_COMMAND}?sort=completeness")' \
-        --bind='alt-s:reload(eval "${FZF_DEFAULT_COMMAND}?state=all")' \
-        --bind='alt-D:reload(eval "${FZF_DEFAULT_COMMAND}?direction=desc")' \
+        --bind="$GH_FZF_MILESTONE_STATE_FILTER_KEY"':reload(eval "${FZF_DEFAULT_COMMAND}?state=all")' \
+        --bind="$GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY"':reload(eval "${FZF_DEFAULT_COMMAND}?sort=completeness")' \
+        --bind="$GH_FZF_MILESTONE_DESCENDING_ORDER_KEY"':reload(eval "${FZF_DEFAULT_COMMAND}?direction=desc")' \
         --bind='alt-1:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-2:reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-3:reload(eval "$FZF_DEFAULT_COMMAND")' \
@@ -846,7 +858,8 @@ repo_cmd() {
     #         {{- end -}}
     # '\'''
 
-    # KEYBINDING HINTS {{{2
+    # KEYBINDINGS {{{2
+
     repo_header="Actions > (enter: edit) (alt-p: prs) (alt-i: issues) (alt-r: runs) (alt-C: clone) (alt-F: fork)
 Filters > (alt-c: private) (alt-o: public) (alt-s: source) (alt-f: forks)
 $global_binds
@@ -880,10 +893,17 @@ $global_binds
 # COMMAND > GIST                                                        {{{1
 
 gist_cmd() {
-    # KEYBINDING HINTS {{{2
-    gist_header="Actions > (enter: edit) (alt-c: clone) (alt-X: delete)
+    # KEYBINDINGS {{{2
+    export GH_FZF_GIST_EDIT_KEY="${GH_FZF_GIST_EDIT_KEY:-enter}"
+    export GH_FZF_GIST_CLONE_KEY="${GH_FZF_GIST_CLONE_KEY:-alt-c}"
+    export GH_FZF_GIST_DELETE_KEY="${GH_FZF_GIST_DELETE_KEY:-alt-X}"
+
+    export GH_FZF_GIST_PUBLIC_FILTER_KEY="${GH_FZF_GIST_PUBLIC_FILTER_KEY:-alt-p}"
+    export GH_FZF_GIST_SECRET_FILTER_KEY="${GH_FZF_GIST_SECRET_FILTER_KEY:-alt-s}"
+
+    gist_header="Actions > ($GH_FZF_GIST_EDIT_KEY: edit) ($GH_FZF_GIST_CLONE_KEY: clone) ($GH_FZF_GIST_DELETE_KEY: delete)
         > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload)
-Filters > (alt-p: public) (alt-s: secret)
+Filters > ($GH_FZF_GIST_PUBLIC_FILTER_KEY: public) ($GH_FZF_GIST_SECRET_FILTER_KEY: secret)
 
 "
 
@@ -894,15 +914,15 @@ Filters > (alt-p: public) (alt-s: secret)
         --prompt="gist ❱ " \
         --header="$gist_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind='$GH_FZF_OPEN_KEY:execute-silent(gh gist view --web {1} &)+refresh-preview' \
+        --bind="$GH_FZF_OPEN_KEY:execute-silent(gh gist view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
-        --bind='enter:execute(gh gist edit {1})+refresh-preview' \
-        --bind='alt-c:execute(gh gist clone {1})+refresh-preview' \
-        --bind="alt-X:execute(gh gist delete {1})+refresh-preview" \
-        --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --public")' \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --secret")'
+        --bind="$GH_FZF_GIST_EDIT_KEY:execute(gh gist edit {1})+refresh-preview" \
+        --bind="$GH_FZF_GIST_CLONE_KEY:execute(gh gist clone {1})+refresh-preview" \
+        --bind="$GH_FZF_GIST_DELETE_KEY:execute(gh gist delete {1})+refresh-preview" \
+        --bind="$GH_FZF_GIST_PUBLIC_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --public")' \
+        --bind="$GH_FZF_GIST_SECRET_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --secret")'
 
     #2}}}
 }

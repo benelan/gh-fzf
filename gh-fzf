@@ -28,7 +28,7 @@
 
 set -e
 
-GH_FZF_VERSION="v0.13.0" # x-release-please-version
+GH_FZF_VERSION="v0.14.0" # x-release-please-version
 
 # USAGE INFO AND LOGS                                                   {{{1
 

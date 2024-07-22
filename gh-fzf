@@ -103,8 +103,6 @@ configuration, and examples.
     exit 0
 }
 
-global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) (alt+P: toggle preview) (alt+H: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
-
 # ----------------------------------------------------------------------1}}}
 # CONFIGURATION                                                         {{{1
 
@@ -160,6 +158,8 @@ export GH_FZF_COPY_KEY="${GH_FZF_COPY_KEY:-ctrl-y}"
 export GH_FZF_TOGGLE_HINTS_KEY="${GH_FZF_TOGGLE_HINTS_KEY:-alt-H}"
 export GH_FZF_TOGGLE_PREVIEW_KEY="${GH_FZF_TOGGLE_PREVIEW_KEY:-alt-P}"
 
+global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) (alt+P: toggle preview) (alt+H: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
+
 # The following fzf options are shared by all commands. They are prepended to
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
 export FZF_DEFAULT_OPTS='
@@ -181,7 +181,7 @@ export FZF_DEFAULT_OPTS='
 --bind="alt-7:reload(eval \"$FZF_DEFAULT_COMMAND -L700\")"
 --bind="alt-8:reload(eval \"$FZF_DEFAULT_COMMAND -L800\")"
 --bind="alt-9:reload(eval \"$FZF_DEFAULT_COMMAND -L900\")"
-'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi --delimiter="\\s\\s+" --with-shell="'$SHELL'"'
+'"$FZF_DEFAULT_OPTS"' --no-select-1 --ansi --no-multi --delimiter="\\s\\s+"'
 # Overriding the three options above breaks gh-fzf, so append them instead.
 
 # ----------------------------------------------------------------------1}}}
@@ -455,9 +455,23 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDING HINTS {{{2
-    run_header="Actions > (enter: watch/logs) (alt-r: rerun) (alt-R: rerun failed) (alt-x: cancel) (alt-n: notify) (alt-p: pr) (alt-d: download)
-Filters > (alt-f: failed) (alt-i: in_progress) (alt-b: current branch) (alt-u: current user) (alt-w: workflow)
+    # KEYBINDINGS {{{2
+    export GH_FZF_RUN_VIEW_KEY="${GH_FZF_RUN_VIEW_KEY:-enter}"
+    export GH_FZF_RUN_RERUN_KEY="${GH_FZF_RUN_RERUN_KEY:-alt-r}"
+    export GH_FZF_RUN_RERUN_FAILED_KEY="${GH_FZF_RUN_RERUN_FAILED_KEY:-alt-R}"
+    export GH_FZF_RUN_CANCEL_KEY="${GH_FZF_RUN_CANCEL_KEY:-alt-x}"
+    export GH_FZF_RUN_NOTIFY_KEY="${GH_FZF_RUN_NOTIFY_KEY:-alt-n}"
+    export GH_FZF_RUN_PR_KEY="${GH_FZF_RUN_PR_KEY:-alt-p}"
+    export GH_FZF_RUN_DOWNLOAD_KEY="${GH_FZF_RUN_DOWNLOAD_KEY:-alt-d}"
+
+    export GH_FZF_RUN_USER_FILTER_KEY="${GH_FZF_RUN_USER_FILTER_KEY:-alt-u}"
+    export GH_FZF_RUN_FAILED_FILTER_KEY="${GH_FZF_RUN_FAILED_FILTER_KEY:-alt-f}"
+    export GH_FZF_RUN_IN_PROGRESS_FILTER_KEY="${GH_FZF_RUN_IN_PROGRESS_FILTER_KEY:-alt-i}"
+    export GH_FZF_RUN_BRANCH_FILTER_KEY="${GH_FZF_RUN_BRANCH_FILTER_KEY:-alt-b}"
+    export GH_FZF_RUN_WORKFLOW_FILTER_KEY="${GH_FZF_RUN_WORKFLOW_FILTER_KEY:-alt-w}"
+
+    run_header="Actions > ($GH_FZF_RUN_VIEW_KEY: watch/logs) ($GH_FZF_RUN_RERUN_KEY: rerun) ($GH_FZF_RUN_RERUN_FAILED_KEY: rerun failed) ($GH_FZF_RUN_CANCEL_KEY: cancel) ($GH_FZF_RUN_NOTIFY_KEY: notify) ($GH_FZF_RUN_PR_KEY: pr) ($GH_FZF_RUN_DOWNLOAD_KEY: download)
+Filters > ($GH_FZF_RUN_FAILED_FILTER_KEY: failed) ($GH_FZF_RUN_IN_PROGRESS_FILTER_KEY: in_progress) ($GH_FZF_RUN_BRANCH_FILTER_KEY: current branch) ($GH_FZF_RUN_USER_FILTER_KEY: current user) ($GH_FZF_RUN_WORKFLOW_FILTER_KEY: workflow)
 $global_binds
 
 "
@@ -468,33 +482,33 @@ $global_binds
         --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh run view {-1} '"$REPO_FLAG" \
         --prompt="run ❱ " \
         --header="$run_header" \
+        --bind="alt-l:execute(gh run view --log {-1} $REPO_FLAG)+refresh-preview" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh run view --web {-1} $REPO_FLAG &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
-        --bind="enter:execute(
+        --bind="$GH_FZF_RUN_VIEW_KEY:execute(
             case {1} in
                 in_progress | queued | requested | waiting) gh run watch {-1} $REPO_FLAG ;;
                 *) gh run view --log {-1} $REPO_FLAG ;;
             esac
         )+refresh-preview" \
-        --bind="alt-l:execute(gh run view --log {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-r:execute(gh run rerun {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-R:execute(gh run rerun --failed {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-d:execute(gh run download {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-x:execute(gh run cancel {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-w:execute(gh fzf workflow $REPO_FLAG)" \
-        --bind="alt-n:execute-silent(
+        --bind="$GH_FZF_RUN_RERUN_KEY:execute(gh run rerun {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RUN_RERUN_FAILED_KEY:execute(gh run rerun --failed {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RUN_DOWNLOAD_KEY:execute(gh run download {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RUN_CANCEL_KEY:execute(gh run cancel {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RUN_WORKFLOW_FILTER_KEY:execute(gh fzf workflow $REPO_FLAG)" \
+        --bind="$GH_FZF_RUN_NOTIFY_KEY:execute-silent(
             gh fzf util notify-run-completed {-1} $REPO_FLAG &
         )+refresh-preview" \
-        --bind='alt-p:execute<gh fzf pr --head $(
-            gh run view {-1} --json headBranch --jq .headBranch '"$REPO_FLAG"'
-        ) '"$REPO_FLAG"'>+refresh-preview' \
-        --bind='alt-b:reload(
+        --bind="$GH_FZF_RUN_PR_KEY:execute<gh fzf pr --head \$(
+            gh run view {-1} --json headBranch --jq .headBranch $REPO_FLAG
+        ) $REPO_FLAG>+refresh-preview" \
+        --bind="$GH_FZF_RUN_BRANCH_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
-        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
-        --bind='alt-i:reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
-        --bind='alt-u:reload(
+        --bind="$GH_FZF_RUN_FAILED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
+        --bind="$GH_FZF_RUN_IN_PROGRESS_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
+        --bind="$GH_FZF_RUN_USER_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)"
         )'
 
@@ -529,9 +543,16 @@ workflow_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDING HINTS {{{2
-    workflow_header="Actions > (enter: runs) (alt-d: dispatch) (alt-X: disable) (alt-E: enable)
-Filters > (alt-a: all)
+    # KEYBINDINGS {{{2
+    export GH_FZF_WORKFLOW_VIEW_RUNS_KEY="${GH_FZF_WORKFLOW_VIEW_RUNS_KEY:-enter}"
+    export GH_FZF_WORKFLOW_DISPATCH_KEY="${GH_FZF_WORKFLOW_DISPATCH_KEY:-alt-d}"
+    export GH_FZF_WORKFLOW_DISABLE_KEY="${GH_FZF_WORKFLOW_DISABLE_KEY:-alt-X}"
+    export GH_FZF_WORKFLOW_ENABLE_KEY="${GH_FZF_WORKFLOW_ENABLE_KEY:-alt-E}"
+
+    export GH_FZF_WORKFLOW_SHOW_ALL_FILTER_KEY="${GH_FZF_WORKFLOW_SHOW_ALL_FILTER_KEY:-alt-a}"
+
+    workflow_header="Actions > ($GH_FZF_WORKFLOW_VIEW_RUNS_KEY: runs) ($GH_FZF_WORKFLOW_DISPATCH_KEY: dispatch) ($GH_FZF_WORKFLOW_DISABLE_KEY: disable) ($GH_FZF_WORKFLOW_ENABLE_KEY: enable)
+Filters > ($GH_FZF_WORKFLOW_SHOW_ALL_FILTER_KEY: all)
 $global_binds
 
 "
@@ -545,11 +566,11 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh workflow view --web {-1} $REPO_FLAG &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
-        --bind="enter:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-d:execute(gh workflow run {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-E:execute(gh workflow enable {-1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh workflow disable {-1} $REPO_FLAG)+refresh-preview" \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --all")'
+        --bind="$GH_FZF_WORKFLOW_VIEW_RUNS_KEY:execute(gh fzf run --workflow {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_WORKFLOW_DISPATCH_KEY:execute(gh workflow run {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_WORKFLOW_ENABLE_KEY:execute(gh workflow enable {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_WORKFLOW_DISABLE_KEY:execute(gh workflow disable {-1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_WORKFLOW_SHOW_ALL_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --all")'
 
     #2}}}
 }
@@ -594,9 +615,17 @@ release_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDING HINTS {{{2
-    release_header="Actions > (enter: download) (alt-X: delete)
-Filters > (alt-s: stable) (alt-p: published) (alt-a: ascending)
+    # KEYBINDINGS {{{2
+    export GH_FZF_RELEASE_DOWNLOAD_KEY="${GH_FZF_RELEASE_DOWNLOAD_KEY:-alt-enter}"
+    export GH_FZF_RELEASE_DELETE_KEY="${GH_FZF_RELEASE_DELETE_KEY:-alt-X}"
+
+    export GH_FZF_RELEASE_STABLE_FILTER_KEY="${GH_FZF_RELEASE_STABLE_FILTER_KEY:-alt-s}"
+    export GH_FZF_RELEASE_PUBLISHED_FILTER_KEY="${GH_FZF_RELEASE_PUBLISHED_FILTER_KEY:-alt-p}"
+
+    export GH_FZF_RELEASE_ASCENDING_SORT_KEY="${GH_FZF_RELEASE_ASCENDING_SORT_KEY:-alt-a}"
+
+    release_header="Actions > ($GH_FZF_RELEASE_DOWNLOAD_KEY: download) ($GH_FZF_RELEASE_DELETE_KEY: delete)
+Filters > ($GH_FZF_RELEASE_STABLE_FILTER_KEY: stable) ($GH_FZF_RELEASE_PUBLISHED_FILTER_KEY: published) ($GH_FZF_RELEASE_ASCENDING_SORT_KEY: ascending)
 $global_binds
 
 "
@@ -610,11 +639,11 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh release view --web {1} $REPO_FLAG &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
-        --bind="alt-enter:execute(gh release download {1} $REPO_FLAG)+refresh-preview" \
-        --bind="alt-X:execute(gh release delete {1} $REPO_FLAG)+refresh-preview" \
-        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
-        --bind='alt-p:reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
-        --bind='alt-a:reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
+        --bind="$GH_FZF_RELEASE_DOWNLOAD_KEY:execute(gh release download {1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RELEASE_DELETE_KEY:execute(gh release delete {1} $REPO_FLAG)+refresh-preview" \
+        --bind="$GH_FZF_RELEASE_STABLE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
+        --bind="$GH_FZF_RELEASE_PUBLISHED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --exclude-drafts")' \
+        --bind="$GH_FZF_RELEASE_ASCENDING_SORT_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --order asc")'
 
     #2}}}
 }

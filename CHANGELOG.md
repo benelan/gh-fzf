@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.14.0](https://github.com/benelan/gh-fzf/compare/v0.13.0...v0.14.0) (2024-07-22)
+
+
+### Features
+
+* Add `status` command that prints GitHub's service [status](https://www.githubstatus.com/) summary ([4ac7a48](https://github.com/benelan/gh-fzf/commit/4ac7a48adffcd576f06010b06dbc60fbc29f8e9d))
+* Add upgrade command to pin the latest version ([4ac127c](https://github.com/benelan/gh-fzf/commit/4ac127ccf8a5fbb78646db20000877f070c49ae6))
+* **config:** Increase GH_FZF_DEFAULT_LIMIT to 75 ([b442dbd](https://github.com/benelan/gh-fzf/commit/b442dbd16aa53590a3653367fc548d9a9b0124cf))
+* Display GitHub service alerts in the preview-label during incidents ([4ac7a48](https://github.com/benelan/gh-fzf/commit/4ac7a48adffcd576f06010b06dbc60fbc29f8e9d))
+* **pr:** Add column showing the diff shortstat ([26c1d50](https://github.com/benelan/gh-fzf/commit/26c1d500fee4f966f444b243303312d73154c45f))
+* **run:** Add `alt-w` keybind to filter by selected workflow ([48a29dd](https://github.com/benelan/gh-fzf/commit/48a29dd1447de2dcc14ee7feb69e8999537ae748))
+* **ui:** Add second layout to `alt-P` preview toggling ([d77d364](https://github.com/benelan/gh-fzf/commit/d77d364bc59ba0252e869a5c0e4cf5c65048fd90))
+* **ui:** Display command in fzf prompt ([66bbf1e](https://github.com/benelan/gh-fzf/commit/66bbf1e742747030b420e61754503f734f293a8a))
+* **workflow:** Add `ctrl-y` keybinding to copy file url ([2f478f2](https://github.com/benelan/gh-fzf/commit/2f478f26dd57a9b6c24222a6943affb9e05862ed))
+* **workflow:** Add custom list formatting ([0a57814](https://github.com/benelan/gh-fzf/commit/0a57814dad10c985fcb7366bc1fdac0c106c09bf))
+
+
+### Bug Fixes
+
+* **linux:** Check XDG_SESSION_TYPE when determining copy command ([f743c80](https://github.com/benelan/gh-fzf/commit/f743c8025b58c10e1e4309a9cbe959e166ff9ddd))
+* **ui:** Pad preview columns to prevent word wrap weirdness ([79cbd4b](https://github.com/benelan/gh-fzf/commit/79cbd4be80133afacfc1b6e92dfd47a1c6b9be6b))
+* **upgrade:** Skip if already on latest version ([#35](https://github.com/benelan/gh-fzf/issues/35)) ([e944671](https://github.com/benelan/gh-fzf/commit/e944671d2d378076ac2cb1ef9939ffbb3233b603))
+* **util:** Execute notify-run-completed as a background process ([5a3469c](https://github.com/benelan/gh-fzf/commit/5a3469c0f44500cac5d2880cc18f22ed88f41739))
+
 ## [0.13.0](https://github.com/benelan/gh-fzf/compare/v0.12.0...v0.13.0) (2024-06-23)
 
 

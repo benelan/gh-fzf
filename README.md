@@ -59,21 +59,20 @@ An fzf wrapper around the GitHub CLI.
 
 ### Upgrading
 
-To upgrade `gh-fzf` to the latest commit on `main` **(recommended)**:
+To upgrade `gh-fzf` to the latest commit on `main`:
 
 ```sh
 gh extension upgrade gh-fzf
 ```
 
 Alternatively, you can pin a tag when installing `gh` extensions. A convenience
-command is provided for upgrading to the `stable` tag, which always points to
-the latest version:
+command is provided for upgrading to the latest version **(recommended)**:
 
 ```sh
 gh fzf upgrade
 ```
 
-You can check which version `gh-fzf` you currently have installed:
+You can check which version of `gh-fzf` you currently have installed:
 
 ```sh
 gh fzf version

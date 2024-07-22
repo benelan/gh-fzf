@@ -243,7 +243,7 @@ issue_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
 
     export GH_FZF_ISSUE_EDIT_KEY="${GH_FZF_ISSUE_EDIT_KEY:-enter}"
     export GH_FZF_ISSUE_CHECKOUT_KEY="${GH_FZF_ISSUE_CHECKOUT_KEY:-alt-o}"
@@ -342,7 +342,7 @@ pr_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
 
     export GH_FZF_PR_EDIT_KEY="${GH_FZF_PR_EDIT_KEY:-enter}"
     export GH_FZF_PR_CHECKOUT_KEY="${GH_FZF_PR_CHECKOUT_KEY:-alt-o}"
@@ -455,7 +455,7 @@ run_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_RUN_VIEW_KEY="${GH_FZF_RUN_VIEW_KEY:-enter}"
     export GH_FZF_RUN_RERUN_KEY="${GH_FZF_RUN_RERUN_KEY:-alt-r}"
     export GH_FZF_RUN_RERUN_FAILED_KEY="${GH_FZF_RUN_RERUN_FAILED_KEY:-alt-R}"
@@ -543,7 +543,7 @@ workflow_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_WORKFLOW_VIEW_RUNS_KEY="${GH_FZF_WORKFLOW_VIEW_RUNS_KEY:-enter}"
     export GH_FZF_WORKFLOW_DISPATCH_KEY="${GH_FZF_WORKFLOW_DISPATCH_KEY:-alt-d}"
     export GH_FZF_WORKFLOW_DISABLE_KEY="${GH_FZF_WORKFLOW_DISABLE_KEY:-alt-X}"
@@ -615,7 +615,7 @@ release_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_RELEASE_DOWNLOAD_KEY="${GH_FZF_RELEASE_DOWNLOAD_KEY:-alt-enter}"
     export GH_FZF_RELEASE_DELETE_KEY="${GH_FZF_RELEASE_DELETE_KEY:-alt-X}"
 
@@ -652,7 +652,7 @@ $global_binds
 # COMMAND > LABEL                                                       {{{1
 
 label_cmd() {
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_LABEL_PRINT_KEY="${GH_FZF_LABEL_PRINT_KEY:-enter}"
     export GH_FZF_LABEL_EDIT_NAME_KEY="${GH_FZF_LABEL_EDIT_NAME_KEY:-alt-n}"
     export GH_FZF_LABEL_EDIT_DESCRIPTION_KEY="${GH_FZF_LABEL_EDIT_DESCRIPTION_KEY:-alt-d}"
@@ -740,7 +740,7 @@ milestone_cmd() {
             {{- end -}}
     '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_MILESTONE_PRINT_KEY="${GH_FZF_MILESTONE_PRINT_KEY:-enter}"
     export GH_FZF_MILESTONE_VIEW_ISSUES_KEY="${GH_FZF_MILESTONE_ISSUES_KEY:-alt-i}"
     export GH_FZF_MILESTONE_CLOSE_KEY="${GH_FZF_MILESTONE_CLOSE_KEY:-alt-X}"
@@ -858,7 +858,7 @@ repo_cmd() {
     #         {{- end -}}
     # '\'''
 
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_REPO_EDIT_KEY="${GH_FZF_REPO_EDIT_KEY:-enter}"
     export GH_FZF_REPO_VIEW_ISSUES_KEY="${GH_FZF_REPO_ISSUES_KEY:-alt-i}"
     export GH_FZF_REPO_VIEW_PRS_KEY="${GH_FZF_REPO_VIEW_PRS_KEY:-alt-p}"
@@ -904,7 +904,7 @@ $global_binds
 # COMMAND > GIST                                                        {{{1
 
 gist_cmd() {
-    # KEYBINDINGS {{{2
+    # KEYBINDINGS      {{{2
     export GH_FZF_GIST_EDIT_KEY="${GH_FZF_GIST_EDIT_KEY:-enter}"
     export GH_FZF_GIST_CLONE_KEY="${GH_FZF_GIST_CLONE_KEY:-alt-c}"
     export GH_FZF_GIST_DELETE_KEY="${GH_FZF_GIST_DELETE_KEY:-alt-X}"

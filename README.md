@@ -55,6 +55,7 @@ An fzf wrapper around the GitHub CLI.
    ```
 
 4. **[???](#usage)**
+
 5. **PROFIT**
 
 ### Upgrading
@@ -114,30 +115,39 @@ that can be used with any `gh fzf` command:
 ### `issue`
 
 - **Usage**: `gh fzf issue [flags]`
+
 - **Aliases**: `i`, `issues`, `-i`, `--issue`, `--issues`
+
 - **Flags**: See `gh issue list --help` for available options
+
 - **Keybindings**:
-  | Key | Description | Configuration Environment Variable |
-  | ------- | -------------------------------------------------------------------- | ---------------------------------- |
-  | `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`) | `GH_FZF_ISSUE_EDIT_KEY` |
-  | `alt-o` | Create/checkout a branch linked to the selected issue, prompting | `GH_FZF_ISSUE_CHECKOUT_KEY` |
-  | `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`) | `GH_FZF_ISSUE_COMMENT_KEY` |
-  | `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue | `GH_FZF_ISSUE_ADD_LABEL_KEY` |
-  | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue | `GH_FZF_ISSUE_REMOVE_LABEL_KEY` |
-  | `alt-X` | Close the selected issue (see `gh issue close --help`) | `GH_FZF_ISSUE_CLOSE_KEY` |
-  | `alt-O` | Reopen the selected issue (see `gh issue reopen --help`) | `GH_FZF_ISSUE_REOPEN_KEY` |
-  | `alt-a` | Filter the list, showing issues assigned to you | `GH_FZF_ASSIGNED_FILTER_KEY` |
-  | `alt-A` | Filter the list, showing issues authored by you | `GH_FZF_AUTHOR_FILTER_KEY` |
-  | `alt-m` | Filter the list, showing issues where you are mentioned | `GH_FZF_MENTIONED_FILTER_KEY` |
-  | `alt-s` | Filter the list, showing issues with any state (open or closed) | `GH_FZF_STATE_FILTER_KEY` |
+
+| Key     | Description                                                          | Configuration Environment Variable |
+| ------- | -------------------------------------------------------------------- | ---------------------------------- |
+| `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`) | `GH_FZF_ISSUE_EDIT_KEY`            |
+| `alt-o` | Create/checkout a branch linked to the selected issue, prompting     | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
+| `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)  | `GH_FZF_ISSUE_COMMENT_KEY`         |
+| `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue       | `GH_FZF_ISSUE_ADD_LABEL_KEY`       |
+| `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue  | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`    |
+| `alt-X` | Close the selected issue (see `gh issue close --help`)               | `GH_FZF_ISSUE_CLOSE_KEY`           |
+| `alt-O` | Reopen the selected issue (see `gh issue reopen --help`)             | `GH_FZF_ISSUE_REOPEN_KEY`          |
+| `alt-a` | Filter the list, showing issues assigned to you                      | `GH_FZF_ASSIGNED_FILTER_KEY`       |
+| `alt-A` | Filter the list, showing issues authored by you                      | `GH_FZF_AUTHOR_FILTER_KEY`         |
+| `alt-m` | Filter the list, showing issues where you are mentioned              | `GH_FZF_MENTIONED_FILTER_KEY`      |
+| `alt-s` | Filter the list, showing issues with any state (open or closed)      | `GH_FZF_STATE_FILTER_KEY`          |
+
 - **Examples:**
+
   - Filter the initial list to open and closed issues assigned to you in the
     "v1.33.7" milestone:
+
     ```sh
     gh fzf issue --assignee @me --milestone "v1.33.7" --state all
     ```
+
   - Filter the initial list to issues with the "good first issue" label, no
     assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
+
     ```sh
     gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner\'
     ```
@@ -145,9 +155,13 @@ that can be used with any `gh fzf` command:
 ### `pr`
 
 - **Usage**: `gh fzf pr [flags]`
+
 - **Aliases**: `p`, `prs`, `-p`, `--pr`, `--prs`
+
 - **Flags**: See `gh pr list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Edit the selected PR via CLI prompts (see `gh pr edit --help`)
   - `alt-o`: Checkout the HEAD branch of the selected PR
     (see `gh pr checkout --help`)
@@ -168,15 +182,20 @@ that can be used with any `gh fzf` command:
   - `alt-A`: Filter the list, showing PRs authored by you
   - `alt-b`: Filter the list, showing PRs from the current branch
   - `alt-s`: Filter the list, showing PRs in any state (open, closed, or merged)
+
 - **Examples:**
+
   - Filter the initial list to your merged pull requests with the
     "breaking change" label:
+
     ```sh
     gh fzf pr --state merged --author @me --label \"breaking change\"
     ```
+
   - Filter the initial list to your pull requests merged since the beginning
     of 2023 that have "breaking change" in the body. Uses
     [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
+
     ```sh
     gh fzf p -S \'merged:">=2023-01-01" \"breaking change\" in:body author:@me\'
     ```
@@ -184,9 +203,13 @@ that can be used with any `gh fzf` command:
 ### `run`
 
 - **Usage**: `gh fzf run [flags]`
+
 - **Aliases**: `r`, `runs`, `-r`, `--run`, `--runs`
+
 - **Flags**: See `gh run list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Watch for status changes or view logs, depending on whether the
     selected run is in progress or completed.
     (see `gh run watch --help` and `gh run view --help`)
@@ -205,21 +228,28 @@ that can be used with any `gh fzf` command:
     and "open in browser" when using `dunstify`. There is an additional
     "download artifacts" or "rerun failed jobs" action depending on whether the
     run passed or failed, respectively.
+
     > **NOTE:** The run watching process is executed in the background, so
     > closing `gh-fzf` won't prevent the desktop notification from displaying.
     > Use `killall gh` to end all `gh` processes, including the run watcher.
+
   - `alt-w`: Filter the list, showing runs for the selected item from
     `gh fzf workflow` (see [`workflow`](#workflow))
   - `alt-b`: Filter the list, showing runs from the current branch
   - `alt-u`: Filter the list, showing runs triggered by you
   - `alt-f`: Filter the list, showing failed runs
   - `alt-i`: Filter the list, showing in_progress runs
+
 - **Examples:**
+
   - Filter the initial list to runs for the "tests" workflow:
+
     ```sh
     gh fzf run --workflow tests
     ```
+
   - Filter the initial list to failed runs on the main branch:
+
     ```sh
     gh fzf r -b main -s failure
     ```
@@ -227,17 +257,24 @@ that can be used with any `gh fzf` command:
 ### `workflow`
 
 - **Usage**: `gh fzf workflow [flags]`
+
 - **Aliases**: `workflows`, `--workflow`, `--workflows`
+
 - **Flags**: See `gh workflow list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Open `gh fzf run` filtered for the selected workflow
     (see [`run`](#run))
   - `alt-d`: Dispatch the selected workflow (see `gh workflow run --help`)
   - `alt-X`: Disable the selected workflow (see `gh workflow disable --help`)
   - `alt-E`: Enable the selected workflow (see `gh workflow enable --help`)
   - `alt-a`: Filter the list, showing all workflows (including disabled ones)
+
 - **Examples**:
+
   - Filter the initial list to show all workflows:
+
     ```sh
     gh fzf workflow --all
     ```
@@ -245,9 +282,13 @@ that can be used with any `gh fzf` command:
 ### `release`
 
 - **Usage**: `gh fzf release [flags]`
+
 - **Aliases**: `releases`, `--release`, `--releases`
+
 - **Flags**: See `gh release list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Download the assets from the selected release
     (see `gh release download --help`)
   - `alt-X`: Delete the selected release (see `gh release delete --help`)
@@ -255,8 +296,11 @@ that can be used with any `gh fzf` command:
   - `alt-p`: Filter the list, showing published releases (exclude drafts)
   - `alt-a`: Filter the list, showing releases in ascending order by date
     (defaults to descending)
+
 - **Examples**:
+
   - Filter the initial list to exclude drafts and pre-releases:
+
     ```sh
     gh fzf release --exclude-drafts --exclude-pre-releases
     ```
@@ -264,9 +308,13 @@ that can be used with any `gh fzf` command:
 ### `label`
 
 - **Usage**: `gh fzf label [flags]`
+
 - **Aliases**: `labels`, `--label`, `--labels`
+
 - **Flags**: See `gh label list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Print the name of the selected label(s) to stdout
   - `alt-n`: Edit the name of the most recently selected label (see `gh label edit --help`)
   - `alt-d`: Edit the description of the most recently selected label
@@ -276,8 +324,11 @@ that can be used with any `gh fzf` command:
   - `alt-N`: Filter the list, sorting labels by name (defaults to creation date)
   - `alt-D`: Filter the list, showing labels in descending order
     (defaults to ascending)
+
 - **Examples**:
+
   - Filter the initial list to sort by label name in descending order
+
     ```sh
     gh fzf label --sort name --order desc
     ```
@@ -285,9 +336,13 @@ that can be used with any `gh fzf` command:
 ### `milestone`
 
 - **Usage**: `gh fzf milestone`
+
 - **Aliases**: `milestones`, `--milestone`, `--milestones`
+
 - **Flags**: N/A
+
 - **Keybindings**:
+
   - `enter`: Print the name of the selected milestone to stdout
   - `alt-t`: Edit the title of the selected milestone
   - `alt-d`: Edit the description of the selected milestone
@@ -303,9 +358,13 @@ that can be used with any `gh fzf` command:
 ### `repo`
 
 - **Usage**: `gh fzf repo [flags]`
+
 - **Aliases**: `repos`, `--repo`, `--repos`
+
 - **Flags**: See `gh repo list --help` for available options
+
 - **Keybindings**:
+
   - `alt-i`: Run `gh fzf issue` on the selected repo (see [`issue`](#issue))
   - `alt-p`: Run `gh fzf pr` on the selected repo (see [`pr`](#pr))
   - `alt-r`: Run `gh fzf run` on the selected repo (see [`run`](#run))
@@ -316,14 +375,19 @@ that can be used with any `gh fzf` command:
   - `alt-o`: Filter the list, showing public repos (i.e. open source)
   - `alt-f`: Filter the list, showing forked repos
   - `alt-s`: Filter the list, showing source (non-forked) repos
+
 - **Examples**:
+
   - Filter the initial list to your non-archived, private repos with the "cli"
     topic:
+
     ```sh
     gh fzf repo --no-archived --visibility private --topic cli
     ```
+
   - Filter the initial list to archived repos created by the "google"
     organization where the primary language was "typescript":
+
     ```sh
     gh fzf repo google --archived --language typescript
     ```
@@ -331,17 +395,24 @@ that can be used with any `gh fzf` command:
 ### `gist`
 
 - **Usage**: `gh fzf gist [flags]`
+
 - **Aliases**: `gists`, `--gist`, `--gists`
+
 - **Flags**: See `gh gist list --help` for available options
+
 - **Keybindings**:
+
   - `enter`: Edit the selected gist (see `gh gist edit --help`)
   - `alt-c`: Clone the selected gist to the current directory
     (see `gh gist clone --help`)
   - `alt-X`: Delete the selected gist (see `gh gist delete --help`)
   - `alt-s`: Filter the list, showing only secret gists
   - `alt-p`: Filter the list, showing only public gists
+
 - **Examples**:
+
   - Filter the initial list to only show public gists (excluding secret ones):
+
     ```sh
     gh fzf gist --public
     ```

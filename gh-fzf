@@ -876,8 +876,10 @@ search_cmd() {
         exit "$?"
     fi
 
+    echo "$GH_FZF_DEFAULT_LIMIT" >"${TMPDIR:-/tmp}/gh-fzf-search-limit"
+
     # FZF COMMAND      {{{2
-    search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L $GH_FZF_DEFAULT_LIMIT"
+    search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L \$(cat "${TMPDIR:-/tmp}/gh-fzf-search-limit")"
 
     fzf \
         --header-lines=4 \
@@ -909,18 +911,38 @@ search_cmd() {
         )+transform-query(echo \"$*\")+first+reload-sync:$search_cmd \"$*\"" \
         --bind="ctrl-o:execute-silent:$search_open_cmd &" \
         --bind="ctrl-y:execute-silent:$search_copy_cmd" \
-        --bind="alt-1:reload-sync($search_cmd -L100 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-2:reload-sync($search_cmd -L200 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-3:reload-sync($search_cmd -L300 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-4:reload-sync($search_cmd -L400 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-5:reload-sync($search_cmd -L500 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-6:reload-sync($search_cmd -L600 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-7:reload-sync($search_cmd -L700 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-8:reload-sync($search_cmd -L800 \$FZF_QUERY $multiline_chunker || true)" \
-        --bind="alt-9:reload-sync($search_cmd -L900 \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-1:execute-silent(
+            echo 100 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-2:execute-silent(
+            echo 200 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-3:execute-silent(
+            echo 300 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-4:execute-silent(
+            echo 400 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-5:execute-silent(
+            echo 500 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-6:execute-silent(
+            echo 600 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-7:execute-silent(
+            echo 700 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-8:execute-silent(
+            echo 800 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-9:execute-silent(
+            echo 900 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
         </dev/null
 
     #2}}}
+
+    rm -f ${TMPDIR:-/tmp}/gh-fzf-search-*
 }
 
 # ----------------------------------------------------------------------1}}}

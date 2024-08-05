@@ -82,7 +82,8 @@ An fzf wrapper around the GitHub CLI.
 Homepage: https://github.com/benelan/gh-fzf
 
 Usage:
-  gh fzf <command> [flags]
+  gh fzf [<command>] [flags]
+  gh fzf search [<subcommand>] [flags]
 
 Core Commands:
   issue       Search for and interact with GitHub issues.
@@ -94,6 +95,7 @@ Core Commands:
   milestone   Search for and interact with GitHub milestones via \`gh api\`.
   repo        Search for and interact with GitHub repos.
   gist        Search for and interact with GitHub gists.
+  search      Search for and interact with GitHub issues, prs, commits, and code.
 
 See \`gh <command> list --help\` for the flag options.
 
@@ -189,8 +191,8 @@ export FZF_DEFAULT_OPTS='
 # COMMAND > DEFAULT                                                     {{{1
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
-        issue pr run workflow release label milestone repo gist" \
+    FZF_DEFAULT_COMMAND="printf '%s\n' COMMAND \
+        issue pr run workflow release label milestone repo gist search" \
         fzf \
         --preview='
             cmd={};
@@ -1184,8 +1186,8 @@ main() {
         util | utils | --util | --utils)
             util_cmd "$@"
             ;;
-        status) 
-            github_status 
+        status)
+            github_status
             ;;
         changelog)
             gh fzf release --repo benelan/gh-fzf

@@ -5,7 +5,7 @@
 
 ### Bug Fixes
 
-* Add manual `/dev/tty` redirection to user input prompts to prevent `read` error ([#39](https://github.com/benelan/gh-fzf/issues/39)) ([4e2ba98](https://github.com/benelan/gh-fzf/commit/4e2ba984c0f903056c05ebd034ebbaf73e2ae042)), closes [#38](https://github.com/benelan/gh-fzf/issues/38)
+* **issue, label, milestone:** Add manual `/dev/tty` redirection to prevent `read` error during user input prompts ([#39](https://github.com/benelan/gh-fzf/issues/39)) ([4e2ba98](https://github.com/benelan/gh-fzf/commit/4e2ba984c0f903056c05ebd034ebbaf73e2ae042)), closes [#38](https://github.com/benelan/gh-fzf/issues/38)
 
 ## [0.14.0](https://github.com/benelan/gh-fzf/compare/v0.13.0...v0.14.0) (2024-07-22)
 

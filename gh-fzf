@@ -28,7 +28,7 @@
 
 set -e
 
-GH_FZF_VERSION="v0.14.0" # x-release-please-version
+GH_FZF_VERSION="v0.14.1" # x-release-please-version
 
 FZF_USER_VERSION="$(fzf --version | awk '{print $1}')"
 
@@ -711,16 +711,16 @@ $global_binds
         --bind="enter:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="ctrl-o:execute-silent(gh label list --web &)" \
         --bind='alt-n:execute(
-            read -rp "Enter new name for {1} label: " name;
+            read -rp "Enter new name for {1} label: " name </dev/tty >/dev/tty 2>&1;
             [ -n "$name" ] && gh label edit {1} --name "$name"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-d:execute(
-            read -rp "Enter new description for {1} label: " description;
+            read -rp "Enter new description for {1} label: " description </dev/tty >/dev/tty 2>&1;
             [ -n "$description" ] &&
                 gh label edit {1} --description "$description"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-c:execute(
-            read -rp "Enter new color for {1} label: " color;
+            read -rp "Enter new color for {1} label: " color </dev/tty >/dev/tty 2>&1;
             [ -n "$color" ] && gh label edit {1} --color "$color"
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="alt-X:execute(gh label delete {1})" \
@@ -813,14 +813,14 @@ Globals > (ctrl-o: open url) (ctrl-y: copy url) (ctrl-r: reload)
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-t:execute(
-            read -rp "Enter new milestone title: " t;
+            read -rp "Enter new milestone title: " t </dev/tty >/dev/tty 2>&1;
             [ -n "$t" ] && gh api --silent --method PATCH -f "title=$t" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
                 /repos/{owner}/{repo}/milestones/{-1}
         )+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind='alt-d:execute(
-            read -rp "Enter new milestone description: " d;
+            read -rp "Enter new milestone description: " d </dev/tty >/dev/tty 2>&1;
             [ -n "$d" ] && gh api --silent --method PATCH -f "description=$d" \
                 -H "Accept: application/vnd.github+json" \
                 -H "X-GitHub-Api-Version: 2022-11-28" \
@@ -982,7 +982,7 @@ branch_prompt() {
     issue="${GH_FZF_BRANCH_ADD_ISSUE_NUMBER:+${1}$GH_FZF_BRANCH_ADD_ISSUE_NUMBER}"
     sanitized_issue=$(tr -d "#'\''" <<<"${issue// /}")
 
-    read -rp "Enter branch name for ${1}: ${GH_FZF_BRANCH_PREFIX}${sanitized_issue}" name
+    read -rp "Enter branch name for ${1}: ${GH_FZF_BRANCH_PREFIX}${sanitized_issue}" name </dev/tty >/dev/tty 2>&1
     echo "${GH_FZF_BRANCH_PREFIX}${sanitized_issue}${name// /-}"
 }
 

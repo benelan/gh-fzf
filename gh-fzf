@@ -341,7 +341,7 @@ pr_cmd() {
     rm -f /tmp/gh-fzf-pr-*
     # GO TEMPLATE      {{{2
     pr_template='\
-        --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles" \
+        --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles,isDraft" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
@@ -361,7 +361,9 @@ pr_cmd() {
                 {{- end -}}
 
                 {{- $stateColor := "green" -}}
-                {{- if eq .state "CLOSED" -}}
+                {{- if eq .isDraft true -}}
+                    {{- $stateColor = "white+dh" -}}
+                {{- else if eq .state "CLOSED" -}}
                     {{- $stateColor = "red" -}}
                 {{- else if eq .state "MERGED" -}}
                     {{- $stateColor = "magenta" -}}

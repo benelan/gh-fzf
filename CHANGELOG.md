@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://github.com/benelan/gh-fzf/compare/v0.14.1...v0.15.0) (2024-11-03)
+
+
+### Features
+
+* **pr:** Make draft pull request numbers gray ([63da381](https://github.com/benelan/gh-fzf/commit/63da38176a9b39aa3fee5731328562b878c63cca))
+
 ## [0.14.1](https://github.com/benelan/gh-fzf/compare/v0.14.0...v0.14.1) (2024-08-21)
 
 

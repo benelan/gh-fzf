@@ -3,6 +3,13 @@
     "comments": true
   },
   "rules": {
-    "terminology": true
+    "terminology": {
+      "exclude": [
+        "JavaScript",
+        "TypeSript",
+        "repo\\b",
+        "bug[- ]fix(es)?"
+      ]
+    }
   }
 }

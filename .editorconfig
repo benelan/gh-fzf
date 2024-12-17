@@ -1,0 +1,29 @@
+# https://editorconfig.org/
+root = true
+
+[*]
+    charset = utf-8
+    insert_final_newline = true
+    end_of_line = lf
+    quote_type = double
+    indent_style = space
+    indent_size = 4
+    curly_bracket_next_line = false
+    spaces_around_operators = true
+    indent_brace_style = K&R
+
+[*.{js,jsx,json,jsonc,ts,tsx,html,vue,svelte,astro,css,scss,sass,less,lua,yml,yaml,md,mdx,mail,markdownlintrc}]
+    indent_size = 2
+
+[*.{mail,sh,bash}]
+    max_line_length = 80
+
+[COMMIT_EDITMSG]
+    max_line_length = 72
+
+[Makefile]
+    indent_style = tab
+
+# https://github.com/mvdan/sh/blob/master/cmd/shfmt/shfmt.1.scd
+[[shell]]
+    switch_case_indent = true

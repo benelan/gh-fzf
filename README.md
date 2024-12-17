@@ -2,6 +2,7 @@
 
 An fzf wrapper around the GitHub CLI.
 
+<!--editorconfig-checker-disable-->
 <!--toc:start-->
 
 - [gh fzf](#gh-fzf)
@@ -88,7 +89,7 @@ gh fzf changelog
 ## Usage
 
 ```sh
-gh fzf <command> [flags]
+gh fzf \<command\> [flags]
 ```
 
 This extension adds a new command that wraps GitHub's `list` subcommands with

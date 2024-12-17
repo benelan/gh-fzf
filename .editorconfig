@@ -12,7 +12,7 @@ root = true
     spaces_around_operators = true
     indent_brace_style = K&R
 
-[*.{js,jsx,json,jsonc,ts,tsx,html,vue,svelte,astro,css,scss,sass,less,lua,yml,yaml,md,mdx,mail,markdownlintrc}]
+[*.{js,jsx,json,jsonc,ts,tsx,html,vue,svelte,astro,css,scss,sass,less,lua,yml,yaml,md,mdx,mail,markdownlintrc,textlintrc}]
     indent_size = 2
 
 [*.{mail,sh,bash}]

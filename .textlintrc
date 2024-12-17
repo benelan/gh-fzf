@@ -6,7 +6,7 @@
     "terminology": {
       "exclude": [
         "JavaScript",
-        "TypeSript",
+        "TypeScript",
         "repo\\b",
         "bug[- ]fix(es)?"
       ]

@@ -1,13 +1,8 @@
 {
   "filters": {
-    "comments": true,
-    "node-types": {
-      "nodeTypes": ["BlockQuote"]
-    }
+    "comments": true
   },
   "rules": {
-    "terminology": {
-      "exclude": ["JavaScript", "TypeSript", "repo\\b", "bug[- ]fix(es)?"]
-    }
+    "terminology": true
   }
 }

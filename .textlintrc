@@ -1,0 +1,22 @@
+{
+  "filters": {
+    "comments": true,
+    "node-types": {
+      "nodeTypes": [
+        "BlockQuote"
+      ]
+    }
+  },
+  "rules": {
+    "no-curly-quotes": true,
+    "terminology": {
+      "severity": "warning",
+      "exclude": [
+        "JavaScript",
+        "TypeSript",
+        "repo\\b",
+        "bug[- ]fix(es)?"
+      ]
+    }
+  }
+}

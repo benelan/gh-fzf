@@ -251,14 +251,14 @@ that can be used with any `gh fzf` command:
   - `enter`: Download the assets from the selected release
     (see `gh release download --help`)
   - `alt-X`: Delete the selected release (see `gh release delete --help`)
-  - `alt-s`: Filter the list, showing stable releases (exclude pre-releases)
+  - `alt-s`: Filter the list, showing stable releases (exclude prereleases)
   - `alt-p`: Filter the list, showing published releases (exclude drafts)
   - `alt-a`: Filter the list, showing releases in ascending order by date
     (defaults to descending)
 - **Examples**:
-  - Filter the initial list to exclude drafts and pre-releases:
+  - Filter the initial list to exclude drafts and prereleases:
     ```sh
-    gh fzf release --exclude-drafts --exclude-pre-releases
+    gh fzf release --exclude-drafts --exclude-prereleases
     ```
 
 ### `label`

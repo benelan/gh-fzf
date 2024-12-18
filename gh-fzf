@@ -74,28 +74,28 @@ An fzf wrapper around the GitHub CLI.
 Homepage: https://github.com/benelan/gh-fzf
 
 Usage:
-  gh fzf <command> [flags]
+    gh fzf <command> [flags]
 
 Core Commands:
-  issue       Search for and interact with GitHub issues.
-  pr          Search for and interact with GitHub pull requests.
-  run         Search for and interact with GitHub Action runs.
-  workflow    Search for and interact with GitHub Action workflows.
-  release     Search for and interact with GitHub releases.
-  label       Search for and interact with GitHub labels.
-  milestone   Search for and interact with GitHub milestones via \`gh api\`.
-  repo        Search for and interact with GitHub repos.
-  gist        Search for and interact with GitHub gists.
+    issue       Search for and interact with GitHub issues.
+    pr          Search for and interact with GitHub pull requests.
+    run         Search for and interact with GitHub Action runs.
+    workflow    Search for and interact with GitHub Action workflows.
+    release     Search for and interact with GitHub releases.
+    label       Search for and interact with GitHub labels.
+    milestone   Search for and interact with GitHub milestones via \`gh api\`.
+    repo        Search for and interact with GitHub repos.
+    gist        Search for and interact with GitHub gists.
 
 See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
-  status      Print GitHub's service status from https://githubstatus.com/
-  changelog   View gh-fzf's changelog via the release command.
-  upgrade     Upgrade to the latest version of gh-fzf.
-  version     Print the version of gh-fzf.
-  help        Print this help message.
-  util        Functions used internally that may be useful for scripting.
+    help        Print this help message.
+    status      Print GitHub's service status from https://githubstatus.com/
+    version     Print the version of gh-fzf.
+    changelog   View gh-fzf's changelog via the release command.
+    upgrade     Upgrade to the latest version of gh-fzf.
+    util        Functions used internally that may be useful for scripting.
 
 Check out the project homepage for more information, such as keybindings,
 configuration, and examples.
@@ -300,7 +300,7 @@ $global_binds
 pr_cmd() {
     # GO TEMPLATE      {{{2
     pr_template='\
-        --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles" \
+        --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles,isDraft" \
         --template '\''
             {{- $headerColor := "blue+b" -}}
             {{- tablerow
@@ -320,7 +320,9 @@ pr_cmd() {
                 {{- end -}}
 
                 {{- $stateColor := "green" -}}
-                {{- if eq .state "CLOSED" -}}
+                {{- if eq .isDraft true -}}
+                    {{- $stateColor = "white+dh" -}}
+                {{- else if eq .state "CLOSED" -}}
                     {{- $stateColor = "red" -}}
                 {{- else if eq .state "MERGED" -}}
                     {{- $stateColor = "magenta" -}}

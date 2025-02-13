@@ -265,12 +265,13 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Open `gh fzf run` filtered for the selected workflow
-    (see [`run`](#run))
-  - `alt-d`: Dispatch the selected workflow (see `gh workflow run --help`)
-  - `alt-X`: Disable the selected workflow (see `gh workflow disable --help`)
-  - `alt-E`: Enable the selected workflow (see `gh workflow enable --help`)
-  - `alt-a`: Filter the list, showing all workflows (including disabled ones)
+  | Key     | Description                                                              | Configuration Environment Variable    |
+  | ------- | ------------------------------------------------------------------------ | ------------------------------------- |
+  | `enter` | Open `gh fzf run` filtered for the selected workflow (see [`run`](#run)) | `GH_FZF_WORKFLOW_VIEW_RUNS_KEY`       |
+  | `alt-d` | Dispatch the selected workflow (see `gh workflow run --help`)            | `GH_FZF_WORKFLOW_DISPATCH_KEY`        |
+  | `alt-X` | Disable the selected workflow (see `gh workflow disable --help`)         | `GH_FZF_WORKFLOW_DISABLE_KEY`         |
+  | `alt-E` | Enable the selected workflow (see `gh workflow enable --help`)           | `GH_FZF_WORKFLOW_ENABLE_KEY`          |
+  | `alt-a` | Filter the list, showing all workflows (including disabled ones)         | `GH_FZF_WORKFLOW_SHOW_ALL_FILTER_KEY` |
 
 - **Examples**:
 
@@ -290,13 +291,13 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Download the assets from the selected release
-    (see `gh release download --help`)
-  - `alt-X`: Delete the selected release (see `gh release delete --help`)
-  - `alt-s`: Filter the list, showing stable releases (exclude prereleases)
-  - `alt-p`: Filter the list, showing published releases (exclude drafts)
-  - `alt-a`: Filter the list, showing releases in ascending order by date
-    (defaults to descending)
+  | Key     | Description                                                                           | Configuration Environment Variable    |
+  | ------- | ------------------------------------------------------------------------------------- | ------------------------------------- |
+  | `enter` | Download the assets from the selected release (see `gh release download --help`)      | `GH_FZF_RELEASE_DOWNLOAD_KEY`         |
+  | `alt-X` | Delete the selected release (see `gh release delete --help`)                          | `GH_FZF_RELEASE_DELETE_KEY`           |
+  | `alt-s` | Filter the list, showing stable releases (exclude prereleases)                        | `GH_FZF_RELEASE_STABLE_FILTER_KEY`    |
+  | `alt-p` | Filter the list, showing published releases (exclude drafts)                          | `GH_FZF_RELEASE_PUBLISHED_FILTER_KEY` |
+  | `alt-a` | Filter the list, showing releases in ascending order by date (defaults to descending) | `GH_FZF_RELEASE_ASCENDING_SORT_KEY`   |
 
 - **Examples**:
 
@@ -316,15 +317,15 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Print the name of the selected label(s) to stdout
-  - `alt-n`: Edit the name of the most recently selected label (see `gh label edit --help`)
-  - `alt-d`: Edit the description of the most recently selected label
-    (see `gh label edit --help`)
-  - `alt-c`: Edit the color of the mostly recently selected label (see `gh label edit --help`)
-  - `alt-X`: Delete the most recently selected label (see `gh label delete --help`)
-  - `alt-N`: Filter the list, sorting labels by name (defaults to creation date)
-  - `alt-D`: Filter the list, showing labels in descending order
-    (defaults to ascending)
+  | Key     | Description                                                                           | Configuration Environment Variable  |
+  | ------- | ------------------------------------------------------------------------------------- | ----------------------------------- |
+  | `enter` | Print the name of the selected label(s) to stdout                                     | `GH_FZF_LABEL_PRINT_KEY`            |
+  | `alt-n` | Edit the name of the most recently selected label (see `gh label edit --help`)        | `GH_FZF_LABEL_EDIT_NAME_KEY`        |
+  | `alt-d` | Edit the description of the most recently selected label (see `gh label edit --help`) | `GH_FZF_LABEL_EDIT_DESCRIPTION_KEY` |
+  | `alt-c` | Edit the color of the mostly recently selected label (see `gh label edit --help`)     | `GH_FZF_LABEL_EDIT_COLOR_KEY`       |
+  | `alt-X` | Delete the most recently selected label (see `gh label delete --help`)                | `GH_FZF_LABEL_DELETE_KEY`           |
+  | `alt-N` | Filter the list, sorting labels by name (defaults to creation date)                   | `GH_FZF_LABEL_NAME_SORT_KEY`        |
+  | `alt-D` | Filter the list, showing labels in descending order (defaults to ascending)           | `GH_FZF_LABEL_DESCENDING_ORDER_KEY` |
 
 - **Examples**:
 
@@ -344,17 +345,17 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Print the name of the selected milestone to stdout
-  - `alt-t`: Edit the title of the selected milestone
-  - `alt-d`: Edit the description of the selected milestone
-  - `alt-X`: Close the selected milestone
-  - `alt-O`: Reopen the selected milestone
-  - `alt-s`: Filter the list, showing both open and closed milestones
-    (defaults to open)
-  - `alt-c`: Filter the list, sorting milestones by completeness
-    (defaults to due date)
-  - `alt-D`: Filter the list, showing milestones in descending order
-    (defaults to ascending)
+  | Key     | Description                                                                     | Configuration Environment Variable       |
+  | ------- | ------------------------------------------------------------------------------- | ---------------------------------------- |
+  | `enter` | Print the name of the selected milestone to stdout                              | `GH_FZF_MILESTONE_PRINT_KEY`             |
+  | `alt-i` | Open `gh fzf issue` filtered for the selected milestone                         | `GH_FZF_MILESTONE_VIEW_ISSUES_KEY`       |
+  | `alt-t` | Edit the title of the selected milestone                                        | `GH_FZF_MILESTONE_EDIT_TITLE_KEY`        |
+  | `alt-d` | Edit the description of the selected milestone                                  | `GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY`  |
+  | `alt-X` | Close the selected milestone                                                    | `GH_FZF_MILESTONE_CLOSE_KEY`             |
+  | `alt-O` | Reopen the selected milestone                                                   | `GH_FZF_MILESTONE_REOPEN_KEY`            |
+  | `alt-s` | Filter the list, showing both open and closed milestones (defaults to open)     | `GH_FZF_MILESTONE_STATE_FILTER_KEY`      |
+  | `alt-c` | Filter the list, sorting milestones by completeness (defaults to due date)      | `GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY` |
+  | `alt-D` | Filter the list, showing milestones in descending order (defaults to ascending) | `GH_FZF_MILESTONE_DESCENDING_ORDER_KEY`  |
 
 ### `repo`
 
@@ -366,16 +367,18 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `alt-i`: Run `gh fzf issue` on the selected repo (see [`issue`](#issue))
-  - `alt-p`: Run `gh fzf pr` on the selected repo (see [`pr`](#pr))
-  - `alt-r`: Run `gh fzf run` on the selected repo (see [`run`](#run))
-  - `enter`: Edit the selected repo's settings (see `gh repo edit --help`)
-  - `alt-C`: Clone the selected repo (see `gh repo clone --help`)
-  - `alt-F`: Fork the selected repo (see `gh repo fork --help`)
-  - `alt-c`: Filter the list, showing private repos (i.e. closed source)
-  - `alt-o`: Filter the list, showing public repos (i.e. open source)
-  - `alt-f`: Filter the list, showing forked repos
-  - `alt-s`: Filter the list, showing source (non-forked) repos
+  | Key     | Description                                                     | Configuration Environment Variable     |
+  | ------- | --------------------------------------------------------------- | -------------------------------------- |
+  | `enter` | Edit the selected repo's settings (see `gh repo edit --help`)   | `GH_FZF_REPO_EDIT_KEY`                 |
+  | `alt-i` | Run `gh fzf issue` on the selected repo (see [`issue`](#issue)) | `GH_FZF_REPO_VIEW_ISSUES_KEY`          |
+  | `alt-p` | Run `gh fzf pr` on the selected repo (see [`pr`](#pr))          | `GH_FZF_REPO_VIEW_PRS_KEY`             |
+  | `alt-r` | Run `gh fzf run` on the selected repo (see [`run`](#run))       | `GH_FZF_REPO_VIEW_RUNS_KEY`            |
+  | `alt-C` | Clone the selected repo (see `gh repo clone --help`)            | `GH_FZF_REPO_CLONE_KEY`                |
+  | `alt-F` | Fork the selected repo (see `gh repo fork --help`)              | `GH_FZF_REPO_FORK_KEY`                 |
+  | `alt-c` | Filter the list, showing private repos (i.e. closed source)     | `GH_FZF_REPO_PRIVATE_FILTER_KEY`       |
+  | `alt-o` | Filter the list, showing public repos (i.e. open source)        | `GH_FZF_REPO_PUBLIC_FILTER_KEY`        |
+  | `alt-s` | Filter the list, showing source (non-forked) repos              | `GH_FZF_REPO_SOURCE_FILTER_KEY`        |
+  | `alt-f` | Filter the list, showing forked repos                           | `GH_FZF_REPO_FORK_FILTER_KEY`          |
 
 - **Examples**:
 
@@ -403,12 +406,13 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Edit the selected gist (see `gh gist edit --help`)
-  - `alt-c`: Clone the selected gist to the current directory
-    (see `gh gist clone --help`)
-  - `alt-X`: Delete the selected gist (see `gh gist delete --help`)
-  - `alt-s`: Filter the list, showing only secret gists
-  - `alt-p`: Filter the list, showing only public gists
+  | Key     | Description                                                                   | Configuration Environment Variable |
+  | ------- | ----------------------------------------------------------------------------- | ---------------------------------- |
+  | `enter` | Edit the selected gist (see `gh gist edit --help`)                            | `GH_FZF_GIST_EDIT_KEY`             |
+  | `alt-c` | Clone the selected gist to the current directory (see `gh gist clone --help`) | `GH_FZF_GIST_CLONE_KEY`            |
+  | `alt-X` | Delete the selected gist (see `gh gist delete --help`)                        | `GH_FZF_GIST_DELETE_KEY`           |
+  | `alt-p` | Filter the list, showing only public gists                                    | `GH_FZF_GIST_PUBLIC_FILTER_KEY`    |
+  | `alt-s` | Filter the list, showing only secret gists                                    | `GH_FZF_GIST_SECRET_FILTER_KEY`    |
 
 - **Examples**:
 

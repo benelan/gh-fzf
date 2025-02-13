@@ -662,9 +662,6 @@ label_cmd() {
     export GH_FZF_LABEL_EDIT_COLOR_KEY="${GH_FZF_LABEL_EDIT_COLOR_KEY:-alt-c}"
     export GH_FZF_LABEL_DELETE_KEY="${GH_FZF_LABEL_DELETE_KEY:-alt-X}"
 
-    export GH_FZF_LABEL_STABLE_FILTER_KEY="${GH_FZF_LABEL_STABLE_FILTER_KEY:-alt-s}"
-    export GH_FZF_LABEL_PUBLISHED_FILTER_KEY="${GH_FZF_LABEL_PUBLISHED_FILTER_KEY:-alt-p}"
-
     export GH_FZF_LABEL_NAME_SORT_KEY="${GH_FZF_LABEL_NAME_SORT_KEY:-alt-N}"
     export GH_FZF_LABEL_DESCENDING_ORDER_KEY="${GH_FZF_LABEL_DESCENDING_ORDER_KEY:-alt-D}"
 
@@ -746,10 +743,10 @@ milestone_cmd() {
     # KEYBINDINGS      {{{2
     export GH_FZF_MILESTONE_PRINT_KEY="${GH_FZF_MILESTONE_PRINT_KEY:-enter}"
     export GH_FZF_MILESTONE_VIEW_ISSUES_KEY="${GH_FZF_MILESTONE_ISSUES_KEY:-alt-i}"
-    export GH_FZF_MILESTONE_CLOSE_KEY="${GH_FZF_MILESTONE_CLOSE_KEY:-alt-X}"
-    export GH_FZF_MILESTONE_REOPEN_KEY="${GH_FZF_MILESTONE_REOPEN_KEY:-alt-O}"
     export GH_FZF_MILESTONE_EDIT_TITLE_KEY="${GH_FZF_MILESTONE_EDIT_TITLE_KEY:-alt-t}"
     export GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY="${GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY:-alt-d}"
+    export GH_FZF_MILESTONE_CLOSE_KEY="${GH_FZF_MILESTONE_CLOSE_KEY:-alt-X}"
+    export GH_FZF_MILESTONE_REOPEN_KEY="${GH_FZF_MILESTONE_REOPEN_KEY:-alt-O}"
 
     export GH_FZF_MILESTONE_STATE_FILTER_KEY="${GH_FZF_MILESTONE_STATE_FILTER_KEY:-alt-s}"
 
@@ -867,15 +864,15 @@ repo_cmd() {
     export GH_FZF_REPO_VIEW_PRS_KEY="${GH_FZF_REPO_VIEW_PRS_KEY:-alt-p}"
     export GH_FZF_REPO_VIEW_RUNS_KEY="${GH_FZF_REPO_VIEW_RUNS_KEY:-alt-r}"
     export GH_FZF_REPO_CLONE_KEY="${GH_FZF_REPO_CLONE_KEY:-alt-C}"
-    export GH_FZF_REPO_FORK_KEY="${GH_FZF_REPO_FORK_KEY:-alt-f}"
+    export GH_FZF_REPO_FORK_KEY="${GH_FZF_REPO_FORK_KEY:-alt-F}"
 
-    export GH_FZF_REPO_CLOSED_SOURCE_FILTER_KEY="${GH_FZF_REPO_CLOSED_SOURCE_FILTER_KEY:-alt-c}"
-    export GH_FZF_REPO_OPEN_SOURCE_FILTER_KEY="${GH_FZF_REPO_OPEN_SOURCE_FILTER_KEY:-alt-o}"
+    export GH_FZF_REPO_PRIVATE_FILTER_KEY="${GH_FZF_REPO_CLOSED_SOURCE_FILTER_KEY:-alt-c}"
+    export GH_FZF_REPO_PUBLIC_FILTER_KEY="${GH_FZF_REPO_OPEN_SOURCE_FILTER_KEY:-alt-o}"
     export GH_FZF_REPO_SOURCE_FILTER_KEY="${GH_FZF_REPO_SOURCE_FILTER_KEY:-alt-s}"
     export GH_FZF_REPO_FORK_FILTER_KEY="${GH_FZF_REPO_FORK_FILTER_KEY:-alt-f}"
 
-    repo_header="Actions > ($GH_FZF_REPO_EDIT_KEY: edit) ($GH_FZF_REPO_VIEW_PRS_KEY: prs) ($GH_FZF_REPO_VIEW_ISSUES_KEY: issues) ($GH_FZF_REPO_VIEW_RUNS_KEY: runs) ($GH_FZF_REPO_CLONE_KEY: clone) ($GH_FZF_REPO_FORK_KEY: fork)
-Filters > ($GH_FZF_REPO_CLOSED_SOURCE_FILTER_KEY: closed source) ($GH_FZF_REPO_OPEN_SOURCE_FILTER_KEY: open source) ($GH_FZF_REPO_SOURCE_FILTER_KEY: source) ($GH_FZF_REPO_FORK_FILTER_KEY: forks)
+    repo_header="Actions > ($GH_FZF_REPO_EDIT_KEY: edit) ($GH_FZF_REPO_VIEW_ISSUES_KEY: issues) ($GH_FZF_REPO_VIEW_PRS_KEY: prs) ($GH_FZF_REPO_VIEW_RUNS_KEY: runs) ($GH_FZF_REPO_CLONE_KEY: clone) ($GH_FZF_REPO_FORK_KEY: fork)
+Filters > ($GH_FZF_REPO_PRIVATE_FILTER_KEY: private) ($GH_FZF_REPO_PUBLIC_FILTER_KEY: public) ($GH_FZF_REPO_SOURCE_FILTER_KEY: source) ($GH_FZF_REPO_FORK_FILTER_KEY: forks)
 $global_binds
 "
 
@@ -889,14 +886,14 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh repo view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_PRS_KEY:execute(gh fzf pr --repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_ISSUES_KEY:execute(gh fzf issue --repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_RUNS_KEY:execute(gh fzf run --repo {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_EDIT_KEY:execute(gh repo edit {1})+refresh-preview" \
+        --bind="$GH_FZF_REPO_VIEW_ISSUES_KEY:execute(gh fzf issue --repo {1})+refresh-preview" \
+        --bind="$GH_FZF_REPO_VIEW_PRS_KEY:execute(gh fzf pr --repo {1})+refresh-preview" \
+        --bind="$GH_FZF_REPO_VIEW_RUNS_KEY:execute(gh fzf run --repo {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_CLONE_KEY:execute(gh repo clone {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_FORK_KEY:execute(gh repo fork {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_CLOSED_SOURCE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
-        --bind="$GH_FZF_REPO_OPEN_SOURCE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
+        --bind="$GH_FZF_REPO_PRIVATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
+        --bind="$GH_FZF_REPO_PUBLIC_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
         --bind="$GH_FZF_REPO_SOURCE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --source")' \
         --bind="$GH_FZF_REPO_FORK_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --fork")'
 

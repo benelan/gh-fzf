@@ -247,18 +247,18 @@ issue_cmd() {
     # KEYBINDINGS      {{{2
 
     export GH_FZF_ISSUE_EDIT_KEY="${GH_FZF_ISSUE_EDIT_KEY:-enter}"
-    export GH_FZF_ISSUE_CHECKOUT_KEY="${GH_FZF_ISSUE_CHECKOUT_KEY:-alt-o}"
     export GH_FZF_ISSUE_COMMENT_KEY="${GH_FZF_ISSUE_COMMENT_KEY:-alt-c}"
+    export GH_FZF_ISSUE_CHECKOUT_KEY="${GH_FZF_ISSUE_CHECKOUT_KEY:-alt-o}"
     export GH_FZF_ISSUE_ADD_LABEL_KEY="${GH_FZF_ISSUE_ADD_LABEL_KEY:-alt-l}"
     export GH_FZF_ISSUE_REMOVE_LABEL_KEY="${GH_FZF_ISSUE_REMOVE_LABEL_KEY:-alt-L}"
     export GH_FZF_ISSUE_REOPEN_KEY="${GH_FZF_ISSUE_REOPEN_KEY:-alt-O}"
     export GH_FZF_ISSUE_CLOSE_KEY="${GH_FZF_ISSUE_CLOSE_KEY:-alt-X}"
 
-    export GH_FZF_ISSUE_STATE_FILTER_KEY="${GH_FZF_ISSUE_STATE_FILTER_KEY:-alt-s}"
     export GH_FZF_ISSUE_ASSIGNED_FILTER_KEY="${GH_FZF_ISSUE_ASSIGNED_FILTER_KEY:-alt-a}"
     export GH_FZF_ISSUE_AUTHOR_FILTER_KEY="${GH_FZF_ISSUE_AUTHOR_FILTER_KEY:-alt-A}"
     export GH_FZF_ISSUE_MENTIONED_FILTER_KEY="${GH_FZF_ISSUE_MENTIONED_FILTER_KEY:-alt-m}"
     export GH_FZF_ISSUE_MILESTONE_FILTER_KEY="${GH_FZF_ISSUE_MILESTONE_FILTER_KEY:-alt-M}"
+    export GH_FZF_ISSUE_STATE_FILTER_KEY="${GH_FZF_ISSUE_STATE_FILTER_KEY:-alt-s}"
 
     issue_header="Actions > ($GH_FZF_ISSUE_EDIT_KEY: edit) ($GH_FZF_ISSUE_COMMENT_KEY: comment) ($GH_FZF_ISSUE_CHECKOUT_KEY: develop) ($GH_FZF_ISSUE_ADD_LABEL_KEY: add labels) ($GH_FZF_ISSUE_REMOVE_LABEL_KEY: remove labels) ($GH_FZF_ISSUE_CLOSE_KEY: close) ($GH_FZF_ISSUE_REOPEN_KEY: reopen)
 Filters > ($GH_FZF_ISSUE_ASSIGNED_FILTER_KEY: assignee) ($GH_FZF_ISSUE_AUTHOR_FILTER_KEY: author) ($GH_FZF_ISSUE_MENTIONED_FILTER_KEY: mention) ($GH_FZF_ISSUE_MILESTONE_FILTER_KEY: milestone) ($GH_FZF_ISSUE_STATE_FILTER_KEY: state=all)
@@ -276,20 +276,20 @@ $global_binds
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh issue view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_EDIT_KEY:execute(gh issue edit {1})+refresh-preview" \
-        --bind="$GH_FZF_ISSUE_CHECKOUT_KEY:become(gh fzf util develop-issue {1})" \
         --bind="$GH_FZF_ISSUE_COMMENT_KEY:execute(gh issue comment {1})+refresh-preview" \
+        --bind="$GH_FZF_ISSUE_CHECKOUT_KEY:become(gh fzf util develop-issue {1})" \
         --bind="$GH_FZF_ISSUE_ADD_LABEL_KEY:execute(gh fzf util select-labels add issue {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_REMOVE_LABEL_KEY:execute(gh fzf util select-labels remove issue {1})+refresh-preview" \
-        --bind="$GH_FZF_ISSUE_REOPEN_KEY:execute(gh issue reopen {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_CLOSE_KEY:execute(gh issue close {1})+refresh-preview" \
+        --bind="$GH_FZF_ISSUE_REOPEN_KEY:execute(gh issue reopen {1})+refresh-preview" \
+        --bind="$GH_FZF_ISSUE_ASSIGNED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
+        --bind="$GH_FZF_ISSUE_AUTHOR_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
+        --bind="$GH_FZF_ISSUE_MENTIONED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
         --bind="$GH_FZF_ISSUE_MILESTONE_FILTER_KEY"':execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
             m="$(cat /tmp/gh-fzf-milestone)"
             rm -f /tmp/gh-fzf-milestone;
             eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
         )' \
-        --bind="$GH_FZF_ISSUE_ASSIGNED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind="$GH_FZF_ISSUE_AUTHOR_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
-        --bind="$GH_FZF_ISSUE_MENTIONED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
         --bind="$GH_FZF_ISSUE_STATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --state all")'
 
     #2}}}
@@ -679,8 +679,8 @@ $global_binds
         --header-lines=4 \
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="$GH_FZF_LABEL_PRINT_KEY:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh label list --web &)" \
+        --bind="$GH_FZF_LABEL_PRINT_KEY:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="$GH_FZF_LABEL_EDIT_NAME_KEY"':execute(
             read -rp "Enter new name for {1} label: " name </dev/tty >/dev/tty 2>&1;
             [ -n "$name" ] && gh label edit {1} --name "$name"
@@ -743,13 +743,12 @@ milestone_cmd() {
     # KEYBINDINGS      {{{2
     export GH_FZF_MILESTONE_PRINT_KEY="${GH_FZF_MILESTONE_PRINT_KEY:-enter}"
     export GH_FZF_MILESTONE_VIEW_ISSUES_KEY="${GH_FZF_MILESTONE_ISSUES_KEY:-alt-i}"
-    export GH_FZF_MILESTONE_EDIT_TITLE_KEY="${GH_FZF_MILESTONE_EDIT_TITLE_KEY:-alt-t}"
-    export GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY="${GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY:-alt-d}"
     export GH_FZF_MILESTONE_CLOSE_KEY="${GH_FZF_MILESTONE_CLOSE_KEY:-alt-X}"
     export GH_FZF_MILESTONE_REOPEN_KEY="${GH_FZF_MILESTONE_REOPEN_KEY:-alt-O}"
+    export GH_FZF_MILESTONE_EDIT_TITLE_KEY="${GH_FZF_MILESTONE_EDIT_TITLE_KEY:-alt-t}"
+    export GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY="${GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY:-alt-d}"
 
     export GH_FZF_MILESTONE_STATE_FILTER_KEY="${GH_FZF_MILESTONE_STATE_FILTER_KEY:-alt-s}"
-
     export GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY="${GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY:-alt-c}"
     export GH_FZF_MILESTONE_DESCENDING_ORDER_KEY="${GH_FZF_MILESTONE_DESCENDING_ORDER_KEY:-alt-D}"
 
@@ -768,7 +767,6 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
         --prompt="milestone ❱ " \
         --header="$milestone_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="$GH_FZF_MILESTONE_PRINT_KEY:become(echo {1})" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             gh api --jq '.html_url' \
                 -H 'Accept: application/vnd.github+json' \
@@ -782,6 +780,7 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
                 /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
+        --bind="$GH_FZF_MILESTONE_PRINT_KEY:become(echo {1})" \
         --bind="$GH_FZF_MILESTONE_VIEW_ISSUES_KEY:execute(gh fzf issue --milestone {-1})" \
         --bind="$GH_FZF_MILESTONE_CLOSE_KEY"':execute(
             gh api --silent --method PATCH -f "state=closed" \

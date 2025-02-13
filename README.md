@@ -126,8 +126,8 @@ that can be used with any `gh fzf` command:
 | Key     | Description                                                          | Configuration Environment Variable |
 | ------- | -------------------------------------------------------------------- | ---------------------------------- |
 | `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`) | `GH_FZF_ISSUE_EDIT_KEY`            |
-| `alt-o` | Create/checkout a branch linked to the selected issue, prompting     | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
 | `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)  | `GH_FZF_ISSUE_COMMENT_KEY`         |
+| `alt-o` | Create/checkout a branch linked to the selected issue, prompting     | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
 | `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue       | `GH_FZF_ISSUE_ADD_LABEL_KEY`       |
 | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue  | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`    |
 | `alt-X` | Close the selected issue (see `gh issue close --help`)               | `GH_FZF_ISSUE_CLOSE_KEY`           |
@@ -135,6 +135,7 @@ that can be used with any `gh fzf` command:
 | `alt-a` | Filter the list, showing issues assigned to you                      | `GH_FZF_ASSIGNED_FILTER_KEY`       |
 | `alt-A` | Filter the list, showing issues authored by you                      | `GH_FZF_AUTHOR_FILTER_KEY`         |
 | `alt-m` | Filter the list, showing issues where you are mentioned              | `GH_FZF_MENTIONED_FILTER_KEY`      |
+| `alt-M` | Open `gh fzf milestone` and filter issues by the selected milestone  | `GH_FZF_MILESTONE_FILTER_KEY`      |
 | `alt-s` | Filter the list, showing issues with any state (open or closed)      | `GH_FZF_STATE_FILTER_KEY`          |
 
 - **Examples:**
@@ -349,10 +350,10 @@ that can be used with any `gh fzf` command:
   | ------- | ------------------------------------------------------------------------------- | ---------------------------------------- |
   | `enter` | Print the name of the selected milestone to stdout                              | `GH_FZF_MILESTONE_PRINT_KEY`             |
   | `alt-i` | Open `gh fzf issue` filtered for the selected milestone                         | `GH_FZF_MILESTONE_VIEW_ISSUES_KEY`       |
-  | `alt-t` | Edit the title of the selected milestone                                        | `GH_FZF_MILESTONE_EDIT_TITLE_KEY`        |
-  | `alt-d` | Edit the description of the selected milestone                                  | `GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY`  |
   | `alt-X` | Close the selected milestone                                                    | `GH_FZF_MILESTONE_CLOSE_KEY`             |
   | `alt-O` | Reopen the selected milestone                                                   | `GH_FZF_MILESTONE_REOPEN_KEY`            |
+  | `alt-t` | Edit the title of the selected milestone                                        | `GH_FZF_MILESTONE_EDIT_TITLE_KEY`        |
+  | `alt-d` | Edit the description of the selected milestone                                  | `GH_FZF_MILESTONE_EDIT_DESCRIPTION_KEY`  |
   | `alt-s` | Filter the list, showing both open and closed milestones (defaults to open)     | `GH_FZF_MILESTONE_STATE_FILTER_KEY`      |
   | `alt-c` | Filter the list, sorting milestones by completeness (defaults to due date)      | `GH_FZF_MILESTONE_COMPLETENESS_SORT_KEY` |
   | `alt-D` | Filter the list, showing milestones in descending order (defaults to ascending) | `GH_FZF_MILESTONE_DESCENDING_ORDER_KEY`  |
@@ -367,18 +368,18 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  | Key     | Description                                                     | Configuration Environment Variable     |
-  | ------- | --------------------------------------------------------------- | -------------------------------------- |
-  | `enter` | Edit the selected repo's settings (see `gh repo edit --help`)   | `GH_FZF_REPO_EDIT_KEY`                 |
-  | `alt-i` | Run `gh fzf issue` on the selected repo (see [`issue`](#issue)) | `GH_FZF_REPO_VIEW_ISSUES_KEY`          |
-  | `alt-p` | Run `gh fzf pr` on the selected repo (see [`pr`](#pr))          | `GH_FZF_REPO_VIEW_PRS_KEY`             |
-  | `alt-r` | Run `gh fzf run` on the selected repo (see [`run`](#run))       | `GH_FZF_REPO_VIEW_RUNS_KEY`            |
-  | `alt-C` | Clone the selected repo (see `gh repo clone --help`)            | `GH_FZF_REPO_CLONE_KEY`                |
-  | `alt-F` | Fork the selected repo (see `gh repo fork --help`)              | `GH_FZF_REPO_FORK_KEY`                 |
-  | `alt-c` | Filter the list, showing private repos (i.e. closed source)     | `GH_FZF_REPO_PRIVATE_FILTER_KEY`       |
-  | `alt-o` | Filter the list, showing public repos (i.e. open source)        | `GH_FZF_REPO_PUBLIC_FILTER_KEY`        |
-  | `alt-s` | Filter the list, showing source (non-forked) repos              | `GH_FZF_REPO_SOURCE_FILTER_KEY`        |
-  | `alt-f` | Filter the list, showing forked repos                           | `GH_FZF_REPO_FORK_FILTER_KEY`          |
+  | Key     | Description                                                     | Configuration Environment Variable |
+  | ------- | --------------------------------------------------------------- | ---------------------------------- |
+  | `enter` | Edit the selected repo's settings (see `gh repo edit --help`)   | `GH_FZF_REPO_EDIT_KEY`             |
+  | `alt-i` | Run `gh fzf issue` on the selected repo (see [`issue`](#issue)) | `GH_FZF_REPO_VIEW_ISSUES_KEY`      |
+  | `alt-p` | Run `gh fzf pr` on the selected repo (see [`pr`](#pr))          | `GH_FZF_REPO_VIEW_PRS_KEY`         |
+  | `alt-r` | Run `gh fzf run` on the selected repo (see [`run`](#run))       | `GH_FZF_REPO_VIEW_RUNS_KEY`        |
+  | `alt-C` | Clone the selected repo (see `gh repo clone --help`)            | `GH_FZF_REPO_CLONE_KEY`            |
+  | `alt-F` | Fork the selected repo (see `gh repo fork --help`)              | `GH_FZF_REPO_FORK_KEY`             |
+  | `alt-c` | Filter the list, showing private repos (i.e. closed source)     | `GH_FZF_REPO_PRIVATE_FILTER_KEY`   |
+  | `alt-o` | Filter the list, showing public repos (i.e. open source)        | `GH_FZF_REPO_PUBLIC_FILTER_KEY`    |
+  | `alt-s` | Filter the list, showing source (non-forked) repos              | `GH_FZF_REPO_SOURCE_FILTER_KEY`    |
+  | `alt-f` | Filter the list, showing forked repos                           | `GH_FZF_REPO_FORK_FILTER_KEY`      |
 
 - **Examples**:
 

@@ -36,7 +36,7 @@ has() { command -v "$1" >/dev/null 2>&1; }
 
 github_status() {
     GH_PAGER="cat" gh api https://www.githubstatus.com/api/v2/status.json \
-        --jq '.status.description'
+        --cache '10m' --jq '.status.description'
     # 'def colors: {
     #     "green":      "'"$(tput setaf 2)"'",
     #     "magenta":    "'"$(tput setaf 5)"'",
@@ -148,9 +148,10 @@ fi
 SHELL="$(which bash)"
 export SHELL
 
-GH_STATUS="$(github_status)"
-[ "$GH_STATUS" == "All Systems Operational" ] && GH_STATUS="" ||
-    GH_STATUS=" GitHub Service Alert: $GH_STATUS "
+GH_STATUS="$(github_status || true)"
+if [ -n "$GH_STATUS" ] && [ "$GH_STATUS" != "All Systems Operational" ]; then
+    GH_STATUS_INDICATOR=" $GH_STATUS - githubstatus.com "
+fi
 
 export GH_FZF_RELOAD_KEY="${GH_FZF_RELOAD_KEY:-ctrl-r}"
 export GH_FZF_OPEN_KEY="${GH_FZF_OPEN_KEY:-ctrl-o}"
@@ -166,7 +167,7 @@ export FZF_DEFAULT_OPTS='
 --no-hscroll --no-exit-0 --header-lines=1 --cycle --reverse --info=right
 --color="fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b"
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
-'${GH_STATUS:+--preview-label=\"$GH_STATUS\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
+'${GH_STATUS_INDICATOR:+--preview-label=\"$GH_STATUS_INDICATOR\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
 --bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"
 --bind="'$GH_FZF_TOGGLE_HINTS_KEY':toggle-header"
@@ -1178,7 +1179,7 @@ main() {
         label | labels | --label | --labels) label_cmd "$@" ;;
         milestone | milestones | --milestone | --milestones) milestone_cmd "$@" ;;
         util | utils | --util | --utils) util_cmd "$@" ;;
-        status) github_status ;;
+        status) echo "$GH_STATUS" ;;
         changelog) gh fzf release --repo benelan/gh-fzf ;;
         upgrade)
             latest_version=$(gh release view --json tagName --jq .tagName --repo benelan/gh-fzf)

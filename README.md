@@ -123,20 +123,20 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-| Key     | Description                                                          | Configuration Environment Variable |
-| ------- | -------------------------------------------------------------------- | ---------------------------------- |
-| `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`) | `GH_FZF_ISSUE_EDIT_KEY`            |
-| `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)  | `GH_FZF_ISSUE_COMMENT_KEY`         |
-| `alt-o` | Create/checkout a branch linked to the selected issue, prompting     | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
-| `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue       | `GH_FZF_ISSUE_ADD_LABEL_KEY`       |
-| `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue  | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`    |
-| `alt-X` | Close the selected issue (see `gh issue close --help`)               | `GH_FZF_ISSUE_CLOSE_KEY`           |
-| `alt-O` | Reopen the selected issue (see `gh issue reopen --help`)             | `GH_FZF_ISSUE_REOPEN_KEY`          |
-| `alt-a` | Filter the list, showing issues assigned to you                      | `GH_FZF_ASSIGNED_FILTER_KEY`       |
-| `alt-A` | Filter the list, showing issues authored by you                      | `GH_FZF_AUTHOR_FILTER_KEY`         |
-| `alt-m` | Filter the list, showing issues where you are mentioned              | `GH_FZF_MENTIONED_FILTER_KEY`      |
-| `alt-M` | Open `gh fzf milestone` and filter issues by the selected milestone  | `GH_FZF_MILESTONE_FILTER_KEY`      |
-| `alt-s` | Filter the list, showing issues with any state (open or closed)      | `GH_FZF_STATE_FILTER_KEY`          |
+| Key     | Description                                                                                                   | Configuration Environment Variable |
+| ------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`)                                          | `GH_FZF_ISSUE_EDIT_KEY`            |
+| `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)                                           | `GH_FZF_ISSUE_COMMENT_KEY`         |
+| `alt-o` | Create/checkout a branch linked to the selected issue, prompting for the name (see `gh issue develop --help`) | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
+| `alt-X` | Close the selected issue (see `gh issue close --help`)                                                        | `GH_FZF_ISSUE_CLOSE_KEY`           |
+| `alt-O` | Reopen the selected issue (see `gh issue reopen --help`)                                                      | `GH_FZF_ISSUE_REOPEN_KEY`          |
+| `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue                                                | `GH_FZF_ISSUE_ADD_LABEL_KEY`       |
+| `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue                                           | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`    |
+| `alt-a` | Filter the list, showing issues assigned to you                                                               | `GH_FZF_ASSIGNED_FILTER_KEY`       |
+| `alt-A` | Filter the list, showing issues authored by you                                                               | `GH_FZF_AUTHOR_FILTER_KEY`         |
+| `alt-m` | Filter the list, showing issues where you are mentioned                                                       | `GH_FZF_MENTIONED_FILTER_KEY`      |
+| `alt-M` | Open `gh fzf milestone` and filter issues by the selected milestone                                           | `GH_FZF_MILESTONE_FILTER_KEY`      |
+| `alt-s` | Filter the list, showing issues with any state (open or closed)                                               | `GH_FZF_STATE_FILTER_KEY`          |
 
 - **Examples:**
 
@@ -166,23 +166,23 @@ that can be used with any `gh fzf` command:
 
   | Key     | Description                                                                    | Configuration Environment Variable |
   | ------- | ------------------------------------------------------------------------------ | ---------------------------------- |
-  | `enter` | Edit the selected PR via CLI prompts (see `gh pr edit --help`)                 | `GH_FZF_PR_EDIT_KEY`
-  | `alt-o` | Checkout the HEAD branch of the selected PR (see `gh pr checkout --help`)      | `GH_FZF_PR_CHECKOUT_KEY`
-  | `alt-c` | Add a comment to the selected PR (see `gh pr comment --help`)                  | `GH_FZF_PR_COMMENT_KEY`
-  | `alt-d` | Show the diff for the selected PR (see `gh pr diff --help`)                    | `GH_FZF_PR_DIFF_KEY`
-  | `alt-r` | Start/continue/finish a review for the selected PR (see `gh pr review --help`) | `GH_FZF_PR_REVIEW_KEY`
-  | `alt-y` | Copy the branch name of the selected PR                                        | `GH_FZF_PR_COPY_BRANCH_KEY`
-  | `alt-R` | Mark the selected draft PR as "ready for review" (see `gh pr ready --help`)    | `GH_FZF_PR_READY_KEY`
-  | `alt-M` | Merge the selected PR (see `gh pr merge --help`)                               | `GH_FZF_PR_MERGE_KEY`
-  | `alt-X` | Close the selected PR (see `gh pr close --help`)                               | `GH_FZF_PR_CLOSE_KEY`
-  | `alt-O` | Reopen the selected PR (see `gh pr reopen --help`)                             | `GH_FZF_PR_REOPEN_KEY`
-  | `alt-l` | Open `gh fzf label` and add the selected label(s) to the PR                    | `GH_FZF_PR_ADD_LABEL_KEY`
-  | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the PR               | `GH_FZF_PR_REMOVE_LABEL_KEY`
-  | `alt-C` | Open `gh fzf run` filtered for the selected PR (see [run](#run))               | `GH_FZF_PR_CHECKS_KEY`
-  | `alt-a` | Filter the list, showing PRs assigned to you                                   | `GH_FZF_PR_ASSIGNED_FILTER_KEY`
-  | `alt-A` | Filter the list, showing PRs authored by you                                   | `GH_FZF_PR_AUTHOR_FILTER_KEY`
-  | `alt-b` | Filter the list, showing PRs from the current branch                           | `GH_FZF_PR_BRANCH_FILTER_KEY`
-  | `alt-s` | Filter the list, showing PRs in any state (open, closed, or merged)            | `GH_FZF_PR_STATE_FILTER_KEY`
+  | `enter` | Edit the selected PR via CLI prompts (see `gh pr edit --help`)                 | `GH_FZF_PR_EDIT_KEY`               |
+  | `alt-o` | Checkout the HEAD branch of the selected PR (see `gh pr checkout --help`)      | `GH_FZF_PR_CHECKOUT_KEY`           |
+  | `alt-c` | Add a comment to the selected PR (see `gh pr comment --help`)                  | `GH_FZF_PR_COMMENT_KEY`            |
+  | `alt-d` | Show the diff for the selected PR (see `gh pr diff --help`)                    | `GH_FZF_PR_DIFF_KEY`               |
+  | `alt-r` | Start/continue/finish a review for the selected PR (see `gh pr review --help`) | `GH_FZF_PR_REVIEW_KEY`             |
+  | `alt-y` | Copy the branch name of the selected PR                                        | `GH_FZF_PR_COPY_BRANCH_KEY`        |
+  | `alt-R` | Mark the selected draft PR as "ready for review" (see `gh pr ready --help`)    | `GH_FZF_PR_READY_KEY`              |
+  | `alt-M` | Merge the selected PR (see `gh pr merge --help`)                               | `GH_FZF_PR_MERGE_KEY`              |
+  | `alt-X` | Close the selected PR (see `gh pr close --help`)                               | `GH_FZF_PR_CLOSE_KEY`              |
+  | `alt-O` | Reopen the selected PR (see `gh pr reopen --help`)                             | `GH_FZF_PR_REOPEN_KEY`             |
+  | `alt-C` | Open `gh fzf run` filtered for the selected PR (see [run](#run))               | `GH_FZF_PR_CHECKS_KEY`             |
+  | `alt-l` | Open `gh fzf label` and add the selected label(s) to the PR                    | `GH_FZF_PR_ADD_LABEL_KEY`          |
+  | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the PR               | `GH_FZF_PR_REMOVE_LABEL_KEY`       |
+  | `alt-a` | Filter the list, showing PRs assigned to you                                   | `GH_FZF_PR_ASSIGNED_FILTER_KEY`    |
+  | `alt-A` | Filter the list, showing PRs authored by you                                   | `GH_FZF_PR_AUTHOR_FILTER_KEY`      |
+  | `alt-b` | Filter the list, showing PRs from the current branch                           | `GH_FZF_PR_BRANCH_FILTER_KEY`      |
+  | `alt-s` | Filter the list, showing PRs in any state (open, closed, or merged)            | `GH_FZF_PR_STATE_FILTER_KEY`       |
 
 - **Examples:**
 

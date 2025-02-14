@@ -211,35 +211,21 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Watch for status changes or view logs, depending on whether the
-    selected run is in progress or completed.
-    (see `gh run watch --help` and `gh run view --help`)
-  - `alt-l`: Display logs for the selected run (**deprecated**, use `enter` instead)
-  - `alt-d`: Download artifacts from the selected run
-    (see `gh run download --help`)
-  - `alt-r`: Rerun the selected run (see `gh run rerun --help`)
-  - `alt-R`: Rerun only failed jobs of the selected run (see `gh run rerun --help`)
-  - `alt-x`: Cancel the selected run (see `gh run cancel --help`)
-  - `alt-p`: Open `gh fzf pr` filtered for the selected run's branch as HEAD
-    (see [`pr`](#pr))
-  - `alt-n`: Create a desktop notification with the conclusion (failed, passed,
-    etc.) when the selected run ends. The supported notification tools (tried in
-    order) are `dunstify`, `notify-send`, and `osascript`. The notification has
-    [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs"
-    and "open in browser" when using `dunstify`. There is an additional
-    "download artifacts" or "rerun failed jobs" action depending on whether the
-    run passed or failed, respectively.
-
-    > **NOTE:** The run watching process is executed in the background, so
-    > closing `gh-fzf` won't prevent the desktop notification from displaying.
-    > Use `killall gh` to end all `gh` processes, including the run watcher.
-
-  - `alt-w`: Filter the list, showing runs for the selected item from
-    `gh fzf workflow` (see [`workflow`](#workflow))
-  - `alt-b`: Filter the list, showing runs from the current branch
-  - `alt-u`: Filter the list, showing runs triggered by you
-  - `alt-f`: Filter the list, showing failed runs
-  - `alt-i`: Filter the list, showing in_progress runs
+  | Key     | Description                                                                                                                                                   | Configuration Environment Variable  |
+  | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+  | `enter` | Watch for status changes or view logs, depending on whether the selected run is in progress or completed (see `gh run watch --help` and `gh run view --help`) | `GH_FZF_RUN_VIEW_KEY`               |
+  | `alt-l` | Display logs for the selected run (**deprecated**, use `enter` instead)                                                                                       | N/A                                 |
+  | `alt-r` | Rerun the selected run (see `gh run rerun --help`)                                                                                                            | `GH_FZF_RUN_RERUN_KEY`              |
+  | `alt-R` | Rerun only failed jobs of the selected run (see `gh run rerun --help`)                                                                                        | `GH_FZF_RUN_RERUN_FAILED_KEY`       |
+  | `alt-x` | Cancel the selected run (see `gh run cancel --help`)                                                                                                          | `GH_FZF_RUN_CANCEL_KEY`             |
+  | `alt-d` | Download artifacts from the selected run (see `gh run download --help`)                                                                                       | `GH_FZF_RUN_DOWNLOAD_KEY`           |
+  | `alt-p` | Open `gh fzf pr` filtered for the selected run's branch as HEAD (see [`pr`](#pr))                                                                             | `GH_FZF_RUN_PR_KEY`                 |
+  | `alt-n` | Create a desktop notification with the conclusion (failed, success, etc.) when the selected run ends[^1]                                                      | `GH_FZF_RUN_NOTIFY_KEY`             |
+  | `alt-u` | Filter the list, showing runs triggered by you                                                                                                                | `GH_FZF_RUN_USER_FILTER_KEY`        |
+  | `alt-f` | Filter the list, showing failed runs                                                                                                                          | `GH_FZF_RUN_FAILED_FILTER_KEY`      |
+  | `alt-i` | Filter the list, showing in_progress runs                                                                                                                     | `GH_FZF_RUN_IN_PROGRESS_FILTER_KEY` |
+  | `alt-b` | Filter the list, showing runs from the current branch                                                                                                         | `GH_FZF_RUN_BRANCH_FILTER_KEY`      |
+  | `alt-w` | Filter the list, showing runs for the selected item from `gh fzf workflow` (see [`workflow`](#workflow))                                                      | `GH_FZF_RUN_WORKFLOW_FILTER_KEY`    |
 
 - **Examples:**
 
@@ -254,6 +240,13 @@ that can be used with any `gh fzf` command:
     ```sh
     gh fzf r -b main -s failure
     ```
+
+[^1]:
+    The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`.
+
+    The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
+
+    > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
 
 ### `workflow`
 

@@ -462,9 +462,9 @@ run_cmd() {
     export GH_FZF_RUN_RERUN_KEY="${GH_FZF_RUN_RERUN_KEY:-alt-r}"
     export GH_FZF_RUN_RERUN_FAILED_KEY="${GH_FZF_RUN_RERUN_FAILED_KEY:-alt-R}"
     export GH_FZF_RUN_CANCEL_KEY="${GH_FZF_RUN_CANCEL_KEY:-alt-x}"
-    export GH_FZF_RUN_NOTIFY_KEY="${GH_FZF_RUN_NOTIFY_KEY:-alt-n}"
-    export GH_FZF_RUN_PR_KEY="${GH_FZF_RUN_PR_KEY:-alt-p}"
     export GH_FZF_RUN_DOWNLOAD_KEY="${GH_FZF_RUN_DOWNLOAD_KEY:-alt-d}"
+    export GH_FZF_RUN_PR_KEY="${GH_FZF_RUN_PR_KEY:-alt-p}"
+    export GH_FZF_RUN_NOTIFY_KEY="${GH_FZF_RUN_NOTIFY_KEY:-alt-n}"
 
     export GH_FZF_RUN_USER_FILTER_KEY="${GH_FZF_RUN_USER_FILTER_KEY:-alt-u}"
     export GH_FZF_RUN_FAILED_FILTER_KEY="${GH_FZF_RUN_FAILED_FILTER_KEY:-alt-f}"

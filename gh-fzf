@@ -251,8 +251,8 @@ issue_cmd() {
     export GH_FZF_ISSUE_CHECKOUT_KEY="${GH_FZF_ISSUE_CHECKOUT_KEY:-alt-o}"
     export GH_FZF_ISSUE_ADD_LABEL_KEY="${GH_FZF_ISSUE_ADD_LABEL_KEY:-alt-l}"
     export GH_FZF_ISSUE_REMOVE_LABEL_KEY="${GH_FZF_ISSUE_REMOVE_LABEL_KEY:-alt-L}"
-    export GH_FZF_ISSUE_REOPEN_KEY="${GH_FZF_ISSUE_REOPEN_KEY:-alt-O}"
     export GH_FZF_ISSUE_CLOSE_KEY="${GH_FZF_ISSUE_CLOSE_KEY:-alt-X}"
+    export GH_FZF_ISSUE_REOPEN_KEY="${GH_FZF_ISSUE_REOPEN_KEY:-alt-O}"
 
     export GH_FZF_ISSUE_ASSIGNED_FILTER_KEY="${GH_FZF_ISSUE_ASSIGNED_FILTER_KEY:-alt-a}"
     export GH_FZF_ISSUE_AUTHOR_FILTER_KEY="${GH_FZF_ISSUE_AUTHOR_FILTER_KEY:-alt-A}"
@@ -346,25 +346,24 @@ pr_cmd() {
     '\'''
 
     # KEYBINDINGS      {{{2
-
     export GH_FZF_PR_EDIT_KEY="${GH_FZF_PR_EDIT_KEY:-enter}"
     export GH_FZF_PR_CHECKOUT_KEY="${GH_FZF_PR_CHECKOUT_KEY:-alt-o}"
     export GH_FZF_PR_COMMENT_KEY="${GH_FZF_PR_COMMENT_KEY:-alt-c}"
     export GH_FZF_PR_DIFF_KEY="${GH_FZF_PR_DIFF_KEY:-alt-d}"
-    export GH_FZF_PR_COPY_BRANCH_KEY="${GH_FZF_PR_COPY_BRANCH_KEY:-alt-y}"
     export GH_FZF_PR_REVIEW_KEY="${GH_FZF_PR_REVIEW_KEY:-alt-r}"
+    export GH_FZF_PR_COPY_BRANCH_KEY="${GH_FZF_PR_COPY_BRANCH_KEY:-alt-y}"
     export GH_FZF_PR_READY_KEY="${GH_FZF_PR_READY_KEY:-alt-R}"
     export GH_FZF_PR_MERGE_KEY="${GH_FZF_PR_MERGE_KEY:-alt-M}"
-    export GH_FZF_PR_CHECKS_KEY="${GH_FZF_PR_CHECKS_KEY:-alt-C}"
+    export GH_FZF_PR_CLOSE_KEY="${GH_FZF_PR_CLOSE_KEY:-alt-X}"
+    export GH_FZF_PR_REOPEN_KEY="${GH_FZF_PR_REOPEN_KEY:-alt-O}"
     export GH_FZF_PR_ADD_LABEL_KEY="${GH_FZF_PR_ADD_LABEL_KEY:-alt-l}"
     export GH_FZF_PR_REMOVE_LABEL_KEY="${GH_FZF_PR_REMOVE_LABEL_KEY:-alt-L}"
-    export GH_FZF_PR_REOPEN_KEY="${GH_FZF_PR_REOPEN_KEY:-alt-O}"
-    export GH_FZF_PR_CLOSE_KEY="${GH_FZF_PR_CLOSE_KEY:-alt-X}"
+    export GH_FZF_PR_CHECKS_KEY="${GH_FZF_PR_CHECKS_KEY:-alt-C}"
 
-    export GH_FZF_PR_STATE_FILTER_KEY="${GH_FZF_PR_STATE_FILTER_KEY:-alt-s}"
     export GH_FZF_PR_ASSIGNED_FILTER_KEY="${GH_FZF_PR_ASSIGNED_FILTER_KEY:-alt-a}"
     export GH_FZF_PR_AUTHOR_FILTER_KEY="${GH_FZF_PR_AUTHOR_FILTER_KEY:-alt-A}"
     export GH_FZF_PR_BRANCH_FILTER_KEY="${GH_FZF_PR_BRANCH_FILTER_KEY:-alt-b}"
+    export GH_FZF_PR_STATE_FILTER_KEY="${GH_FZF_PR_STATE_FILTER_KEY:-alt-s}"
 
     pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
         > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-y: copy branch) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
@@ -385,24 +384,24 @@ $global_binds
             gh pr view --json 'headRefName' -q '.headRefName' {1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
         --bind="$GH_FZF_PR_EDIT_KEY:execute(gh pr edit {1})+refresh-preview" \
+        --bind="$GH_FZF_PR_CHECKOUT_KEY:become(gh pr checkout {1})" \
         --bind="$GH_FZF_PR_COMMENT_KEY:execute(gh pr comment {1})+refresh-preview" \
         --bind="$GH_FZF_PR_DIFF_KEY:execute(gh pr diff {1})+refresh-preview" \
-        --bind="$GH_FZF_PR_CHECKOUT_KEY:become(gh pr checkout {1})" \
         --bind="$GH_FZF_PR_REVIEW_KEY:execute(gh pr review {1})+refresh-preview" \
+        --bind="$GH_FZF_PR_READY_KEY:execute(gh pr ready {1})+refresh-preview" \
+        --bind="$GH_FZF_PR_MERGE_KEY:execute(gh pr merge {1})+refresh-preview" \
+        --bind="$GH_FZF_PR_CLOSE_KEY:execute(gh pr close {1})+refresh-preview" \
+        --bind="$GH_FZF_PR_REOPEN_KEY:execute(gh pr reopen {1})+refresh-preview" \
         --bind="$GH_FZF_PR_ADD_LABEL_KEY:execute(gh fzf util select-labels add pr {1})+refresh-preview" \
         --bind="$GH_FZF_PR_REMOVE_LABEL_KEY:execute(gh fzf util select-labels remove pr {1})+refresh-preview" \
         --bind="$GH_FZF_PR_CHECKS_KEY:execute<gh fzf run -b \$(
             gh pr view {1} --json headRefName --jq .headRefName
         )>+refresh-preview" \
-        --bind="$GH_FZF_PR_READY_KEY:execute(gh pr ready {1})+refresh-preview" \
-        --bind="$GH_FZF_PR_MERGE_KEY:execute(gh pr merge {1})+refresh-preview" \
-        --bind="$GH_FZF_PR_REOPEN_KEY:execute(gh pr reopen {1})+refresh-preview" \
-        --bind="$GH_FZF_PR_CLOSE_KEY:execute(gh pr close {1})+refresh-preview" \
         --bind="$GH_FZF_PR_ASSIGNED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
         --bind="$GH_FZF_PR_AUTHOR_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
-        --bind="$GH_FZF_PR_STATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --state all")' \
         --bind="$GH_FZF_PR_BRANCH_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --head \
-            $(git symbolic-ref --short HEAD)")'
+            $(git symbolic-ref --short HEAD)")' \
+        --bind="$GH_FZF_PR_STATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --state all")'
 
     #2}}}
 }
@@ -497,20 +496,20 @@ $global_binds
         )+refresh-preview" \
         --bind="$GH_FZF_RUN_RERUN_KEY:execute(gh run rerun {-1})+refresh-preview" \
         --bind="$GH_FZF_RUN_RERUN_FAILED_KEY:execute(gh run rerun --failed {-1})+refresh-preview" \
-        --bind="$GH_FZF_RUN_DOWNLOAD_KEY:execute(gh run download {-1})+refresh-preview" \
         --bind="$GH_FZF_RUN_CANCEL_KEY:execute(gh run cancel {-1})+refresh-preview" \
-        --bind="$GH_FZF_RUN_WORKFLOW_FILTER_KEY:execute(gh fzf workflow)" \
+        --bind="$GH_FZF_RUN_DOWNLOAD_KEY:execute(gh run download {-1})+refresh-preview" \
         --bind="$GH_FZF_RUN_NOTIFY_KEY:execute-silent(
             gh fzf util notify-run-completed {-1} &
         )+refresh-preview" \
         --bind="$GH_FZF_RUN_PR_KEY:execute<gh fzf pr --head \$(
             gh run view {-1} --json headBranch --jq .headBranch
         )>+refresh-preview" \
+        --bind="$GH_FZF_RUN_FAILED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
+        --bind="$GH_FZF_RUN_IN_PROGRESS_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
+        --bind="$GH_FZF_RUN_WORKFLOW_FILTER_KEY:execute(gh fzf workflow)" \
         --bind="$GH_FZF_RUN_BRANCH_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
-        --bind="$GH_FZF_RUN_FAILED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status failure")' \
-        --bind="$GH_FZF_RUN_IN_PROGRESS_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --status in_progress")' \
         --bind="$GH_FZF_RUN_USER_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)"
         )'
@@ -628,7 +627,7 @@ release_cmd() {
     export GH_FZF_RELEASE_ASCENDING_SORT_KEY="${GH_FZF_RELEASE_ASCENDING_SORT_KEY:-alt-a}"
 
     release_header="Actions > ($GH_FZF_RELEASE_DOWNLOAD_KEY: download) ($GH_FZF_RELEASE_DELETE_KEY: delete)
-Filters > ($GH_FZF_RELEASE_STABLE_FILTER_KEY: stable) ($GH_FZF_RELEASE_PUBLISHED_FILTER_KEY: published) ($GH_FZF_RELEASE_ASCENDING_SORT_KEY: ascending)
+Filters > ($GH_FZF_RELEASE_STABLE_FILTER_KEY: stable) ($GH_FZF_RELEASE_PUBLISHED_FILTER_KEY: published) ($GH_FZF_RELEASE_ASCENDING_SORT_KEY: ascending order)
 $global_binds
 
 "

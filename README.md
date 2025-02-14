@@ -164,26 +164,25 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-  - `enter`: Edit the selected PR via CLI prompts (see `gh pr edit --help`)
-  - `alt-o`: Checkout the HEAD branch of the selected PR
-    (see `gh pr checkout --help`)
-  - `alt-c`: Add a comment to the selected PR (see `gh pr comment --help`)
-  - `alt-d`: Show the diff for the selected PR (see `gh pr diff --help`)
-  - `alt-r`: Start/continue/finish a review for the selected PR
-    (see `gh pr review --help`)
-  - `alt-y`: Copy the branch name of the selected PR
-  - `alt-l`: Open `gh fzf label` and add the selected label(s) to the PR
-  - `alt-L`: Open `gh fzf label` and remove the selected label(s) from the PR
-  - `alt-R`: Mark the selected draft PR as "ready for review"
-    (see `gh pr ready --help`)
-  - `alt-M`: Merge the selected PR (see `gh pr merge --help`)
-  - `alt-X`: Close the selected PR (see `gh pr close --help`)
-  - `alt-O`: Reopen the selected PR (see `gh pr reopen --help`)
-  - `alt-C`: Open `gh fzf run` filtered for the selected PR (see [run](#run))
-  - `alt-a`: Filter the list, showing PRs assigned to you
-  - `alt-A`: Filter the list, showing PRs authored by you
-  - `alt-b`: Filter the list, showing PRs from the current branch
-  - `alt-s`: Filter the list, showing PRs in any state (open, closed, or merged)
+  | Key     | Description                                                                    | Configuration Environment Variable |
+  | ------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+  | `enter` | Edit the selected PR via CLI prompts (see `gh pr edit --help`)                 | `GH_FZF_PR_EDIT_KEY`
+  | `alt-o` | Checkout the HEAD branch of the selected PR (see `gh pr checkout --help`)      | `GH_FZF_PR_CHECKOUT_KEY`
+  | `alt-c` | Add a comment to the selected PR (see `gh pr comment --help`)                  | `GH_FZF_PR_COMMENT_KEY`
+  | `alt-d` | Show the diff for the selected PR (see `gh pr diff --help`)                    | `GH_FZF_PR_DIFF_KEY`
+  | `alt-r` | Start/continue/finish a review for the selected PR (see `gh pr review --help`) | `GH_FZF_PR_REVIEW_KEY`
+  | `alt-y` | Copy the branch name of the selected PR                                        | `GH_FZF_PR_COPY_BRANCH_KEY`
+  | `alt-R` | Mark the selected draft PR as "ready for review" (see `gh pr ready --help`)    | `GH_FZF_PR_READY_KEY`
+  | `alt-M` | Merge the selected PR (see `gh pr merge --help`)                               | `GH_FZF_PR_MERGE_KEY`
+  | `alt-X` | Close the selected PR (see `gh pr close --help`)                               | `GH_FZF_PR_CLOSE_KEY`
+  | `alt-O` | Reopen the selected PR (see `gh pr reopen --help`)                             | `GH_FZF_PR_REOPEN_KEY`
+  | `alt-l` | Open `gh fzf label` and add the selected label(s) to the PR                    | `GH_FZF_PR_ADD_LABEL_KEY`
+  | `alt-L` | Open `gh fzf label` and remove the selected label(s) from the PR               | `GH_FZF_PR_REMOVE_LABEL_KEY`
+  | `alt-C` | Open `gh fzf run` filtered for the selected PR (see [run](#run))               | `GH_FZF_PR_CHECKS_KEY`
+  | `alt-a` | Filter the list, showing PRs assigned to you                                   | `GH_FZF_PR_ASSIGNED_FILTER_KEY`
+  | `alt-A` | Filter the list, showing PRs authored by you                                   | `GH_FZF_PR_AUTHOR_FILTER_KEY`
+  | `alt-b` | Filter the list, showing PRs from the current branch                           | `GH_FZF_PR_BRANCH_FILTER_KEY`
+  | `alt-s` | Filter the list, showing PRs in any state (open, closed, or merged)            | `GH_FZF_PR_STATE_FILTER_KEY`
 
 - **Examples:**
 

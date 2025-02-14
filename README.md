@@ -124,7 +124,7 @@ that can be used with any `gh fzf` command:
 - **Keybindings**:
 
 | Key     | Description                                                                                                   | Configuration Environment Variable  |
-| ------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------  |
+| ------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
 | `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`)                                          | `GH_FZF_ISSUE_EDIT_KEY`             |
 | `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)                                           | `GH_FZF_ISSUE_COMMENT_KEY`          |
 | `alt-o` | Create/checkout a branch linked to the selected issue, prompting for the name (see `gh issue develop --help`) | `GH_FZF_ISSUE_CHECKOUT_KEY`         |
@@ -246,8 +246,7 @@ that can be used with any `gh fzf` command:
 
     The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
 
-    > [!NOTE]
-    > The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
+    > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
 
 ### `workflow`
 

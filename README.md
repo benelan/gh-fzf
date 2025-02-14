@@ -246,7 +246,8 @@ that can be used with any `gh fzf` command:
 
     The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
 
-    > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
+    > [!NOTE]
+    > The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
 
 ### `workflow`
 

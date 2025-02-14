@@ -123,20 +123,20 @@ that can be used with any `gh fzf` command:
 
 - **Keybindings**:
 
-| Key     | Description                                                                                                   | Configuration Environment Variable |
-| ------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`)                                          | `GH_FZF_ISSUE_EDIT_KEY`            |
-| `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)                                           | `GH_FZF_ISSUE_COMMENT_KEY`         |
-| `alt-o` | Create/checkout a branch linked to the selected issue, prompting for the name (see `gh issue develop --help`) | `GH_FZF_ISSUE_CHECKOUT_KEY`        |
-| `alt-X` | Close the selected issue (see `gh issue close --help`)                                                        | `GH_FZF_ISSUE_CLOSE_KEY`           |
-| `alt-O` | Reopen the selected issue (see `gh issue reopen --help`)                                                      | `GH_FZF_ISSUE_REOPEN_KEY`          |
-| `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue                                                | `GH_FZF_ISSUE_ADD_LABEL_KEY`       |
-| `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue                                           | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`    |
-| `alt-a` | Filter the list, showing issues assigned to you                                                               | `GH_FZF_ASSIGNED_FILTER_KEY`       |
-| `alt-A` | Filter the list, showing issues authored by you                                                               | `GH_FZF_AUTHOR_FILTER_KEY`         |
-| `alt-m` | Filter the list, showing issues where you are mentioned                                                       | `GH_FZF_MENTIONED_FILTER_KEY`      |
-| `alt-M` | Open `gh fzf milestone` and filter issues by the selected milestone                                           | `GH_FZF_MILESTONE_FILTER_KEY`      |
-| `alt-s` | Filter the list, showing issues with any state (open or closed)                                               | `GH_FZF_STATE_FILTER_KEY`          |
+| Key     | Description                                                                                                   | Configuration Environment Variable  |
+| ------- | ------------------------------------------------------------------------------------------------------------- | ----------------------------------  |
+| `enter` | Edit the selected issue via CLI prompts (see `gh issue edit --help`)                                          | `GH_FZF_ISSUE_EDIT_KEY`             |
+| `alt-c` | Add a comment to the selected issue (see `gh issue comment --help`)                                           | `GH_FZF_ISSUE_COMMENT_KEY`          |
+| `alt-o` | Create/checkout a branch linked to the selected issue, prompting for the name (see `gh issue develop --help`) | `GH_FZF_ISSUE_CHECKOUT_KEY`         |
+| `alt-X` | Close the selected issue (see `gh issue close --help`)                                                        | `GH_FZF_ISSUE_CLOSE_KEY`            |
+| `alt-O` | Reopen the selected issue (see `gh issue reopen --help`)                                                      | `GH_FZF_ISSUE_REOPEN_KEY`           |
+| `alt-l` | Open `gh fzf label` and add the selected label(s) to the issue                                                | `GH_FZF_ISSUE_ADD_LABEL_KEY`        |
+| `alt-L` | Open `gh fzf label` and remove the selected label(s) from the issue                                           | `GH_FZF_ISSUE_REMOVE_LABEL_KEY`     |
+| `alt-a` | Filter the list, showing issues assigned to you                                                               | `GH_FZF_ISSUE_ASSIGNED_FILTER_KEY`  |
+| `alt-A` | Filter the list, showing issues authored by you                                                               | `GH_FZF_ISSUE_AUTHOR_FILTER_KEY`    |
+| `alt-m` | Filter the list, showing issues where you are mentioned                                                       | `GH_FZF_ISSUE_MENTIONED_FILTER_KEY` |
+| `alt-M` | Open `gh fzf milestone` and filter issues by the selected milestone                                           | `GH_FZF_ISSUE_MILESTONE_FILTER_KEY` |
+| `alt-s` | Filter the list, showing issues with any state (open or closed)                                               | `GH_FZF_ISSUE_STATE_FILTER_KEY`     |
 
 - **Examples:**
 

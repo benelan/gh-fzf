@@ -182,7 +182,7 @@ export FZF_DEFAULT_OPTS='
 # COMMAND > DEFAULT                                                     {{{1
 
 default_cmd() {
-    FZF_DEFAULT_COMMAND="printf 'COMMAND\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n' \
+    FZF_DEFAULT_COMMAND="printf '%s\n' COMMAND \
         issue pr run workflow release label milestone repo gist" \
         fzf \
         --preview='

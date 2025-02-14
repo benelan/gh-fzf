@@ -1,11 +1,11 @@
-# gh fzf
+# gh-fzf
 
 An fzf wrapper around the GitHub CLI.
 
 <!--editorconfig-checker-disable-->
 <!--toc:start-->
 
-- [gh fzf](#gh-fzf)
+- [gh-fzf](#gh-fzf)
   - [Installation](#installation)
     - [Upgrading](#upgrading)
   - [Usage](#usage)
@@ -80,7 +80,7 @@ gh fzf version
 ```
 
 The [changelog](./CHANGELOG.md) contains a list of features and fixes released
-in each version. You can also view the release notes on the command line with:
+in each version. You can also view the release notes via `gh-fzf` itself:
 
 ```sh
 gh fzf changelog
@@ -95,13 +95,16 @@ gh fzf \<command\> [flags]
 This extension adds a new command that wraps GitHub's `list` subcommands with
 fzf to make them fuzzy findable. All of the arguments after `<command>` are
 passed directly to `gh`. Because of the way shell works, you need to escape
-quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
+quotes required by GitHub, e.g.
+[strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
 There are usage examples for each command in the sections below.
 
 A preview of the current selection is displayed when navigating through the
-resulting list. Each command has keybindings to further filter the list or to
-call other `gh` subcommands on the item. There are also a few global keybindings
-that can be used with any `gh fzf` command:
+resulting list. Each command has keybindings that execute `gh` subcommands on
+the item or filter the list further. The command-specific keybindings are
+listed in the following sections.
+
+There are also global keybindings that work on all `gh-fzf` commands:
 
 - `ctrl-o`: Open the selected item in the browser
 - `ctrl-y`: Copy the selected item's URL to the clipboard
@@ -206,9 +209,9 @@ that can be used with any `gh fzf` command:
     and "open in browser" when using `dunstify`. There is an additional
     "download artifacts" or "rerun failed jobs" action depending on whether the
     run passed or failed, respectively.
-    > **NOTE:** The run watching process is executed in the background, so
+    > **NOTE:** The run watcher process is executed in the background, so
     > closing `gh-fzf` won't prevent the desktop notification from displaying.
-    > Use `killall gh` to end all `gh` processes, including the run watcher.
+    > Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
   - `alt-w`: Filter the list, showing runs for the selected item from
     `gh fzf workflow` (see [`workflow`](#workflow))
   - `alt-b`: Filter the list, showing runs from the current branch
@@ -351,17 +354,21 @@ that can be used with any `gh fzf` command:
 
 Environment variables are used to configure `gh-fzf`.
 
-| Variable                         | Description                                                                                                                                                                                                                                                                                                    | Default                                                                                                      |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `GH_FZF_DEFAULT_LIMIT`           | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info.                                                                                                                         | 75                                                                                                           |
-| `GH_FZF_TRUNCATE_FIELDS`         | Set the variable to any value to make `gh` truncate text to ensure all fields fit on the screen. When set, truncated text is **not** fuzzy findable. When unset, fields may be cut off, but all text is still fuzzy findable.                                                                                  | unset                                                                                                        |
-| `GH_FZF_HIDE_HINTS`              | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                                                                                                     | unset                                                                                                        |
-| `GH_FZF_BRANCH_PREFIX`           | A string to prepend to the branch name entered for the `pr` command's `alt-o` keybinding. Spaces are replaced with hyphens. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples.                                                          | unset                                                                                                        |
-| `GH_FZF_BRANCH_ADD_ISSUE_NUMBER` | When set, the issue number is added after the prefix (if specified) for the `pr` command's `alt-o` keybinding. The variable's value is added after the number, unless it is a space. See the [commit](https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119) message for examples. | unset                                                                                                        |
-| `GH_FZF_NOTIFY_ICON`             | A path to an icon for the desktop notification displayed by the `run` command's `alt-n` keybinding. Only supported by `dunstify` and `notify-send` for now.                                                                                                                                                    | unset                                                                                                        |
-| `GH_FZF_COPY_CMD`                | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                                                                                                           | [see code](https://github.com/benelan/gh-fzf/blob/830e6562f9494a5489d5c4c38c99ed409908cf32/gh-fzf#L124-L134) |
+| Variable                         | Description                                                                                                                                                                                                                           | Default    |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `GH_FZF_DEFAULT_LIMIT`           | The initial number of items to request from GitHub. The number of items can be changed at runtime with the `alt-1` to `alt-9` commands, see the [Usage](#usage) section for more info.                                                | 75         |
+| `GH_FZF_TRUNCATE_FIELDS`         | Set the variable to any value to make `gh` truncate text to ensure all fields fit on the screen. When set, truncated text is **not** fuzzy findable. When unset, fields may be cut off, but all text is still fuzzy findable.         | unset      |
+| `GH_FZF_HIDE_HINTS`              | Set the variable to any value to hide the header (where the keybinding hints are) on startup. The header can still be toggled with the `alt-H` keybinding.                                                                            | unset      |
+| `GH_FZF_BRANCH_PREFIX`           | A string to prepend to the branch name entered for the `pr` command's `alt-o` keybinding. Spaces are replaced with hyphens. See the feature's [commit message] for examples.                                                          | unset      |
+| `GH_FZF_BRANCH_ADD_ISSUE_NUMBER` | When set, the issue number is added after the prefix (if specified) for the `pr` command's `alt-o` keybinding. The variable's value is added after the number, unless it is a space. See the feature's [commit message] for examples. | unset      |
+| `GH_FZF_NOTIFY_ICON`             | A path to an icon for the desktop notification displayed by the `run` command's `alt-n` keybinding. Only supported by `dunstify` and `notify-send` for now.                                                                           | unset      |
+| `GH_FZF_COPY_CMD`                | The command used by your operating system to copy an item's URL to the clipboard. Expects the URL from stdin. This only needs to be set if the default doesn't work on your machine.                                                  | [see code] |
 
-You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
+[commit message]: https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119
+[see code]: https://github.com/benelan/gh-fzf/blob/65bfdb81a30fc55878e04758e5cbcec68a242a18/gh-fzf#L113-L125
+
+You can also set the
+[`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
 environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
 For example, create aliases in the `gh` config file that add new keybindings to
@@ -414,8 +421,13 @@ When adding or modifying fzf keybindings:
   - the `<workflow-id>` for the [`workflow`](#workflow) command
   - the `<number>` for the [`milestone`](#milestone) command
 
-For a list of the fzf options shared by all `gh-fzf` commands, see the
-[source code](https://github.com/benelan/gh-fzf/blob/f8d5b23e283e234557cbed615993e618fd45ccf3/gh-fzf#L109-L129).
+Check out the `gh-fzf` author's
+[`~/.config/gh/config.yml`](https://github.com/benelan/dotfiles/blob/master/.config/gh/config.yml)
+for more inspiration.
+
+See the
+[code](https://github.com/benelan/gh-fzf/blob/65bfdb81a30fc55878e04758e5cbcec68a242a18/gh-fzf#L157-L179)
+for the list of fzf options shared by all `gh-fzf` commands.
 
 > [!WARNING]
 > If any of the shared keybindings set by `gh-fzf` don't work, you may be

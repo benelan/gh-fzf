@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: PR Title
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  pull-requests: read
+
+jobs:
+  pr-title:
+    uses: benelan/github/.github/workflows/pr.yml@main
+    secrets: inherit

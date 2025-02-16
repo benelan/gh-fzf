@@ -86,26 +86,26 @@ Usage:
   gh fzf search [<subcommand>] [flags]
 
 Core Commands:
-  issue       Search for and interact with GitHub issues.
-  pr          Search for and interact with GitHub pull requests.
-  run         Search for and interact with GitHub Action runs.
-  workflow    Search for and interact with GitHub Action workflows.
-  release     Search for and interact with GitHub releases.
-  label       Search for and interact with GitHub labels.
-  milestone   Search for and interact with GitHub milestones via \`gh api\`.
-  repo        Search for and interact with GitHub repos.
-  gist        Search for and interact with GitHub gists.
-  search      Search for and interact with GitHub issues, prs, commits, and code.
+    issue       Search for and interact with GitHub issues.
+    pr          Search for and interact with GitHub pull requests.
+    run         Search for and interact with GitHub Action runs.
+    workflow    Search for and interact with GitHub Action workflows.
+    release     Search for and interact with GitHub releases.
+    label       Search for and interact with GitHub labels.
+    milestone   Search for and interact with GitHub milestones via \`gh api\`.
+    repo        Search for and interact with GitHub repos.
+    gist        Search for and interact with GitHub gists.
+    search      Search for and interact with GitHub issues, prs, commits, and code.
 
 See \`gh <command> list --help\` for the flag options.
 
 Other Commands:
-  help        Print this help message.
-  status      Print GitHub's service status from https://githubstatus.com/
-  version     Print the version of gh-fzf.
-  changelog   View gh-fzf's changelog via the release command.
-  upgrade     Upgrade to the latest version of gh-fzf.
-  util        Functions used internally that may be useful for scripting.
+    help        Print this help message.
+    status      Print GitHub's service status from https://githubstatus.com/
+    version     Print the version of gh-fzf.
+    changelog   View gh-fzf's changelog via the release command.
+    upgrade     Upgrade to the latest version of gh-fzf.
+    util        Functions used internally that may be useful for scripting.
 
 Check out the project homepage for more information, such as keybindings,
 configuration, and examples.

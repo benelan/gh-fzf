@@ -18,6 +18,7 @@ An fzf wrapper around the GitHub CLI.
     - [`milestone`](#milestone)
     - [`repo`](#repo)
     - [`gist`](#gist)
+    - [`search`](#search)
   - [Configuration](#configuration)
   - [Related projects](#related-projects)
 
@@ -416,6 +417,35 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
     ```sh
     gh fzf gist --public
+    ```
+
+### `search`
+
+> [!WARNING]
+> The `search` command is **experimental**, which means it is subject to
+> breaking changes without a major version bump. Please report any bugs you
+> find!
+
+- **Usage**: `gh fzf search <subcommand> [flags]`
+
+- **Aliases**: `s`, `-s`, `--search`
+
+- **Subcommands:** `issues`, `prs`, `repos`, `commits`, `code`
+
+- **Flags**: See `gh search <subcommand> --help` for available options
+
+- **Keybindings**:
+
+  | Key     | Description                                | Configuration Environment Variable |
+  | ------- | ------------------------------------------ | ---------------------------------- |
+  | `alt-/` | Toggle between `gh` and `fzf` search modes | `GH_FZF_SEARCH_TOGGLE_MODE_KEY`    |
+
+- **Examples:**
+
+  - Filter the initial list to issues assigned to you in all repos:
+
+    ```sh
+    gh fzf search issues --assignee @me
     ```
 
 ## Configuration

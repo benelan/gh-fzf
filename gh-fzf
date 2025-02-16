@@ -989,10 +989,18 @@ search_cmd() {
 
     echo "$GH_FZF_DEFAULT_LIMIT" >"${TMPDIR:-/tmp}/gh-fzf-search-limit"
 
+    # KEYBINDINGS      {{{2
+    export GH_FZF_SEARCH_TOGGLE_MODE_KEY="${GH_FZF_SEARCH_TOGGLE_MODE_KEY:-alt-/}"
+
+    search_header="Actions > ($GH_FZF_SEARCH_TOGGLE_MODE_KEY: toggle mode)
+$global_binds
+"
+
     # FZF COMMAND      {{{2
     search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L \$(cat "${TMPDIR:-/tmp}/gh-fzf-search-limit")"
 
     fzf \
+        --header="$search_header" \
         --header-lines=4 \
         --disabled \
         --query="$*" \

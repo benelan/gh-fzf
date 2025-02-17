@@ -336,19 +336,19 @@ $global_binds
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
             )+change-prompt:'"$issue_prompt"' --assignee @me ❱ " ||
-           [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
         ' \
         --bind="$GH_FZF_ISSUE_AUTHOR_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --author @me\"
             )+change-prompt:'"$issue_prompt"' --author @me ❱ " ||
-           [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
         ' \
         --bind="$GH_FZF_ISSUE_MENTIONED_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
             )+change-prompt:'"$issue_prompt"' --mention @me ❱ " ||
-           [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
+            [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
         ' \
         --bind="$GH_FZF_ISSUE_STATE_FILTER_KEY"':transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
             echo "reload(
@@ -496,13 +496,13 @@ $global_binds
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
             )+change-prompt:'"$pr_prompt"' --assignee @me ❱ " ||
-           [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
         ' \
         --bind="$GH_FZF_PR_AUTHOR_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
             echo "reload(
                 eval \"\$FZF_DEFAULT_COMMAND --author @me\"
             )+change-prompt:'"$pr_prompt"' --author @me ❱ " ||
-           [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
         ' \
         --bind="$GH_FZF_PR_BRANCH_FILTER_KEY"':transform:
             branch="$(git symbolic-ref --short HEAD)";
@@ -510,7 +510,7 @@ $global_binds
                 echo "reload(
                     eval \"\$FZF_DEFAULT_COMMAND --head $branch\"
                 )+change-prompt:'"$pr_prompt"' --head $branch ❱ " ||
-           [[ ! $FZF_QUERY =~ head:$branch ]] && echo "put( head:$branch)"
+            [[ ! $FZF_QUERY =~ head:$branch ]] && echo "put( head:$branch)"
         ' \
         --bind="$GH_FZF_PR_STATE_FILTER_KEY"':transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
             echo "reload(

@@ -82,8 +82,8 @@ An fzf wrapper around the GitHub CLI.
 Homepage: https://github.com/benelan/gh-fzf
 
 Usage:
-  gh fzf [<command>] [flags]
-  gh fzf search [<subcommand>] [flags]
+    gh fzf [<command>] [flags]
+    gh fzf search [<subcommand>] [flags]
 
 Core Commands:
     issue       Search for and interact with GitHub issues.
@@ -95,9 +95,11 @@ Core Commands:
     milestone   Search for and interact with GitHub milestones via \`gh api\`.
     repo        Search for and interact with GitHub repos.
     gist        Search for and interact with GitHub gists.
-    search      Search for and interact with GitHub issues, prs, commits, and code.
+    search      Search globally for GitHub issues, prs, commits, and code.
 
-See \`gh <command> list --help\` for the flag options.
+All arguments are passed directly to gh. For flag options see:
+    gh <command> list --help
+    gh search <subcommand> --help
 
 Other Commands:
     help        Print this help message.

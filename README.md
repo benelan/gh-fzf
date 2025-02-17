@@ -402,31 +402,20 @@ There are also global keybindings that work on all `gh-fzf` commands:
 ### `search`
 
 > [!WARNING]
-> The `search` command is **experimental**, which means it is subject to
-> breaking changes without a major version bump. Please report any bugs you
-> find!
+> The `search` command is **experimental**, which means it is subject to breaking changes without a major version bump. Please report any bugs you find!
 
-The `search` command works differently than the others. There are two different
-search modes:
+The `search` command works differently than the others. There are two different search modes:
 
-1. **gh:** This is the initial mode and nothing is displayed until you type a
-   query. The mode uses GitHub's search syntax, which you can read about in
-   their documentation:
+1. **gh:** This is the initial mode and nothing is displayed until you type a query. The mode uses GitHub's search syntax, which you can read about in their documentation:
 
    - [`issues` & `prs`](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests)
    - [`repos`](https://docs.github.com/en/search-github/searching-on-github/searching-for-repositories)
    - [`commits`](https://docs.github.com/en/search-github/searching-on-github/searching-commits)
    - [`code`](https://docs.github.com/en/search-github/searching-on-github/searching-code)
 
-2. **fzf:** This is mode used by the rest of the commands, which uses `fzf`
-   search syntax.
+2. **fzf:** This is mode used by the rest of the commands, which uses `fzf` search syntax.
 
-The mode is displayed in the bottom left corner. Start by searching with GitHub
-syntax. For example, you may type `author:@me` when using the `issues` or `prs`
-subcommands. When you switch modes from `gh` to `fzf`, the list remains the
-same and the GitHub query is saved to state and cleared from the search bar.
-You can then use `fzf` syntax to filter the list further. When you switch modes
-from `fzf` to `gh`, the GitHub query is restored and the list is reloaded.
+The mode is displayed in the bottom left corner. Start by searching with GitHub syntax. For example, you may type `author:@me` when using the `issues` or `prs` subcommands. When you switch modes from `gh` to `fzf`, the list remains the same and the GitHub query is saved to state and cleared from the search bar. You can then use `fzf` syntax to filter the list further. When you switch modes from `fzf` to `gh`, the GitHub query is restored and the list is reloaded.
 
 - **Usage**: `gh fzf search <subcommand> [flags]`
 

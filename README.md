@@ -100,7 +100,7 @@ There are also global keybindings that work on all `gh-fzf` commands:
 | `ctrl-o`          | Open the selected item in the browser                                     | `GH_FZF_OPEN_KEY`                  |
 | `ctrl-y`          | Copy the selected item's URL to the clipboard                             | `GH_FZF_COPY_KEY`                  |
 | `ctrl-r`          | Reload the list to its initial filter state and fetch changes from GitHub | `GH_FZF_RELOAD_KEY`                |
-| `alt-?`           | View the current command's README section from the terminal               | `GH_FZF_HELP_KEY`                  |
+| `alt-?`           | View the current command's readme section from the terminal               | `GH_FZF_HELP_KEY`                  |
 | `alt-P`           | Toggle the preview window layout from default, bottom, and hidden         | `GH_FZF_TOGGLE_PREVIEW_KEY`        |
 | `alt-H`           | Toggle displaying the header, where the keybinding hints are located      | `GH_FZF_TOGGLE_HINTS_KEY`          |
 | `alt-1` - `alt-9` | Change the number of items fetched from GitHub to 100, 200, ..., 900      | N/A                                |

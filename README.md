@@ -86,7 +86,7 @@ gh fzf changelog
 ## Usage
 
 ```sh
-gh fzf \<command\> [flags]
+gh fzf <command> [flags]
 ```
 
 This extension adds a new command that wraps GitHub's `list` subcommands with fzf to make them fuzzy findable. All of the arguments after `<command>` are passed directly to `gh`. Because of the way shell works, you need to escape quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace). There are usage examples for each command in the sections below.

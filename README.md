@@ -29,29 +29,29 @@ An fzf wrapper around the GitHub CLI.
 
    - **Homebrew**
 
-     ```sh
-     brew install gh fzf
-     ```
+   ```sh
+   brew install gh fzf
+   ```
 
    - **DNF**
 
-     ```sh
-     sudo dnf install gh fzf
-     ```
+   ```sh
+   sudo dnf install gh fzf
+   ```
 
    - ... see the links above for other package managers
 
 2. Authenticate with the GitHub CLI:
 
-   ```sh
-   gh auth login
-   ```
+```bash
+gh auth login
+```
 
 3. Install this extension:
 
-   ```sh
-   gh extension install benelan/gh-fzf
-   ```
+```sh
+gh extension install benelan/gh-fzf
+```
 
 4. **[???](#usage)**
 
@@ -61,7 +61,7 @@ An fzf wrapper around the GitHub CLI.
 
 To upgrade `gh-fzf` to the latest commit on `main`:
 
-```sh
+```shell
 gh extension upgrade gh-fzf
 ```
 
@@ -133,15 +133,15 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to open and closed issues assigned to you in the "v1.33.7" milestone:
 
-    ```sh
-    gh fzf issue --assignee @me --milestone "v1.33.7" --state all
-    ```
+  ```sh
+  gh fzf issue --assignee @me --milestone "v1.33.7" --state all
+  ```
 
   - Filter the initial list to issues with the "good first issue" label, no assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
 
-    ```sh
-    gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner\'
-    ```
+  ```sh
+  gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner\'
+  ```
 
 ### `pr`
 
@@ -177,15 +177,15 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to your merged pull requests with the "breaking change" label:
 
-    ```sh
-    gh fzf pr --state merged --author @me --label \"breaking change\"
-    ```
+  ```sh
+  gh fzf pr --state merged --author @me --label \"breaking change\"
+  ```
 
   - Filter the initial list to your pull requests merged since the beginning of 2023 that have "breaking change" in the body. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
 
-    ```sh
-    gh fzf p -S \'merged:">=2023-01-01" \"breaking change\" in:body author:@me\'
-    ```
+  ```sh
+  gh fzf p -S \'merged:">=2023-01-01" \"breaking change\" in:body author:@me\'
+  ```
 
 ### `run`
 
@@ -217,15 +217,15 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to runs for the "tests" workflow:
 
-    ```sh
-    gh fzf run --workflow tests
-    ```
+  ```sh
+  gh fzf run --workflow tests
+  ```
 
   - Filter the initial list to failed runs on the main branch:
 
-    ```sh
-    gh fzf r -b main -s failure
-    ```
+  ```sh
+  gh fzf r -b main -s failure
+  ```
 
 [^1]:
     The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`. The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
@@ -254,9 +254,9 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to show all workflows:
 
-    ```sh
-    gh fzf workflow --all
-    ```
+  ```sh
+  gh fzf workflow --all
+  ```
 
 ### `release`
 
@@ -280,9 +280,9 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to exclude drafts and prereleases:
 
-    ```sh
-    gh fzf release --exclude-drafts --exclude-prereleases
-    ```
+  ```sh
+  gh fzf release --exclude-drafts --exclude-prereleases
+  ```
 
 ### `label`
 
@@ -308,9 +308,9 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to sort by label name in descending order
 
-    ```sh
-    gh fzf label --sort name --order desc
-    ```
+  ```sh
+  gh fzf label --sort name --order desc
+  ```
 
 ### `milestone`
 
@@ -361,15 +361,15 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to your non-archived, private repos with the "cli" topic:
 
-    ```sh
-    gh fzf repo --no-archived --visibility private --topic cli
-    ```
+  ```sh
+  gh fzf repo --no-archived --visibility private --topic cli
+  ```
 
   - Filter the initial list to archived repos created by the "google" organization where the primary language was "typescript":
 
-    ```sh
-    gh fzf repo google --archived --language typescript
-    ```
+  ```sh
+  gh fzf repo google --archived --language typescript
+  ```
 
 ### `gist`
 
@@ -393,9 +393,9 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
   - Filter the initial list to only show public gists (excluding secret ones):
 
-    ```sh
-    gh fzf gist --public
-    ```
+  ```sh
+  gh fzf gist --public
+  ```
 
 ## Configuration
 

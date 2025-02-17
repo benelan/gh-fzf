@@ -244,14 +244,10 @@ There are also global keybindings that work on all `gh-fzf` commands:
     gh fzf r -b main -s failure
     ```
 
-<!--prettier-ignore-start-->
-
 [^1]:
-    The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`.
-    The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
-    > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
+    The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`. The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
 
-<!--prettier-ignore-end-->
+    > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
 
 ### `workflow`
 

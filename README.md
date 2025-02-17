@@ -444,10 +444,28 @@ from `fzf` to `gh`, the GitHub query is restored and the list is reloaded.
 
 - **Examples:**
 
-  - Filter the initial list to issues assigned to you in all repos:
+  - Search for open issues that you're involved with, sorted by most recent update:
 
     ```sh
-    gh fzf search issues --assignee @me
+    gh fzf search issues state:open involves:@me sort:updated
+    ```
+
+  - Search for public repos that use the "lua" language and have the "neovim-plugin" topic, sorted by the number of stars:
+
+    ```sh
+    gh fzf search repos --visibility=public --language=lua --topic=neovim-plugin --sort=stars
+    ```
+
+  - Search for commits you made in 2024 that contain the phrase "breaking change" in the message:
+
+    ```sh
+    gh fzf search commits --author=$(gh api user --jq '.login') --author-date=2024-01-01..2024-12-31 \"breaking change\"
+    ```
+
+  - Search for code in repos you own that matches "fetch":
+
+    ```sh
+    gh fzf search code --owner=$(gh api user --jq '.login') fetch
     ```
 
 ## Configuration

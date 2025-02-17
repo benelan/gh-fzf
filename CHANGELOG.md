@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.15.0](https://github.com/benelan/gh-fzf/compare/v0.14.1...v0.15.0) (2025-02-17)
+
+
+### Features
+
+* Add `search` command ([#33](https://github.com/benelan/gh-fzf/issues/33)) ([c39d3ad](https://github.com/benelan/gh-fzf/commit/c39d3ad1209dad87591050bedb607c2dc466f5bb))
+* Add environment variables to configure keybinds ([#45](https://github.com/benelan/gh-fzf/issues/45)) ([41b44b0](https://github.com/benelan/gh-fzf/commit/41b44b06a6448c5c89ed3237a73604a4d797afc4))
+* Add global help key to view command's readme section ([#46](https://github.com/benelan/gh-fzf/issues/46)) ([a7a076e](https://github.com/benelan/gh-fzf/commit/a7a076e893efe43b760bc8e81d1afb99432f235b))
+* **pr:** Make draft pull request numbers gray ([63da381](https://github.com/benelan/gh-fzf/commit/63da38176a9b39aa3fee5731328562b878c63cca))
+
+
+### Bug Fixes
+
+* **status:** Prevent exit due to api request error ([#43](https://github.com/benelan/gh-fzf/issues/43)) ([c2008d5](https://github.com/benelan/gh-fzf/commit/c2008d59c74e33bc5fbc9d8443199bb8cf662f62))
+
 ## [0.14.1](https://github.com/benelan/gh-fzf/compare/v0.14.0...v0.14.1) (2024-08-21)
 
 

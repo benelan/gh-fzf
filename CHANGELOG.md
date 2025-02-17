@@ -13,7 +13,7 @@
 
 ### Bug Fixes
 
-* **status:** Prevent exit due to api request error ([#43](https://github.com/benelan/gh-fzf/issues/43)) ([c2008d5](https://github.com/benelan/gh-fzf/commit/c2008d59c74e33bc5fbc9d8443199bb8cf662f62))
+* **status:** Prevent exit due to API request error ([#43](https://github.com/benelan/gh-fzf/issues/43)) ([c2008d5](https://github.com/benelan/gh-fzf/commit/c2008d59c74e33bc5fbc9d8443199bb8cf662f62))
 
 ## [0.14.1](https://github.com/benelan/gh-fzf/compare/v0.14.0...v0.14.1) (2024-08-21)
 

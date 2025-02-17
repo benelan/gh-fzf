@@ -156,7 +156,7 @@ fi
 export GH_FZF_RELOAD_KEY="${GH_FZF_RELOAD_KEY:-ctrl-r}"
 export GH_FZF_OPEN_KEY="${GH_FZF_OPEN_KEY:-ctrl-o}"
 export GH_FZF_COPY_KEY="${GH_FZF_COPY_KEY:-ctrl-y}"
-export GH_FZF_HELP_KEY="${GH_FZF_COPY_KEY:-alt-?}"
+export GH_FZF_HELP_KEY="${GH_FZF_HELP_KEY:-alt-?}"
 export GH_FZF_TOGGLE_HINTS_KEY="${GH_FZF_TOGGLE_HINTS_KEY:-alt-H}"
 export GH_FZF_TOGGLE_PREVIEW_KEY="${GH_FZF_TOGGLE_PREVIEW_KEY:-alt-P}"
 

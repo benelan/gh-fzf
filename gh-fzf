@@ -30,7 +30,9 @@ set -e
 
 GH_FZF_VERSION="v0.14.1" # x-release-please-version
 
-# USAGE INFO AND LOGS                                                   {{{1
+FZF_USER_VERSION="$(fzf --version | awk '{print $1}')"
+
+# USAGE INFO AND INTERNAL FUNCTIONS                                     {{{1
 
 has() { command -v "$1" >/dev/null 2>&1; }
 
@@ -58,6 +60,12 @@ version_number() {
     echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
 }
 
+requires_fzf_version() {
+    if [ "$(version_number "$1")" -gt "$(version_number "$FZF_USER_VERSION")" ]; then
+        error "${2:-"gh-fzf"} requires fzf version >= $1 (found $FZF_USER_VERSION)"
+    fi
+}
+
 error() {
     if [ -n "$1" ]; then
         printf "Error: " >&2
@@ -74,7 +82,8 @@ An fzf wrapper around the GitHub CLI.
 Homepage: https://github.com/benelan/gh-fzf
 
 Usage:
-    gh fzf <command> [flags]
+    gh fzf [<command>] [flags]
+    gh fzf search [<subcommand>] [flags]
 
 Core Commands:
     issue       Search for and interact with GitHub issues.
@@ -86,8 +95,11 @@ Core Commands:
     milestone   Search for and interact with GitHub milestones via \`gh api\`.
     repo        Search for and interact with GitHub repos.
     gist        Search for and interact with GitHub gists.
+    search      Search globally for GitHub issues, prs, commits, and code.
 
-See \`gh <command> list --help\` for the flag options.
+All arguments are passed directly to gh. For flag options see:
+    gh <command> list --help
+    gh search <subcommand> --help
 
 Other Commands:
     help        Print this help message.
@@ -191,7 +203,7 @@ export FZF_DEFAULT_OPTS='
 
 default_cmd() {
     FZF_DEFAULT_COMMAND="printf '%s\n' COMMAND \
-        issue pr run workflow release label milestone repo gist" \
+        issue pr run workflow release label milestone repo gist search" \
         fzf \
         --preview='
             cmd={};
@@ -946,6 +958,126 @@ Filters > ($GH_FZF_GIST_PUBLIC_FILTER_KEY: public) ($GH_FZF_GIST_SECRET_FILTER_K
     #2}}}
 }
 
+# COMMAND > SEARCH                                                      {{{1
+search_cmd() {
+    rm -rf ${TMPDIR:-/tmp}/gh-fzf-search-*
+
+    if [ -n "$1" ]; then
+        search_subcmd="$1"
+        case $search_subcmd in
+            issues | prs | commits)
+                search_open_cmd="gh browse --repo {1} {2}"
+                search_copy_cmd="gh browse --no-browser --repo {1} {2} | $GH_FZF_COPY_CMD"
+                ;;
+            repos)
+                search_open_cmd="gh browse --repo {1}"
+                search_copy_cmd="gh browse --no-browser --repo {1} | $GH_FZF_COPY_CMD"
+                ;;
+            code)
+                # NOTE: requires fzf >= v0.53.0 for multiline support
+                # https://github.com/junegunn/fzf/releases/tag/0.53.0
+                requires_fzf_version "0.53.0" "code search"
+
+                multiline_chunker="| perl -0 -pe 's/^\n/\n\0/gm'"
+                search_subcmd_opts="--header-lines=2 --read0 --highlight-line"
+
+                search_open_cmd="gh browse --repo \$(echo {1})"
+                search_copy_cmd="gh browse --no-browser --repo \$(echo {1}) | $GH_FZF_COPY_CMD"
+                ;;
+            *)
+                error "invalid search subcommand: \"$search_subcmd\"" \
+                    "Valid subcommands: issues, prs, repos, commits, code"
+                ;;
+        esac
+        shift
+    else
+        FZF_DEFAULT_COMMAND="printf '%s\n' issues prs repos commits code" \
+            fzf --ansi --header="COMMAND" --header-lines=0 \
+            --bind="resize:refresh-preview" \
+            --preview='GH_FORCE_TTY=$FZF_PREVIEW_COLUMNS gh help search {}' \
+            --preview-window='right,75%,wrap,<75(down,border-top,75%,wrap)' \
+            --bind="enter:execute(gh fzf search {})"
+        exit "$?"
+    fi
+
+    echo "$GH_FZF_DEFAULT_LIMIT" >"${TMPDIR:-/tmp}/gh-fzf-search-limit"
+
+    # KEYBINDINGS      {{{2
+    export GH_FZF_SEARCH_TOGGLE_MODE_KEY="${GH_FZF_SEARCH_TOGGLE_MODE_KEY:-alt-/}"
+
+    search_header="Actions > ($GH_FZF_SEARCH_TOGGLE_MODE_KEY: toggle mode)
+$global_binds
+"
+
+    # FZF COMMAND      {{{2
+    search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L \$(cat "${TMPDIR:-/tmp}/gh-fzf-search-limit")"
+
+    fzf \
+        --header="$search_header" \
+        --header-lines=4 \
+        --disabled \
+        --query="$*" \
+        $search_subcmd_opts \
+        --border="bottom" \
+        --border-label="[mode: gh] " \
+        --border-label-pos=-99999 \
+        --prompt="search $search_subcmd ❱ " \
+        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header+"}reload-sync(
+            $search_cmd \$FZF_QUERY $multiline_chunker || true
+        )" \
+        --bind "change:reload-sync:sleep 0.5; $search_cmd \$FZF_QUERY $multiline_chunker || true" \
+        --bind "$GH_FZF_SEARCH_TOGGLE_MODE_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "change-border-label([mode:  gh] )+transform-query(
+                    echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf;
+                    cat ${TMPDIR:-/tmp}/gh-fzf-search-query-gh
+                )+rebind(change)+disable-search+reload-sync(
+                    '"$search_cmd"' $FZF_QUERY '"$multiline_chunker"' || true
+                )" ||
+            echo "change-border-label([mode: fzf] )+transform-query(
+                    echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-search-query-gh;
+                    cat ${TMPDIR:-/tmp}/gh-fzf-search-query-fzf
+                )+unbind(change)+enable-search"
+        ' \
+        --bind="$GH_FZF_RELOAD_KEY:execute-silent(
+            rm -f  \${TMPDIR:-/tmp}/gh-fzf-search-query-{gh,fzf}
+        )+transform-query(echo \"$*\")+first+reload-sync:$search_cmd \"$*\"" \
+        --bind="$GH_FZF_OPEN_KEY:execute-silent:$search_open_cmd &" \
+        --bind="$GH_FZF_COPY_KEY:execute-silent:$search_copy_cmd" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .search\"' gh repo view benelan/gh-fzf)" \
+        --bind="alt-1:execute-silent(
+            echo 100 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-2:execute-silent(
+            echo 200 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-3:execute-silent(
+            echo 300 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-4:execute-silent(
+            echo 400 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-5:execute-silent(
+            echo 500 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-6:execute-silent(
+            echo 600 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-7:execute-silent(
+            echo 700 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-8:execute-silent(
+            echo 800 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        --bind="alt-9:execute-silent(
+            echo 900 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
+        )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
+        </dev/null
+
+    #2}}}
+
+    rm -f ${TMPDIR:-/tmp}/gh-fzf-search-*
+}
+
 # ----------------------------------------------------------------------1}}}
 # COMMAND > UTIL                                                        {{{1
 
@@ -1173,19 +1305,48 @@ main() {
     find_repo_flag "$@"
 
     case $command in
-        h | -h | help | --help) help_cmd "$@" ;;
-        i | -i | issue | issues | --issue | --issues) issue_cmd "$@" ;;
-        p | -p | pr | prs | --pr | --prs) pr_cmd "$@" ;;
-        r | -r | run | runs | --run | --runs) run_cmd "$@" ;;
-        repo | repos | --repo | --repos) repo_cmd "$@" ;;
-        release | releases | --release | --releases) release_cmd "$@" ;;
-        gist | gists | --gist | --gists) gist_cmd "$@" ;;
-        workflow | workflows | --workflow | --workflows) workflow_cmd "$@" ;;
-        label | labels | --label | --labels) label_cmd "$@" ;;
-        milestone | milestones | --milestone | --milestones) milestone_cmd "$@" ;;
-        util | utils | --util | --utils) util_cmd "$@" ;;
-        status) echo "$GH_STATUS" ;;
-        changelog) gh fzf release --repo benelan/gh-fzf ;;
+        h | -h | help | --help)
+            help_cmd "$@"
+            ;;
+        i | -i | issue | issues | --issue | --issues)
+            issue_cmd "$@"
+            ;;
+        p | -p | pr | prs | --pr | --prs)
+            pr_cmd "$@"
+            ;;
+        s | -s | search | --search)
+            search_cmd "$@"
+            ;;
+        r | -r | run | runs | --run | --runs)
+            run_cmd "$@"
+            ;;
+        repo | repos | --repo | --repos)
+            repo_cmd "$@"
+            ;;
+        release | releases | --release | --releases)
+            release_cmd "$@"
+            ;;
+        gist | gists | --gist | --gists)
+            gist_cmd "$@"
+            ;;
+        workflow | workflows | --workflow | --workflows)
+            workflow_cmd "$@"
+            ;;
+        label | labels | --label | --labels)
+            label_cmd "$@"
+            ;;
+        milestone | milestones | --milestone | --milestones)
+            milestone_cmd "$@"
+            ;;
+        util | utils | --util | --utils)
+            util_cmd "$@"
+            ;;
+        status)
+            echo "$GH_STATUS"
+            ;;
+        changelog)
+            gh fzf release --repo benelan/gh-fzf
+            ;;
         upgrade)
             latest_version=$(gh release view --json tagName --jq .tagName --repo benelan/gh-fzf)
             if [ "$(version_number "$latest_version")" -gt "$(version_number "$GH_FZF_VERSION")" ]; then
@@ -1195,8 +1356,12 @@ main() {
                 echo "You are up to date!"
             fi
             ;;
-        v | V | -v | -V | version | --version) printf "%s\n" "$GH_FZF_VERSION" ;;
-        *) error "invalid command: \"$command\"" ;;
+        v | V | -v | -V | version | --version)
+            printf "%s\n" "$GH_FZF_VERSION"
+            ;;
+        *)
+            error "invalid command: \"$command\""
+            ;;
     esac
 } #2}}}
 

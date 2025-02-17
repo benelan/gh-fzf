@@ -28,7 +28,7 @@
 
 set -e
 
-GH_FZF_VERSION="v0.14.1" # x-release-please-version
+GH_FZF_VERSION="v0.15.0" # x-release-please-version
 
 FZF_USER_VERSION="$(fzf --version | awk '{print $1}')"
 

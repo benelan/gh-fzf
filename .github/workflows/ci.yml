@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  ci:
+    uses: benelan/github/.github/workflows/ci.yml@main
+    secrets: inherit

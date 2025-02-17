@@ -26,9 +26,7 @@ An fzf wrapper around the GitHub CLI.
 
 ## Installation
 
-1. Install [`gh`](https://github.com/cli/cli#installation) and
-   [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already
-   have them. For example:
+1. Install [`gh`](https://github.com/cli/cli#installation) and [`fzf`](https://github.com/junegunn/fzf#installation) if you don't already have them. For example:
 
    - **Homebrew**
 
@@ -68,8 +66,7 @@ To upgrade `gh-fzf` to the latest commit on `main`:
 gh extension upgrade gh-fzf
 ```
 
-Alternatively, you can pin a tag when installing `gh` extensions. A convenience
-command is provided for upgrading to the latest version **(recommended)**:
+Alternatively, you can pin a tag when installing `gh` extensions. A convenience command is provided for upgrading to the latest version **(recommended)**:
 
 ```sh
 gh fzf upgrade
@@ -81,8 +78,7 @@ You can check which version of `gh-fzf` you currently have installed:
 gh fzf version
 ```
 
-The [changelog](./CHANGELOG.md) contains a list of features and fixes released
-in each version. You can also view the release notes via `gh-fzf` itself:
+The [changelog](./CHANGELOG.md) contains a list of features and fixes released in each version. You can also view the release notes via `gh-fzf` itself:
 
 ```sh
 gh fzf changelog
@@ -91,20 +87,12 @@ gh fzf changelog
 ## Usage
 
 ```sh
-gh fzf \<command\> [flags]
+gh fzf <command> [flags]
 ```
 
-This extension adds a new command that wraps GitHub's `list` subcommands with
-fzf to make them fuzzy findable. All of the arguments after `<command>` are
-passed directly to `gh`. Because of the way shell works, you need to escape
-quotes required by GitHub, e.g.
-[strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace).
-There are usage examples for each command in the sections below.
+This extension adds a new command that wraps GitHub's `list` subcommands with fzf to make them fuzzy findable. All of the arguments after `<command>` are passed directly to `gh`. Because of the way shell works, you need to escape quotes required by GitHub, e.g. [strings with whitespace](https://docs.github.com/en/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax#use-quotation-marks-for-queries-with-whitespace). There are usage examples for each command in the sections below.
 
-A preview of the current selection is displayed when navigating through the
-resulting list. Each command has keybindings that execute `gh` subcommands on
-the item or filter the list further. The command-specific keybindings are
-listed in the following sections.
+A preview of the current selection is displayed when navigating through the resulting list. Each command has keybindings that execute `gh` subcommands on the item or filter the list further. The command-specific keybindings are listed in the following sections.
 
 There are also global keybindings that work on all `gh-fzf` commands:
 
@@ -113,6 +101,7 @@ There are also global keybindings that work on all `gh-fzf` commands:
 | `ctrl-o`          | Open the selected item in the browser                                     | `GH_FZF_OPEN_KEY`                  |
 | `ctrl-y`          | Copy the selected item's URL to the clipboard                             | `GH_FZF_COPY_KEY`                  |
 | `ctrl-r`          | Reload the list to its initial filter state and fetch changes from GitHub | `GH_FZF_RELOAD_KEY`                |
+| `alt-?`           | View the current command's readme section from the terminal               | `GH_FZF_HELP_KEY`                  |
 | `alt-P`           | Toggle the preview window layout from default, bottom, and hidden         | `GH_FZF_TOGGLE_PREVIEW_KEY`        |
 | `alt-H`           | Toggle displaying the header, where the keybinding hints are located      | `GH_FZF_TOGGLE_HINTS_KEY`          |
 | `alt-1` - `alt-9` | Change the number of items fetched from GitHub to 100, 200, ..., 900      | N/A                                |
@@ -144,15 +133,13 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
 - **Examples:**
 
-  - Filter the initial list to open and closed issues assigned to you in the
-    "v1.33.7" milestone:
+  - Filter the initial list to open and closed issues assigned to you in the "v1.33.7" milestone:
 
     ```sh
     gh fzf issue --assignee @me --milestone "v1.33.7" --state all
     ```
 
-  - Filter the initial list to issues with the "good first issue" label, no
-    assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
+  - Filter the initial list to issues with the "good first issue" label, no assignee, and in the "backburner" milestone. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
 
     ```sh
     gh fzf i -S \'no:assignee label:\"good first issue\" milestone:backburner\'
@@ -190,16 +177,13 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
 - **Examples:**
 
-  - Filter the initial list to your merged pull requests with the
-    "breaking change" label:
+  - Filter the initial list to your merged pull requests with the "breaking change" label:
 
     ```sh
     gh fzf pr --state merged --author @me --label \"breaking change\"
     ```
 
-  - Filter the initial list to your pull requests merged since the beginning
-    of 2023 that have "breaking change" in the body. Uses
-    [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
+  - Filter the initial list to your pull requests merged since the beginning of 2023 that have "breaking change" in the body. Uses [GitHub's search syntax](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests):
 
     ```sh
     gh fzf p -S \'merged:">=2023-01-01" \"breaking change\" in:body author:@me\'
@@ -246,9 +230,7 @@ There are also global keybindings that work on all `gh-fzf` commands:
     ```
 
 [^1]:
-    The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`.
-
-    The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
+    The supported notification tools (in order of precedence) are `dunstify`, `notify-send`, and `osascript`. The notification has [actions](https://dunst-project.org/documentation#ACTIONS) for "view logs" and "open in browser" when using `dunstify`. There is an additional "download artifacts" or "rerun failed jobs" action depending on whether the run passed or failed, respectively.
 
     > **NOTE:** The run watcher process is executed in the background, so closing `gh-fzf` won't prevent the desktop notification from displaying. Use `pkill -f "gh run watch --exit-status"` to terminate the run watcher.
 
@@ -379,15 +361,13 @@ There are also global keybindings that work on all `gh-fzf` commands:
 
 - **Examples**:
 
-  - Filter the initial list to your non-archived, private repos with the "cli"
-    topic:
+  - Filter the initial list to your non-archived, private repos with the "cli" topic:
 
     ```sh
     gh fzf repo --no-archived --visibility private --topic cli
     ```
 
-  - Filter the initial list to archived repos created by the "google"
-    organization where the primary language was "typescript":
+  - Filter the initial list to archived repos created by the "google" organization where the primary language was "typescript":
 
     ```sh
     gh fzf repo google --archived --language typescript
@@ -487,13 +467,9 @@ Environment variables are used to configure `gh-fzf`.
 [commit message]: https://github.com/benelan/gh-fzf/commit/f6f78e2dce617f17c6048f28f568fbdc57895119
 [see code]: https://github.com/benelan/gh-fzf/blob/65bfdb81a30fc55878e04758e5cbcec68a242a18/gh-fzf#L113-L125
 
-You can also set the
-[`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables)
-environment variable to add/change `fzf` options used by `gh-fzf` commands.
+You can also set the [`FZF_DEFAULT_OPTS`](https://github.com/junegunn/fzf/blob/master/README.md#environment-variables) environment variable to add/change `fzf` options used by `gh-fzf` commands.
 
-For example, create aliases in the `gh` config file that add new keybindings to
-the [`issue`](#issue), [`pr`](#pr), [`run`](#run), and [`milestone`](#milestone)
-commands:
+For example, create aliases in the `gh` config file that add new keybindings to the [`issue`](#issue), [`pr`](#pr), [`run`](#run), and [`milestone`](#milestone) commands:
 
 ```yml
 # ~/.config/gh/config.yml
@@ -541,30 +517,20 @@ When adding or modifying fzf keybindings:
   - the `<workflow-id>` for the [`workflow`](#workflow) command
   - the `<number>` for the [`milestone`](#milestone) command
 
-Check out the `gh-fzf` author's
-[`~/.config/gh/config.yml`](https://github.com/benelan/dotfiles/blob/master/.config/gh/config.yml)
-for more inspiration.
+Check out the `gh-fzf` author's [`~/.config/gh/config.yml`](https://github.com/benelan/dotfiles/blob/master/.config/gh/config.yml) for more inspiration.
 
-See the
-[code](https://github.com/benelan/gh-fzf/blob/65bfdb81a30fc55878e04758e5cbcec68a242a18/gh-fzf#L157-L179)
-for the list of fzf options shared by all `gh-fzf` commands.
+See the [code](https://github.com/benelan/gh-fzf/blob/65bfdb81a30fc55878e04758e5cbcec68a242a18/gh-fzf#L157-L179) for the list of fzf options shared by all `gh-fzf` commands.
 
 > [!WARNING]
-> If any of the shared keybindings set by `gh-fzf` don't work, you may be
-> overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting
-> the `$FZF_DEFAULT_OPTS` environment variable.
+> If any of the shared keybindings set by `gh-fzf` don't work, you may be overriding them in your shell's start up scripts (e.g. `~/.bashrc`) by setting the `$FZF_DEFAULT_OPTS` environment variable.
 
 ## Related projects
 
-There is another `fzf` wrapper around `gh` that also provides some `git`
-functionality. However, it doesn't provide as many `gh` commands, keybindings,
-or configuration options.
+There is another `fzf` wrapper around `gh` that also provides some `git` functionality. However, it doesn't provide as many `gh` commands, keybindings, or configuration options.
 
 - [`gh-f`](https://github.com/gennaro-tedesco/gh-f)
 
-The main focus of `gh-fzf` is providing keybindings to run `gh` subcommands on
-the selected item, so `git` functionality is left to other tools. The
-following `fzf` wrappers around `git` are good options to bridge that gap.
+The main focus of `gh-fzf` is providing keybindings to run `gh` subcommands on the selected item, so `git` functionality is left to other tools. The following `fzf` wrappers around `git` are good options to bridge that gap.
 
 - [`forgit`](https://github.com/wfxr/forgit)
 - [`git-fuzzy`](https://github.com/bigH/git-fuzzy)

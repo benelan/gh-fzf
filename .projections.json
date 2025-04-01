@@ -7,7 +7,7 @@
     "type": "doc",
     "alternate": "gh-fzf"
   },
-  ".github/workflows/release.yml": {
+  ".github/workflows/ci.yml": {
     "type": "ci",
     "alternate": "gh-fzf"
   }

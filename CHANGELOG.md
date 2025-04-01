@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.15.0](https://github.com/benelan/gh-fzf/compare/v0.14.1...v0.15.0) (2025-02-17)
+
+
+### Features
+
+* Add `search` command ([#33](https://github.com/benelan/gh-fzf/issues/33)) ([c39d3ad](https://github.com/benelan/gh-fzf/commit/c39d3ad1209dad87591050bedb607c2dc466f5bb))
+* Add environment variables to configure keybinds ([#45](https://github.com/benelan/gh-fzf/issues/45)) ([41b44b0](https://github.com/benelan/gh-fzf/commit/41b44b06a6448c5c89ed3237a73604a4d797afc4))
+* Add global help key to view command's readme section ([#46](https://github.com/benelan/gh-fzf/issues/46)) ([a7a076e](https://github.com/benelan/gh-fzf/commit/a7a076e893efe43b760bc8e81d1afb99432f235b))
+* **pr:** Make draft pull request numbers gray ([63da381](https://github.com/benelan/gh-fzf/commit/63da38176a9b39aa3fee5731328562b878c63cca))
+
+
+### Bug Fixes
+
+* **status:** Prevent exit due to API request error ([#43](https://github.com/benelan/gh-fzf/issues/43)) ([c2008d5](https://github.com/benelan/gh-fzf/commit/c2008d59c74e33bc5fbc9d8443199bb8cf662f62))
+
 ## [0.14.1](https://github.com/benelan/gh-fzf/compare/v0.14.0...v0.14.1) (2024-08-21)
 
 
@@ -20,7 +35,7 @@
 * **run:** Add `alt-w` keybind to filter by selected workflow ([48a29dd](https://github.com/benelan/gh-fzf/commit/48a29dd1447de2dcc14ee7feb69e8999537ae748))
 * **ui:** Add second layout to `alt-P` preview toggling ([d77d364](https://github.com/benelan/gh-fzf/commit/d77d364bc59ba0252e869a5c0e4cf5c65048fd90))
 * **ui:** Display command in fzf prompt ([66bbf1e](https://github.com/benelan/gh-fzf/commit/66bbf1e742747030b420e61754503f734f293a8a))
-* **workflow:** Add `ctrl-y` keybinding to copy file url ([2f478f2](https://github.com/benelan/gh-fzf/commit/2f478f26dd57a9b6c24222a6943affb9e05862ed))
+* **workflow:** Add `ctrl-y` keybinding to copy file URL ([2f478f2](https://github.com/benelan/gh-fzf/commit/2f478f26dd57a9b6c24222a6943affb9e05862ed))
 * **workflow:** Add custom list formatting ([0a57814](https://github.com/benelan/gh-fzf/commit/0a57814dad10c985fcb7366bc1fdac0c106c09bf))
 
 
@@ -211,7 +226,7 @@
 * Add `run`, `issue`, and `pr` commands ([9e254a0](https://github.com/benelan/gh-fzf/commit/9e254a05e3f230c1ab0a9474a6a186d1a13f92ba))
 * Add `GH_FZF_DEFAULT_LIMIT` config option for setting the default list items limit ([71e9722](https://github.com/benelan/gh-fzf/commit/71e97227a62f3255d693c7cfc2366ea068a59a8e))
 * Add `GH_FZF_HIDE_HINTS` config option to hide the header by default ([ed6b3d2](https://github.com/benelan/gh-fzf/commit/ed6b3d2265b7561bcdac97a60be26c9471939ac5))
-* Add `ctrl-y` keybinding for copying the item's url to the clipboard ([44bf38c](https://github.com/benelan/gh-fzf/commit/44bf38ca487c535c5f13568c9ada415d25c4588e))
+* Add `ctrl-y` keybinding for copying the item's URL to the clipboard ([44bf38c](https://github.com/benelan/gh-fzf/commit/44bf38ca487c535c5f13568c9ada415d25c4588e))
 * Add `version` and `help` commands ([c20abc8](https://github.com/benelan/gh-fzf/commit/c20abc8933c9dccbbdb9685ce76ae817c68319d1))
 * Display command picker when one is not provided ([ea326e1](https://github.com/benelan/gh-fzf/commit/ea326e1ba242d3affb513dd2320f0469ea5654b7))
 * **issue, pr:** Add `alt-s` and `alt-b` keybindings to filter by "state=all" and the current branch, respectively ([0c2c377](https://github.com/benelan/gh-fzf/commit/0c2c3773432bf2f5093ff78badd1ee1dccffd769))

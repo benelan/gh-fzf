@@ -500,8 +500,8 @@ $global_binds
         --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh run view {-1}' \
         --prompt="run ❱ " \
         --header="$run_header" \
-        --bind="alt-l:execute(gh run view --log {-1})+refresh-preview" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --bind="alt-l:execute(gh run view --log {-1})+refresh-preview" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh run view --web {-1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
         --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .run\"' gh repo view benelan/gh-fzf)" \
@@ -526,8 +526,10 @@ $global_binds
         --bind="$GH_FZF_RUN_BRANCH_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --branch $(git symbolic-ref --short HEAD)"
         )' \
-        --bind='$GH_FZF_RUN_WORKFLOW_FILTER_KEY:reload(
-            eval "$FZF_DEFAULT_COMMAND --workflow \"$(gh fzf workflow)\""
+        --bind="$GH_FZF_RUN_WORKFLOW_FILTER_KEY"':execute(gh fzf workflow > /tmp/gh-fzf-workflow)+reload(
+            w="$(cat /tmp/gh-fzf-workflow)"
+            rm -f /tmp/gh-fzf-workflow;
+            eval "$FZF_DEFAULT_COMMAND${w:+ --workflow \"$w\"}"
         )' \
         --bind="$GH_FZF_RUN_USER_FILTER_KEY"':reload(
             eval "$FZF_DEFAULT_COMMAND --user $(gh api user -q .login)"
@@ -565,7 +567,7 @@ workflow_cmd() {
     '\'''
 
     # KEYBINDINGS      {{{2
-    export GH_FZF_WORKFLOW_VIEW_RUNS_KEY="${GH_FZF_WORKFLOW_VIEW_RUNS_KEY:-enter}"
+    export GH_FZF_WORKFLOW_VIEW_RUNS_KEY="${GH_FZF_WORKFLOW_VIEW_RUNS_KEY:-alt-r}"
     export GH_FZF_WORKFLOW_DISPATCH_KEY="${GH_FZF_WORKFLOW_DISPATCH_KEY:-alt-d}"
     export GH_FZF_WORKFLOW_DISABLE_KEY="${GH_FZF_WORKFLOW_DISABLE_KEY:-alt-X}"
     export GH_FZF_WORKFLOW_ENABLE_KEY="${GH_FZF_WORKFLOW_ENABLE_KEY:-alt-E}"

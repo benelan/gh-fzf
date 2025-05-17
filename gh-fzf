@@ -380,9 +380,9 @@ pr_cmd() {
     export GH_FZF_PR_BRANCH_FILTER_KEY="${GH_FZF_PR_BRANCH_FILTER_KEY:-alt-b}"
     export GH_FZF_PR_STATE_FILTER_KEY="${GH_FZF_PR_STATE_FILTER_KEY:-alt-s}"
 
-    pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
-        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-y: copy branch) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
-Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
+    pr_header="Actions > ($GH_FZF_PR_EDIT_KEY: edit) ($GH_FZF_PR_CHECKOUT_KEY: checkout) ($GH_FZF_PR_DIFF_KEY: diff) ($GH_FZF_PR_COMMENT_KEY: comment) ($GH_FZF_PR_REVIEW_KEY: review) ($GH_FZF_PR_ADD_LABEL_KEY: add labels)
+        > ($GH_FZF_PR_CHECKS_KEY: checks) ($GH_FZF_PR_MERGE_KEY: merge) ($GH_FZF_PR_READY_KEY: ready) ($GH_FZF_PR_COPY_BRANCH_KEY: copy branch) ($GH_FZF_PR_CLOSE_KEY: close) ($GH_FZF_PR_REOPEN_KEY: reopen) ($GH_FZF_PR_REMOVE_LABEL_KEY: remove labels)
+Filters > ($GH_FZF_PR_ASSIGNED_FILTER_KEY: assignee) ($GH_FZF_PR_AUTHOR_FILTER_KEY: author) ($GH_FZF_PR_BRANCH_FILTER_KEY: branch) ($GH_FZF_PR_STATE_FILTER_KEY: state=all)
 $global_binds
 
 "

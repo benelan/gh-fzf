@@ -156,6 +156,18 @@ else
     GH_COLUMNS='9999999'
 fi
 
+# https://github.com/junegunn/fzf/releases/tag/0.46.0
+PREVIEW_TRANSFORMER='
+  lines=\$(( FZF_LINES - FZF_MATCH_COUNT - 8 ));
+  if [[ \$FZF_MATCH_COUNT -eq 0 ]]; then
+    echo \"change-preview-window:hidden,<75(hidden)\";
+  elif [[ \$lines -gt 3 ]]; then
+    echo \"change-preview-window:down,border-top,\$lines,wrap,<75(down,border-top,\$lineswrap)\";
+  elif [[ \$FZF_PREVIEW_LINES -ne 3 ]]; then
+    echo \"change-preview-window:down,border-top,wrap,<75(down,border-top,wrap)\"
+  fi
+'
+
 # export SHELL so bash features can be used in subshells created by fzf
 SHELL="$(which bash)"
 export SHELL
@@ -171,6 +183,8 @@ export GH_FZF_COPY_KEY="${GH_FZF_COPY_KEY:-ctrl-y}"
 export GH_FZF_HELP_KEY="${GH_FZF_HELP_KEY:-alt-?}"
 export GH_FZF_TOGGLE_HINTS_KEY="${GH_FZF_TOGGLE_HINTS_KEY:-alt-H}"
 export GH_FZF_TOGGLE_PREVIEW_KEY="${GH_FZF_TOGGLE_PREVIEW_KEY:-alt-P}"
+export GH_FZF_LAYOUT_VERTICAL="${GH_FZF_LAYOUT_VERTICAL:-alt-|}"
+export GH_FZF_LAYOUT_HORIZONTAL="${GH_FZF_LAYOUT_HORIZONTAL:-alt-_}"
 
 global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) ($GH_FZF_HELP_KEY: help) ($GH_FZF_TOGGLE_PREVIEW_KEY: toggle preview) ($GH_FZF_TOGGLE_HINTS_KEY: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
 
@@ -182,7 +196,12 @@ export FZF_DEFAULT_OPTS='
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
 '${GH_STATUS_INDICATOR:+--preview-label=\"$GH_STATUS_INDICATOR\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
---bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"
+--bind "result:transform('"$PREVIEW_TRANSFORMER"')"
+--bind "resize:transform('"$PREVIEW_TRANSFORMER"')"
+--bind="start:unbind(resize)+unbind(result)'${GH_FZF_HIDE_HINTS:+"+toggle-header"}'"
+--bind "'$GH_FZF_LAYOUT_VERTICAL':rebind('$GH_FZF_TOGGLE_HINTS_KEY')+unbind(result)+unbind(resize)+change-preview-window(right,border-left,wrap,<75(down,border-top,wrap))"
+--bind "'$GH_FZF_LAYOUT_HORIZONTAL':show-header+unbind('$GH_FZF_TOGGLE_HINTS_KEY')+rebind(result)+rebind(resize)+change-preview-window(down,border-top,wrap)"
+--bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,border-top,<75(down,70%,border-top,wrap)|hidden,<75(hidden)|)"
 --bind="'$GH_FZF_TOGGLE_HINTS_KEY':toggle-header"
 --bind="'$GH_FZF_RELOAD_KEY':reload(eval \"$FZF_DEFAULT_COMMAND\")"
 --bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"
@@ -785,6 +804,7 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
         --prompt="milestone ❱ " \
         --header="$milestone_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --bind="enter:become(echo {1})" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             gh api --jq '.html_url' \
                 -H 'Accept: application/vnd.github+json' \
@@ -901,20 +921,18 @@ $global_binds
         --prompt="repo ❱ " \
         --header="$repo_header" \
         --header-lines=4 \
-        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
-        --bind="$GH_FZF_OPEN_KEY:execute-silent(gh repo view --web {1} &)+refresh-preview" \
-        --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .repo\"' gh repo view benelan/gh-fzf)" \
-        --bind="$GH_FZF_REPO_EDIT_KEY:execute(gh repo edit {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_ISSUES_KEY:execute(gh fzf issue --repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_PRS_KEY:execute(gh fzf pr --repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_VIEW_RUNS_KEY:execute(gh fzf run --repo {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_CLONE_KEY:execute(gh repo clone {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_FORK_KEY:execute(gh repo fork {1})+refresh-preview" \
-        --bind="$GH_FZF_REPO_PRIVATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
-        --bind="$GH_FZF_REPO_PUBLIC_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
-        --bind="$GH_FZF_REPO_SOURCE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --source")' \
-        --bind="$GH_FZF_REPO_FORK_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --fork")'
+        --bind="ctrl-o:execute-silent(gh repo view --web {1} &)+refresh-preview" \
+        --bind="ctrl-y:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
+        --bind="alt-p:execute(gh fzf pr --repo {1})+refresh-preview" \
+        --bind="alt-i:execute(gh fzf issue --repo {1})+refresh-preview" \
+        --bind="alt-r:execute(gh fzf run --repo {1})+refresh-preview" \
+        --bind="enter:execute(gh repo edit {1})+refresh-preview" \
+        --bind="alt-C:execute(gh repo clone {1})+refresh-preview" \
+        --bind="alt-F:execute(gh repo fork {1})+refresh-preview" \
+        --bind='alt-c:reload(eval "$FZF_DEFAULT_COMMAND --visibility private")' \
+        --bind='alt-o:reload(eval "$FZF_DEFAULT_COMMAND --visibility public")' \
+        --bind='alt-s:reload(eval "$FZF_DEFAULT_COMMAND --source")' \
+        --bind='alt-f:reload(eval "$FZF_DEFAULT_COMMAND --fork")'
 
     #2}}}
 }

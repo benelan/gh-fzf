@@ -413,7 +413,7 @@ The `search` command works differently than the others. There are two different 
    - [`commits`](https://docs.github.com/en/search-github/searching-on-github/searching-commits)
    - [`code`](https://docs.github.com/en/search-github/searching-on-github/searching-code)
 
-2. **fzf:** This is mode used by the rest of the commands, which uses `fzf` search syntax.
+2. **fzf:** This is the mode used by the rest of the commands, which uses `fzf` search syntax.
 
 The mode is displayed in the bottom left corner. Start by searching with GitHub syntax. For example, you may type `author:@me` when using the `issues` or `prs` subcommands. When you switch modes from `gh` to `fzf`, the list remains the same and the GitHub query is saved to state and cleared from the search bar. You can then use `fzf` syntax to filter the list further. When you switch modes from `fzf` to `gh`, the GitHub query is restored and the list is reloaded.
 

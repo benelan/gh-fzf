@@ -1,5 +1,6 @@
-name: Bug Report
-description: Report a bug with the script
+# yaml-language-server: $schema=https://json.schemastore.org/github-issue-forms.json
+name: Bug
+description: Report a bug with the script.
 labels: ["bug"]
 assignees:
   - benelan
@@ -9,7 +10,7 @@ body:
       value: |
         Thanks for logging an issue, I appreciate the feedback! Please confirm the following before continuing:
         - You are using the latest version, since the issue may already be fixed.
-        - There are no [existing issues](https://github.com/benelan/gh-fzf/issues) with the same report/request.
+        - There are no [existing issues](/../../issues?q=is%3Aopen+is%3Aissue+label%3Abug) with the same bug report.
             - If there is a duplicate issue, please add a 👍 reaction instead of creating a new one.
   - type: textarea
     id: actual
@@ -22,7 +23,7 @@ body:
     id: expected
     attributes:
       label: Expected Behavior
-      description: What you expected instead, and why?
+      description: What did you expect to happen, and why?
     validations:
       required: true
   - type: textarea
@@ -41,7 +42,7 @@ body:
     attributes:
       label: Reproduction Version
       description: The latest version that reproduces the issue (check `gh fzf version`)
-      placeholder: v0.15.0 # x-release-please-version
+      placeholder: v0.15.1 # x-release-please-version
     validations:
       required: true
   - type: input

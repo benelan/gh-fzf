@@ -182,7 +182,7 @@ export FZF_DEFAULT_OPTS='
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
 '${GH_STATUS_INDICATOR:+--preview-label=\"$GH_STATUS_INDICATOR\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
---bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"
+--bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|)"
 --bind="'$GH_FZF_TOGGLE_HINTS_KEY':toggle-header"
 --bind="'$GH_FZF_RELOAD_KEY':reload(eval \"$FZF_DEFAULT_COMMAND\")"
 --bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"

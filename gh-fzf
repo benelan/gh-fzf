@@ -178,14 +178,14 @@ global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url
 
 # https://github.com/junegunn/fzf/releases/tag/0.46.0
 PREVIEW_TRANSFORMER='
-  lines=\$(( FZF_LINES - FZF_MATCH_COUNT - 8 ));
-  if [[ \$FZF_MATCH_COUNT -eq 0 ]]; then
-    echo \"change-preview-window:hidden,<75(hidden)\";
-  elif [[ \$lines -gt 3 ]]; then
-    echo \"change-preview-window:down,border-top,\$lines,wrap,<75(down,border-top,\$lineswrap)\";
-  elif [[ \$FZF_PREVIEW_LINES -ne 3 ]]; then
-    echo \"change-preview-window:down,border-top,wrap,<75(down,border-top,wrap)\"
-  fi
+    lines=\$(( FZF_LINES - FZF_MATCH_COUNT - 8 ));
+    if [[ \$FZF_MATCH_COUNT -eq 0 ]]; then
+        echo \"change-preview-window:hidden,<75(hidden)\";
+    elif [[ \$lines -gt 3 ]]; then
+        echo \"change-preview-window:down,border-top,\$lines,wrap,<75(down,border-top,\$lineswrap)\";
+    elif [[ \$FZF_PREVIEW_LINES -ne 3 ]]; then
+        echo \"change-preview-window:down,border-top,wrap,<75(down,border-top,wrap)\"
+    fi
 '
 
 # The following fzf options are shared by all commands. They are prepended to

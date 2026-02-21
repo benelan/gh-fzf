@@ -215,7 +215,7 @@ default_cmd() {
         ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .{}\"' gh repo view benelan/gh-fzf)"
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .{}\"' gh repo view benelan/gh-fzf)"
 }
 
 # ----------------------------------------------------------------------1}}}
@@ -289,7 +289,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh issue view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .issue\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .issue\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_ISSUE_EDIT_KEY:execute(gh issue edit {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_COMMENT_KEY:execute(gh issue comment {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_CHECKOUT_KEY:become(gh fzf util develop-issue {1})" \
@@ -395,7 +395,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh pr view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .pr\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .pr\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_PR_COPY_BRANCH_KEY:execute-silent(
             gh pr view --json 'headRefName' -q '.headRefName' {1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
@@ -504,7 +504,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh run view --web {-1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .run\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .run\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_RUN_VIEW_KEY:execute(
             case {1} in
                 in_progress | queued | requested | waiting) gh run watch {-1} ;;
@@ -585,7 +585,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh workflow view --web {-1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .workflow\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .workflow\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_WORKFLOW_VIEW_RUNS_KEY:execute(gh fzf run --workflow {-1})+refresh-preview" \
         --bind="$GH_FZF_WORKFLOW_DISPATCH_KEY:execute(gh workflow run {-1})+refresh-preview" \
         --bind="$GH_FZF_WORKFLOW_ENABLE_KEY:execute(gh workflow enable {-1})+refresh-preview" \
@@ -658,7 +658,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh release view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .release\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .release\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_RELEASE_DOWNLOAD_KEY:execute(gh release download {1})+refresh-preview" \
         --bind="$GH_FZF_RELEASE_DELETE_KEY:execute(gh release delete {1})+refresh-preview" \
         --bind="$GH_FZF_RELEASE_STABLE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
@@ -697,7 +697,7 @@ $global_binds
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh label list --web &)" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .label\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .label\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_LABEL_PRINT_KEY:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="$GH_FZF_LABEL_EDIT_NAME_KEY"':execute(
             read -rp "Enter new name for {1} label: " name </dev/tty >/dev/tty 2>&1;
@@ -798,7 +798,7 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
                 /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .milestone\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .milestone\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_MILESTONE_PRINT_KEY:become(echo {1})" \
         --bind="$GH_FZF_MILESTONE_VIEW_ISSUES_KEY:execute(gh fzf issue --milestone {-1})" \
         --bind="$GH_FZF_MILESTONE_CLOSE_KEY"':execute(
@@ -904,7 +904,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh repo view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .repo\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .repo\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_REPO_EDIT_KEY:execute(gh repo edit {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_VIEW_ISSUES_KEY:execute(gh fzf issue --repo {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_VIEW_PRS_KEY:execute(gh fzf pr --repo {1})+refresh-preview" \
@@ -948,7 +948,7 @@ Filters > ($GH_FZF_GIST_PUBLIC_FILTER_KEY: public) ($GH_FZF_GIST_SECRET_FILTER_K
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .gist\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .gist\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_GIST_EDIT_KEY:execute(gh gist edit {1})+refresh-preview" \
         --bind="$GH_FZF_GIST_CLONE_KEY:execute(gh gist clone {1})+refresh-preview" \
         --bind="$GH_FZF_GIST_DELETE_KEY:execute(gh gist delete {1})+refresh-preview" \
@@ -1044,7 +1044,7 @@ $global_binds
         )+transform-query(echo \"$*\")+first+reload-sync:$search_cmd \"$*\"" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent:$search_open_cmd &" \
         --bind="$GH_FZF_COPY_KEY:execute-silent:$search_copy_cmd" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .search\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .search\"' gh repo view benelan/gh-fzf)" \
         --bind="alt-1:execute-silent(
             echo 100 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
         )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \

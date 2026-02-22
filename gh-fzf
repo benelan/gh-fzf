@@ -222,6 +222,9 @@ default_cmd() {
 # COMMAND > ISSUE                                                       {{{1
 
 issue_cmd() {
+    # make sure state from the previous execution is destroyed
+    rm -f /tmp/gh-fzf-issue-*
+
     # GO TEMPLATE      {{{2
     issue_template='\
         --json "number,title,author,assignees,state,milestone,labels,updatedAt" \
@@ -280,13 +283,33 @@ $global_binds
 
 "
 
+    # INITIAL STATE    {{{2
+    issue_command="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT"
+    issue_prompt="issue${*:+ $*}"
+
     # FZF COMMAND      {{{2
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh issue list $issue_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="$issue_command $*" \
         fzf \
         --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh issue view {1} --comments' \
-        --prompt="issue ❱ " \
+        --prompt="$issue_prompt ❱ " \
         --header="$issue_header" \
-        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --border="bottom" \
+        --border-label="[mode: fzf] " \
+        --border-label-pos=-99999 \
+        --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind "change:reload-sync:sleep 0.5; $issue_command $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind='alt-/:transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf;
+                cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh
+            )+change-prompt('"$issue_prompt"' ❱ )+reload-sync($FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true)" ||
+            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-issue-query-gh;
+                cat ${TMPDIR:-/tmp}/gh-fzf-issue-query-fzf
+            )"' \
+        --bind="$GH_FZF_RELOAD_KEY"':change-prompt('"$issue_prompt"' ❱ )+execute-silent(
+                rm -f  ${TMPDIR:-/tmp}/gh-fzf-issue-query-*
+            )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh issue view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
         --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .issue\"' gh repo view benelan/gh-fzf)" \
@@ -297,15 +320,45 @@ $global_binds
         --bind="$GH_FZF_ISSUE_REMOVE_LABEL_KEY:execute(gh fzf util select-labels remove issue {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_CLOSE_KEY:execute(gh issue close {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_REOPEN_KEY:execute(gh issue reopen {1})+refresh-preview" \
-        --bind="$GH_FZF_ISSUE_ASSIGNED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind="$GH_FZF_ISSUE_AUTHOR_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
         --bind="$GH_FZF_ISSUE_MENTIONED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --mention @me")' \
-        --bind="$GH_FZF_ISSUE_MILESTONE_FILTER_KEY"':execute(gh fzf milestone > /tmp/gh-fzf-milestone)+reload(
-            m="$(cat /tmp/gh-fzf-milestone)"
-            rm -f /tmp/gh-fzf-milestone;
-            eval "$FZF_DEFAULT_COMMAND${m:+ --milestone \"$m\"}"
-        )' \
-        --bind="$GH_FZF_ISSUE_STATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --state all")'
+        --bind="$GH_FZF_ISSUE_MILESTONE_FILTER_KEY"':execute(
+            rm -f "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
+            gh fzf milestone > "${TMPDIR:-/tmp}/gh-fzf-issue-milestone";
+        )+transform:
+            m="$(cat ${TMPDIR:-/tmp}/gh-fzf-issue-milestone)";
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "reload(
+                    eval \"\$FZF_DEFAULT_COMMAND --milestone '\''$m'\''\"
+                )+change-prompt:'"$issue_prompt"' --milestone \"$m\" ❱ " ||
+            [[ ! $FZF_QUERY =~ milestone: ]] && echo "put( milestone:\"$m\")"
+        ' \
+        --bind="$GH_FZF_ISSUE_ASSIGNED_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
+            )+change-prompt:'"$issue_prompt"' --assignee @me ❱ " ||
+            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+        ' \
+        --bind="$GH_FZF_ISSUE_AUTHOR_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --author @me\"
+            )+change-prompt:'"$issue_prompt"' --author @me ❱ " ||
+            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+        ' \
+        --bind="$GH_FZF_ISSUE_MENTIONED_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --mention @me\"
+            )+change-prompt:'"$issue_prompt"' --mention @me ❱ " ||
+            [[ ! $FZF_QUERY =~ mention:@me ]] && echo "put( mention:@me)"
+        ' \
+        --bind="$GH_FZF_ISSUE_STATE_FILTER_KEY"':transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --state all\"
+            )+change-prompt:'"$issue_prompt"' --state all ❱ "
+        else
+            [[ ! $FZF_QUERY =~ state:open ]] && act="put( state:open)"
+            [[ ! $FZF_QUERY =~ state:closed ]] && act="${act:+$act+}put( state:closed)"
+            echo "$act"
+        fi'
 
     #2}}}
 }
@@ -314,6 +367,8 @@ $global_binds
 # COMMAND > PR                                                          {{{1
 
 pr_cmd() {
+    # make sure state from the previous execution is destroyed
+    rm -f /tmp/gh-fzf-pr-*
     # GO TEMPLATE      {{{2
     pr_template='\
         --json "number,title,state,headRefName,milestone,updatedAt,labels,additions,deletions,changedFiles,isDraft" \
@@ -386,13 +441,37 @@ Filters > ($GH_FZF_PR_ASSIGNED_FILTER_KEY: assignee) ($GH_FZF_PR_AUTHOR_FILTER_K
 $global_binds
 
 "
+    # INITIAL STATE    {{{2
+    pr_command="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT"
+    pr_prompt="pr${*:+ $*}"
+
     # FZF COMMAND      {{{2
-    FZF_DEFAULT_COMMAND="GH_FORCE_TTY=$GH_COLUMNS gh pr list $pr_template -L $GH_FZF_DEFAULT_LIMIT $*" \
+    FZF_DEFAULT_COMMAND="$pr_command $*" \
         fzf \
         --preview='GH_FORCE_TTY=$((FZF_PREVIEW_COLUMNS-3)) gh pr view {1} --comments' \
-        --prompt="pr ❱ " \
+        --prompt="$pr_prompt ❱ " \
         --header="$pr_header" \
-        --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
+        --border="bottom" \
+        --border-label="[mode: fzf] " \
+        --border-label-pos=-99999 \
+        --bind="start:unbind:change${GH_FZF_HIDE_HINTS:+"+toggle-header"}" \
+        --bind="change:reload-sync:sleep 0.5; $pr_command $* \${FZF_QUERY:+-S {q}} || true" \
+        --bind='alt-/:transform:
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "rebind(change)+change-border-label([mode:  gh] )+disable-search+transform-query(
+                    echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf;
+                    cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh
+                )+change-prompt('"$pr_prompt"' ❱ )+reload-sync(
+                    $FZF_DEFAULT_COMMAND ${FZF_QUERY:+-S {q}} || true
+                )" ||
+            echo "unbind(change)+change-border-label([mode: fzf] )+enable-search+transform-query(
+                echo \{q} > ${TMPDIR:-/tmp}/gh-fzf-pr-query-gh;
+                cat ${TMPDIR:-/tmp}/gh-fzf-pr-query-fzf
+            )"
+        ' \
+        --bind="$GH_FZF_RELOAD_KEY"':change-prompt('"$pr_prompt"' ❱ )+execute-silent(
+                rm -f  ${TMPDIR:-/tmp}/gh-fzf-pr-query-*
+            )+clear-query+first+reload(eval "$FZF_DEFAULT_COMMAND")' \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh pr view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
         --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .pr\"' gh repo view benelan/gh-fzf)" \
@@ -413,11 +492,35 @@ $global_binds
         )>+refresh-preview" \
         --bind="$GH_FZF_PR_ADD_LABEL_KEY:execute(gh fzf util select-labels add pr {1})+refresh-preview" \
         --bind="$GH_FZF_PR_REMOVE_LABEL_KEY:execute(gh fzf util select-labels remove pr {1})+refresh-preview" \
-        --bind="$GH_FZF_PR_ASSIGNED_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --assignee @me")' \
-        --bind="$GH_FZF_PR_AUTHOR_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --author @me")' \
-        --bind="$GH_FZF_PR_BRANCH_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --head \
-            $(git symbolic-ref --short HEAD)")' \
-        --bind="$GH_FZF_PR_STATE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --state all")'
+        --bind="$GH_FZF_PR_ASSIGNED_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --assignee @me\"
+            )+change-prompt:'"$pr_prompt"' --assignee @me ❱ " ||
+            [[ ! $FZF_QUERY =~ assignee:@me ]] && echo "put( assignee:@me)"
+        ' \
+        --bind="$GH_FZF_PR_AUTHOR_FILTER_KEY"':transform:[[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --author @me\"
+            )+change-prompt:'"$pr_prompt"' --author @me ❱ " ||
+            [[ ! $FZF_QUERY =~ author:@me ]] && echo "put( author:@me)"
+        ' \
+        --bind="$GH_FZF_PR_BRANCH_FILTER_KEY"':transform:
+            branch="$(git symbolic-ref --short HEAD)";
+            [[ ! $FZF_BORDER_LABEL =~ gh ]] &&
+                echo "reload(
+                    eval \"\$FZF_DEFAULT_COMMAND --head $branch\"
+                )+change-prompt:'"$pr_prompt"' --head $branch ❱ " ||
+            [[ ! $FZF_QUERY =~ head:$branch ]] && echo "put( head:$branch)"
+        ' \
+        --bind="$GH_FZF_PR_STATE_FILTER_KEY"':transform:if [[ ! $FZF_BORDER_LABEL =~ gh ]]; then
+            echo "reload(
+                eval \"\$FZF_DEFAULT_COMMAND --state all\"
+            )+change-prompt:'"$pr_prompt"' --state all ❱ "
+        else
+            [[ ! $FZF_QUERY =~ state:open ]] && act="put( state:open)"
+            [[ ! $FZF_QUERY =~ state:closed ]] && act="${act:+$act+}put( state:closed)"
+            echo "$act"
+        fi'
 
     #2}}}
 }
@@ -1301,6 +1404,8 @@ find_repo_flag() {
 
 # ENTRY FUNCTION {{{2
 main() {
+    requires_fzf_version "0.45.0"
+
     command="$1"
     [ -n "$command" ] && shift || default_cmd
 
@@ -1311,9 +1416,11 @@ main() {
             help_cmd "$@"
             ;;
         i | -i | issue | issues | --issue | --issues)
+            requires_fzf_version "0.49.0" "issue"
             issue_cmd "$@"
             ;;
         p | -p | pr | prs | --pr | --prs)
+            requires_fzf_version "0.49.0" "pr"
             pr_cmd "$@"
             ;;
         s | -s | search | --search)

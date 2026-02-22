@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.3](https://github.com/benelan/gh-fzf/compare/v0.15.2...v0.15.3) (2026-02-22)
+
+
+### Bug Fixes
+
+* Update headings for help keys after readme changes ([218ee50](https://github.com/benelan/gh-fzf/commit/218ee50a53eab0d6854cbe2c687f3e7078eb6a1f))
+
 ## [0.15.2](https://github.com/benelan/gh-fzf/compare/v0.15.1...v0.15.2) (2026-02-21)
 
 

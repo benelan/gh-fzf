@@ -1,6 +1,7 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-issue-forms.json
 name: Documentation
-description: Report issues with or make requests for documentation
-labels: ["docs"]
+description: Report documentation problems or suggest additions.
+labels: ["documentation"]
 assignees:
   - benelan
 body:
@@ -9,7 +10,7 @@ body:
       value: |
         Thanks for logging an issue, I appreciate the feedback! Please confirm the following before continuing:
         - You are using the latest version, since the issue may already be fixed.
-        - There are no [existing issues](https://github.com/benelan/gh-fzf/issues) with the same report/request.
+        - There are no [existing issues](/../../issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation) with the documentation request/problem.
             - If there is a duplicate issue, please add a 👍 reaction instead of creating a new one.
   - type: textarea
     id: description

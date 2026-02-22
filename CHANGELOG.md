@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.15.2](https://github.com/benelan/gh-fzf/compare/v0.15.1...v0.15.2) (2026-02-21)
+
+
+### Bug Fixes
+
+* Remove duplicate view when toggling preview ([99fd77e](https://github.com/benelan/gh-fzf/commit/99fd77e5e250eaf6595d92ec654447bd964c0291))
+
+## [0.15.1](https://github.com/benelan/gh-fzf/compare/v0.15.0...v0.15.1) (2025-12-20)
+
+
+### Bug Fixes
+
+* **pr:** Use keybind config values in hints header ([269ea01](https://github.com/benelan/gh-fzf/commit/269ea01ce070117849ea3fac3930cfca19337b2d))
+
 ## [0.15.0](https://github.com/benelan/gh-fzf/compare/v0.14.1...v0.15.0) (2025-02-17)
 
 

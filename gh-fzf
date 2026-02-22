@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# vim:foldmethod=marker:
-# shellcheck disable=2086,2015,2016
+# vim:set foldmethod=marker:
+# shellcheck disable=2015,2016
 #
 # An fzf wrapper around the GitHub CLI - https://github.com/benelan/gh-fzf
 #
@@ -28,7 +28,7 @@
 
 set -e
 
-GH_FZF_VERSION="v0.15.0" # x-release-please-version
+GH_FZF_VERSION="v0.15.2" # x-release-please-version
 
 FZF_USER_VERSION="$(fzf --version | awk '{print $1}')"
 
@@ -182,7 +182,7 @@ export FZF_DEFAULT_OPTS='
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
 '${GH_STATUS_INDICATOR:+--preview-label=\"$GH_STATUS_INDICATOR\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
---bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|hidden,<75(hidden)|)"
+--bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|)"
 --bind="'$GH_FZF_TOGGLE_HINTS_KEY':toggle-header"
 --bind="'$GH_FZF_RELOAD_KEY':reload(eval \"$FZF_DEFAULT_COMMAND\")"
 --bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"
@@ -215,7 +215,7 @@ default_cmd() {
         ' \
         --preview-window='right:75%,wrap' \
         --bind="enter:execute(gh fzf {})" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .{}\"' gh repo view benelan/gh-fzf)"
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .{}\"' gh repo view benelan/gh-fzf)"
 }
 
 # ----------------------------------------------------------------------1}}}
@@ -289,7 +289,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh issue view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url issue {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .issue\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .issue\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_ISSUE_EDIT_KEY:execute(gh issue edit {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_COMMENT_KEY:execute(gh issue comment {1})+refresh-preview" \
         --bind="$GH_FZF_ISSUE_CHECKOUT_KEY:become(gh fzf util develop-issue {1})" \
@@ -380,9 +380,9 @@ pr_cmd() {
     export GH_FZF_PR_BRANCH_FILTER_KEY="${GH_FZF_PR_BRANCH_FILTER_KEY:-alt-b}"
     export GH_FZF_PR_STATE_FILTER_KEY="${GH_FZF_PR_STATE_FILTER_KEY:-alt-s}"
 
-    pr_header="Actions > (enter: edit) (alt-o: checkout) (alt-d: diff) (alt-c: comment) (alt-r: review) (alt-l: add labels)
-        > (alt-C: checks) (alt-M: merge) (alt-R: ready) (alt-y: copy branch) (alt-X: close) (alt-O: reopen) (alt-L: remove labels)
-Filters > (alt-a: assignee) (alt-A: author) (alt-b: branch) (alt-s: state=all)
+    pr_header="Actions > ($GH_FZF_PR_EDIT_KEY: edit) ($GH_FZF_PR_CHECKOUT_KEY: checkout) ($GH_FZF_PR_DIFF_KEY: diff) ($GH_FZF_PR_COMMENT_KEY: comment) ($GH_FZF_PR_REVIEW_KEY: review) ($GH_FZF_PR_ADD_LABEL_KEY: add labels)
+        > ($GH_FZF_PR_CHECKS_KEY: checks) ($GH_FZF_PR_MERGE_KEY: merge) ($GH_FZF_PR_READY_KEY: ready) ($GH_FZF_PR_COPY_BRANCH_KEY: copy branch) ($GH_FZF_PR_CLOSE_KEY: close) ($GH_FZF_PR_REOPEN_KEY: reopen) ($GH_FZF_PR_REMOVE_LABEL_KEY: remove labels)
+Filters > ($GH_FZF_PR_ASSIGNED_FILTER_KEY: assignee) ($GH_FZF_PR_AUTHOR_FILTER_KEY: author) ($GH_FZF_PR_BRANCH_FILTER_KEY: branch) ($GH_FZF_PR_STATE_FILTER_KEY: state=all)
 $global_binds
 
 "
@@ -395,7 +395,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh pr view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url pr {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .pr\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .pr\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_PR_COPY_BRANCH_KEY:execute-silent(
             gh pr view --json 'headRefName' -q '.headRefName' {1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
@@ -504,7 +504,7 @@ $global_binds
         --bind="alt-l:execute(gh run view --log {-1})+refresh-preview" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh run view --web {-1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url run {-1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .run\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .run\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_RUN_VIEW_KEY:execute(
             case {1} in
                 in_progress | queued | requested | waiting) gh run watch {-1} ;;
@@ -590,7 +590,7 @@ $global_binds
         --bind="enter:become(echo {-1})" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh workflow view --web {-1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh browse --no-browser {-2} | $GH_FZF_COPY_CMD)+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .workflow\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .workflow\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_WORKFLOW_VIEW_RUNS_KEY:execute(gh fzf run --workflow {-1})+refresh-preview" \
         --bind="$GH_FZF_WORKFLOW_DISPATCH_KEY:execute(gh workflow run {-1})+refresh-preview" \
         --bind="$GH_FZF_WORKFLOW_ENABLE_KEY:execute(gh workflow enable {-1})+refresh-preview" \
@@ -664,7 +664,7 @@ $global_binds
         --bind="enter:become(echo {1})" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh release view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url release {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .release\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .release\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_RELEASE_DOWNLOAD_KEY:execute(gh release download {1})+refresh-preview" \
         --bind="$GH_FZF_RELEASE_DELETE_KEY:execute(gh release delete {1})+refresh-preview" \
         --bind="$GH_FZF_RELEASE_STABLE_FILTER_KEY"':reload(eval "$FZF_DEFAULT_COMMAND --exclude-pre-releases")' \
@@ -703,7 +703,7 @@ $global_binds
         --header="$label_header" \
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh label list --web &)" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .label\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .label\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_LABEL_PRINT_KEY:become(printf '%s\n' {+} | awk -F'  ' '{print \$1}')" \
         --bind="$GH_FZF_LABEL_EDIT_NAME_KEY"':execute(
             read -rp "Enter new name for {1} label: " name </dev/tty >/dev/tty 2>&1;
@@ -804,7 +804,7 @@ Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_REL
                 /repos/{owner}/{repo}/milestones/{-1})\"
             [ -n \"\$url\" ] && $GH_FZF_OPEN_CMD \"\$url\" &
         )" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .milestone\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .milestone\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_MILESTONE_PRINT_KEY:become(echo {1})" \
         --bind="$GH_FZF_MILESTONE_VIEW_ISSUES_KEY:execute(gh fzf issue --milestone {-1})" \
         --bind="$GH_FZF_MILESTONE_CLOSE_KEY"':execute(
@@ -910,7 +910,7 @@ $global_binds
         --bind="start:${GH_FZF_HIDE_HINTS:+"toggle-header"}" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent(gh repo view --web {1} &)+refresh-preview" \
         --bind="$GH_FZF_COPY_KEY:execute-silent(gh fzf util copy-url repo {1})+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .repo\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .repo\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_REPO_EDIT_KEY:execute(gh repo edit {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_VIEW_ISSUES_KEY:execute(gh fzf issue --repo {1})+refresh-preview" \
         --bind="$GH_FZF_REPO_VIEW_PRS_KEY:execute(gh fzf pr --repo {1})+refresh-preview" \
@@ -954,7 +954,7 @@ Filters > ($GH_FZF_GIST_PUBLIC_FILTER_KEY: public) ($GH_FZF_GIST_SECRET_FILTER_K
         --bind="$GH_FZF_COPY_KEY:execute-silent(
             echo https://gist.github.com/$(gh api user -q .login)/{1} | $GH_FZF_COPY_CMD
         )+refresh-preview" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .gist\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .gist\"' gh repo view benelan/gh-fzf)" \
         --bind="$GH_FZF_GIST_EDIT_KEY:execute(gh gist edit {1})+refresh-preview" \
         --bind="$GH_FZF_GIST_CLONE_KEY:execute(gh gist clone {1})+refresh-preview" \
         --bind="$GH_FZF_GIST_DELETE_KEY:execute(gh gist delete {1})+refresh-preview" \
@@ -966,7 +966,7 @@ Filters > ($GH_FZF_GIST_PUBLIC_FILTER_KEY: public) ($GH_FZF_GIST_SECRET_FILTER_K
 
 # COMMAND > SEARCH                                                      {{{1
 search_cmd() {
-    rm -rf ${TMPDIR:-/tmp}/gh-fzf-search-*
+    rm -rf "${TMPDIR:-/tmp}"/gh-fzf-search-*
 
     if [ -n "$1" ]; then
         search_subcmd="$1"
@@ -1018,6 +1018,7 @@ $global_binds
     # FZF COMMAND      {{{2
     search_cmd="GH_FORCE_TTY=$GH_COLUMNS gh search $search_subcmd -L \$(cat "${TMPDIR:-/tmp}/gh-fzf-search-limit")"
 
+    # shellcheck disable=2086
     fzf \
         --header="$search_header" \
         --header-lines=4 \
@@ -1049,7 +1050,7 @@ $global_binds
         )+transform-query(echo \"$*\")+first+reload-sync:$search_cmd \"$*\"" \
         --bind="$GH_FZF_OPEN_KEY:execute-silent:$search_open_cmd &" \
         --bind="$GH_FZF_COPY_KEY:execute-silent:$search_copy_cmd" \
-        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### .search\"' gh repo view benelan/gh-fzf)" \
+        --bind="$GH_FZF_HELP_KEY:execute(GH_PAGER='less -p \"^  ### Command: .search\"' gh repo view benelan/gh-fzf)" \
         --bind="alt-1:execute-silent(
             echo 100 > ${TMPDIR:-/tmp}/gh-fzf-search-limit
         )+reload-sync($search_cmd \$FZF_QUERY $multiline_chunker || true)" \
@@ -1081,7 +1082,7 @@ $global_binds
 
     #2}}}
 
-    rm -f ${TMPDIR:-/tmp}/gh-fzf-search-*
+    rm -f "${TMPDIR:-/tmp}"/gh-fzf-search-*
 }
 
 # ----------------------------------------------------------------------1}}}
@@ -1109,13 +1110,13 @@ select_labels() {
     [ -n "$3" ] && { [ "$1" = "add" ] || [ "$1" = "remove" ]; } &&
         { [ "$2" = "pr" ] || [ "$2" = "issue" ]; } ||
         error "missing argument(s)." \
-            "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifer>"
+            "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifier>"
 
     # increase the limit when selecting labels
-    [ "$GH_FZF_DEFAULT_LIMIT" -lt 500 ] && label_limit="-L 500"
+    [ "$GH_FZF_DEFAULT_LIMIT" -lt 500 ] && label_limit="500"
 
     label_flags="$(
-        gh fzf label $label_limit | flagify "--$1-label"
+        gh fzf label -L "${label_limit:-$GH_FZF_DEFAULT_LIMIT}" | flagify "--$1-label"
     )"
 
     [ -n "$label_flags" ] && eval "gh $2 edit \"$3\" $label_flags"
@@ -1140,13 +1141,13 @@ develop_issue() {
     [ -z "$1" ] && error "missing argument." \
         "Usage: gh fzf util develop-issue <issue-number>"
 
-    branch="$(gh issue develop --list $1 | tail | cut -f1)"
+    branch="$(gh issue develop --list "$1" | tail | cut -f1)"
 
     if git show-ref --quiet "refs/heads/$branch"; then
         git checkout "$branch"
     else
-        name="$(gh fzf util branch-prompt $1)"
-        gh issue develop --checkout ${name:+--name "$name"} $1
+        name="$(gh fzf util branch-prompt "$1")"
+        gh issue develop --checkout ${name:+--name "$name"} "$1"
     fi
 }
 
@@ -1159,7 +1160,7 @@ copy_url() {
 
     case $1 in
         issue | pr | run | release | repo)
-            gh $1 view --json 'url' -q '.url' $2 | $GH_FZF_COPY_CMD
+            gh "$1" view --json 'url' -q '.url' "$2" | $GH_FZF_COPY_CMD
             ;;
         *)
             error "invalid command: \"$1\"" \
@@ -1176,17 +1177,18 @@ notify_run_completed() {
     [ -n "$run_id" ] && shift || error "missing argument." \
         "Usage: gh fzf util notify-run-completed <run-id>"
 
-    gh run watch --exit-status $run_id || urgency="critical"
+    gh run watch --exit-status "$run_id" || urgency="critical"
 
     OLDIFS=$IFS
     IFS=$'\n'
 
     run_info="$(
-        gh run view $run_id \
+        gh run view "$run_id" \
             --json name,headBranch,conclusion,url \
             --jq .name,.headBranch,.conclusion,.url
     )"
 
+    # shellcheck disable=2086
     set -- $run_info
     workflow="$1"
     branch="$2"
@@ -1216,11 +1218,11 @@ notify_run_completed() {
         )
 
         case $action_response in
-            web) gh run view --web $run_id & ;;
-            download) gh run download $run_id ;;
+            web) gh run view --web "$run_id" & ;;
+            download) gh run download "$run_id" ;;
             rerun)
-                gh run rerun --failed $run_id
-                gh fzf util notify-run-completed $run_id &
+                gh run rerun --failed "$run_id"
+                gh fzf util notify-run-completed "$run_id" &
                 ;;
             log)
                 case $TERMINAL in
@@ -1230,9 +1232,9 @@ notify_run_completed() {
                         ;;
                     *)
                         tmpfile="$(
-                            mktemp gh-fzf-run-${run_id}_XXX --tmpdir --suffix .log
+                            mktemp "gh-fzf-run-${run_id}_XXX" --tmpdir --suffix .log
                         )"
-                        gh run view --log $run_id >"$tmpfile"
+                        gh run view --log "$run_id" >"$tmpfile"
                         xdg-open "$tmpfile"
                         ;;
                 esac
@@ -1251,8 +1253,8 @@ notify_run_completed() {
                     fi
 
                     if [ "$rerun_response" = "yes" ]; then
-                        gh run rerun --failed $run_id
-                        gh fzf util notify-run-completed $run_id &
+                        gh run rerun --failed "$run_id"
+                        gh fzf util notify-run-completed "$run_id" &
                     fi
                 fi
                 ;;

@@ -1104,7 +1104,7 @@ select_labels() {
     [ -n "$3" ] && { [ "$1" = "add" ] || [ "$1" = "remove" ]; } &&
         { [ "$2" = "pr" ] || [ "$2" = "issue" ]; } ||
         error "missing argument(s)." \
-            "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifer>"
+            "Usage: gh fzf util modify-labels (add | remove) (issue | pr) <identifier>"
 
     # increase the limit when selecting labels
     [ "$GH_FZF_DEFAULT_LIMIT" -lt 500 ] && label_limit="500"

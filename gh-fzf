@@ -171,8 +171,22 @@ export GH_FZF_COPY_KEY="${GH_FZF_COPY_KEY:-ctrl-y}"
 export GH_FZF_HELP_KEY="${GH_FZF_HELP_KEY:-alt-?}"
 export GH_FZF_TOGGLE_HINTS_KEY="${GH_FZF_TOGGLE_HINTS_KEY:-alt-H}"
 export GH_FZF_TOGGLE_PREVIEW_KEY="${GH_FZF_TOGGLE_PREVIEW_KEY:-alt-P}"
+export GH_FZF_LAYOUT_VERTICAL="${GH_FZF_LAYOUT_VERTICAL:-alt-|}"
+export GH_FZF_LAYOUT_HORIZONTAL="${GH_FZF_LAYOUT_HORIZONTAL:-alt-_}"
 
 global_binds="Globals > ($GH_FZF_OPEN_KEY: open url) ($GH_FZF_COPY_KEY: copy url) ($GH_FZF_RELOAD_KEY: reload) ($GH_FZF_HELP_KEY: help) ($GH_FZF_TOGGLE_PREVIEW_KEY: toggle preview) ($GH_FZF_TOGGLE_HINTS_KEY: toggle hints) (alt-1: 100 items) (alt-2: 200 items) (...) (alt-9: 900 items)"
+
+# https://github.com/junegunn/fzf/releases/tag/0.46.0
+PREVIEW_TRANSFORMER='
+    lines=\$(( FZF_LINES - FZF_MATCH_COUNT - 8 ));
+    if [[ \$FZF_MATCH_COUNT -eq 0 ]]; then
+        echo \"change-preview-window:hidden,<75(hidden)\";
+    elif [[ \$lines -gt 3 ]]; then
+        echo \"change-preview-window:down,border-top,\$lines,wrap,<75(down,border-top,\$lineswrap)\";
+    elif [[ \$FZF_PREVIEW_LINES -ne 3 ]]; then
+        echo \"change-preview-window:down,border-top,wrap,<75(down,border-top,wrap)\"
+    fi
+'
 
 # The following fzf options are shared by all commands. They are prepended to
 # the FZF_DEFAULT_OPTS environment variable so they can be overridden by users.
@@ -180,9 +194,15 @@ export FZF_DEFAULT_OPTS='
 --no-hscroll --no-exit-0 --header-lines=1 --cycle --reverse --info=right
 --color="fg:#ebdbb2,fg+:#ebdbb2,bg:#282828,bg+:#3c3836,hl:#d3869b:bold,hl+:#d3869b"
 --color="info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#928374,label:#83a598"
+--preview-window="right,border-left,wrap,<75(down,border-top,wrap)"
+--bind="result:transform('"$PREVIEW_TRANSFORMER"')"
+--bind="resize:transform('"$PREVIEW_TRANSFORMER"')"
+--bind="start:unbind(resize)+unbind(result)'${GH_FZF_HIDE_HINTS:+"+toggle-header"}'"
+--bind="'$GH_FZF_LAYOUT_VERTICAL':rebind('$GH_FZF_TOGGLE_HINTS_KEY')+unbind(result)+unbind(resize)+change-preview-window(right,border-left,wrap,<75(down,border-top,wrap))"
+--bind="'$GH_FZF_LAYOUT_HORIZONTAL':show-header+unbind('$GH_FZF_TOGGLE_HINTS_KEY')+rebind(result)+rebind(resize)+change-preview-window(down,border-top,wrap)"
 '${GH_STATUS_INDICATOR:+--preview-label=\"$GH_STATUS_INDICATOR\" --color=\"preview-label:#b57614,preview-border:#b57614\"}'
 --preview-window="right,wrap,<75(down,wrap)"
---bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,<75(down,70%,wrap)|)"
+--bind="'$GH_FZF_TOGGLE_PREVIEW_KEY':change-preview-window(down,70%,border-top,<75(down,70%,border-top,wrap)|)"
 --bind="'$GH_FZF_TOGGLE_HINTS_KEY':toggle-header"
 --bind="'$GH_FZF_RELOAD_KEY':reload(eval \"$FZF_DEFAULT_COMMAND\")"
 --bind="alt-1:reload(eval \"$FZF_DEFAULT_COMMAND -L100\")"
